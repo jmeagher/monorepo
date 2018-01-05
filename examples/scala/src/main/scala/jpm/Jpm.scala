@@ -6,4 +6,5 @@ import com.twitter.finatra.http.routing.HttpRouter
 
 object Jpm extends App {
   def getNumber() = System.currentTimeMillis()
+  println(s"This is from the JPM app with scala version ${util.Properties.versionString}. The number is ${getNumber()}")
 }
