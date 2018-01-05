@@ -12,9 +12,9 @@ os:
   - linux
   - osx
 
-#env:
-#  # we want to test the most recent few releases
-#  - V=0.7.0 TEST_SCRIPT=test_rules_scala.sh
+env:
+  # Bazel version to use for testing
+  - V=0.9.0
 
 before_install:
   - |
