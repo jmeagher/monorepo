@@ -5,4 +5,5 @@ import com.twitter.finatra.http.HttpServer
 import com.twitter.finatra.http.routing.HttpRouter
 
 object Jpm extends App {
+  def getNumber() = System.currentTimeMillis()
 }

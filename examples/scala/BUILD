@@ -1,12 +1,8 @@
-scala_library(
-    name = "jpm-lib",
-    srcs = glob(["src/*.scala"]),
-    visibility = ["//visibility:public"]
+scala_binary(
+    name = "jpm_finatra",
+    main_class = "jpm.Jpm",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//examples/scala/src/main/scala/jpm",
+    ]
 )
-
-scala_test(
-  name = "test",
-  srcs = glob(["src/test/*.scala"]),
-  deps = ["jpm-lib"]
-)
-
