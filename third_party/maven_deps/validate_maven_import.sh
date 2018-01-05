@@ -1,5 +1,5 @@
 #! /bin/sh
-function dotest {
+dotest() {
   if [ ! -f $1 ] ; then
      echo "Can't find file $1 in $(pwd)"
      return 1
@@ -11,4 +11,3 @@ function dotest {
 }
 
 dotest third_party/maven_deps/generate_workspace.bzl
-  
