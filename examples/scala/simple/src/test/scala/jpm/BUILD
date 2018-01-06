@@ -3,6 +3,6 @@ scala_test(
   srcs = glob(["*.scala"]),
   size = "small",
   deps = [
-      "//examples/scala/src/main/scala/jpm",
+      "//examples/scala/simple/src/main/scala/jpm",
   ],
 )
