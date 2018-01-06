@@ -1,0 +1,52 @@
+# See https://github.com/johnynek/bazel-deps for help
+# To run this:
+# 1) checkout that next to this monorepo folder
+# 2) in that folder run "bazel build src/scala/com/github/johnynek/bazel_deps:parseproject_deploy.jar"
+# 3) in this folder run "../bazel-deps/gen_maven_deps.sh generate -r `pwd` -s 3rdparty/workspace.bzl -d dependencies.yaml"
+#
+# Anytime this file changes those steps need to be rerun and the results validated.
+
+options:
+  languages: [ "java", "scala:2.11.11" ]
+  buildHeader:
+    - load("@io_bazel_rules_scala//scala:scala_import.bzl", "scala_import")
+  resolvers: 
+    - id: "mavencentral"
+      type: "default"
+      url: https://repo.maven.apache.org/maven2/
+    - id: "maventwitter"
+      type: "default"
+      url: http://maven.twttr.com/
+  transitivity: runtime_deps
+  versionConflictPolicy: highest
+
+dependencies:
+  com.twitter.finatra:
+    finatra-http_2.11:
+      version: "2.1.6"
+      lang: java
+  
+  com.lihaoyi:
+    ammonite_2.11.11:
+      version: "1.0.3"
+      lang: java
+
+replacements:
+  org.scala-lang:
+    scala-compiler:
+      lang: scala/unmangled
+      target: "@scala//:scala-compiler"
+    scala-library:
+      lang: scala/unmangled
+      target: "@scala//:scala-library"
+    scala-reflect:
+      lang: scala/unmangled
+      target: "@scala//:scala-reflect"
+  
+  org.scala-lang.modules:
+    scala-parser-combinators:
+      lang: scala
+      target: "@scala//:scala-parser-combinators"
+    scala-xml:
+      lang: scala
+      target: "@scala//:scala-xml"

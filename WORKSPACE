@@ -1,9 +1,4 @@
 
-
-load("//third_party/maven_deps:generate_workspace.bzl", "generated_maven_jars")
-generated_maven_jars()
-
-
 rules_scala_version="5cdae2f034581a05e23c3473613b409de5978833" # update this as needed
 
 http_archive(
@@ -15,3 +10,7 @@ http_archive(
 
 load("@io_bazel_rules_scala//scala:scala.bzl", "scala_repositories")
 scala_repositories()
+
+# See dependencies.yaml for info about this
+load("//3rdparty:workspace.bzl", "maven_dependencies")
+maven_dependencies()
