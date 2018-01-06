@@ -21,9 +21,10 @@ options:
 
 dependencies:
   com.twitter.finatra:
-    finatra-http_2.11:
+    finatra:
       version: "2.1.6"
       lang: java
+      modules: [http_2.11]
 
 replacements:
   org.scala-lang:
