@@ -24,11 +24,6 @@ dependencies:
     finatra-http_2.11:
       version: "2.1.6"
       lang: java
-  
-  com.lihaoyi:
-    ammonite_2.11.11:
-      version: "1.0.3"
-      lang: java
 
 replacements:
   org.scala-lang:
