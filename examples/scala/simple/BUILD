@@ -16,17 +16,10 @@ scala_binary(
     ]
 )
 
-# Note: This doesn't work when run with "bazel run".
-# To execute it use "bazel build" and run the binary from bazel-bin.
-# Hopefully the need for this will go away with https://github.com/bazelbuild/bazel/issues/1394
-scala_binary(
+scala_repl(
     name = "repl",
-    main_class = "ammonite.Main",
     visibility = ["//visibility:public"],
     deps = [
         "//examples/scala/simple/src/main/scala/jpm",
-        "@com_lihaoyi_ammonite_2_11_11//jar",
-        "@scala//:scala-compiler",
-        "@scala//:scala-xml",
     ]
 )
