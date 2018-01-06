@@ -14,9 +14,7 @@ java_library(
 java_library(
     name = "base",
     exports = [
-        "//external:jar/com/twitter/common/base"
-    ],
-    runtime_deps = [
+        "//external:jar/com/twitter/common/base",
         ":util_system_mocks"
     ],
     visibility = [
@@ -53,9 +51,7 @@ java_library(
 java_library(
     name = "metrics",
     exports = [
-        "//external:jar/com/twitter/common/metrics"
-    ],
-    runtime_deps = [
+        "//external:jar/com/twitter/common/metrics",
         ":base",
         ":quantity",
         ":stats_util",
@@ -71,9 +67,7 @@ java_library(
 java_library(
     name = "quantity",
     exports = [
-        "//external:jar/com/twitter/common/quantity"
-    ],
-    runtime_deps = [
+        "//external:jar/com/twitter/common/quantity",
         ":collections"
     ],
     visibility = [
@@ -98,9 +92,7 @@ java_library(
 java_library(
     name = "stat_registry",
     exports = [
-        "//external:jar/com/twitter/common/stat_registry"
-    ],
-    runtime_deps = [
+        "//external:jar/com/twitter/common/stat_registry",
         ":stat"
     ],
     visibility = [
@@ -113,9 +105,7 @@ java_library(
 java_library(
     name = "stats",
     exports = [
-        "//external:jar/com/twitter/common/stats"
-    ],
-    runtime_deps = [
+        "//external:jar/com/twitter/common/stats",
         ":application_action",
         ":stat_registry",
         ":stats_provider",
@@ -143,9 +133,7 @@ java_library(
 java_library(
     name = "stats_util",
     exports = [
-        "//external:jar/com/twitter/common/stats_util"
-    ],
-    runtime_deps = [
+        "//external:jar/com/twitter/common/stats_util",
         ":util"
     ],
     visibility = [
@@ -158,9 +146,7 @@ java_library(
 java_library(
     name = "util",
     exports = [
-        "//external:jar/com/twitter/common/util"
-    ],
-    runtime_deps = [
+        "//external:jar/com/twitter/common/util",
         ":jdk_logging",
         ":stats"
     ],

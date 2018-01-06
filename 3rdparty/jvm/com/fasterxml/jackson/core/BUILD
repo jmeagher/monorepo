@@ -26,9 +26,7 @@ java_library(
 java_library(
     name = "jackson_databind",
     exports = [
-        "//external:jar/com/fasterxml/jackson/core/jackson_databind"
-    ],
-    runtime_deps = [
+        "//external:jar/com/fasterxml/jackson/core/jackson_databind",
         ":jackson_annotations",
         ":jackson_core"
     ],

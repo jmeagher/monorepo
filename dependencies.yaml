@@ -17,7 +17,6 @@ options:
     - id: "maventwitter"
       type: "default"
       url: http://maven.twttr.com/
-  transitivity: runtime_deps
   versionConflictPolicy: highest
 
 dependencies:

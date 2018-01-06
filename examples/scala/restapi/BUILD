@@ -1,6 +1,6 @@
 scala_binary(
     name = "scala_rest",
-    main_class = "jpm.restapi.Server",
+    main_class = "jpm.restapi.RestServerMain",
     visibility = ["//visibility:public"],
     deps = [
         "//examples/scala/restapi/src/main/scala/jpm/restapi",
