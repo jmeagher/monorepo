@@ -3,7 +3,7 @@ scala_binary(
     main_class = "jpm.Jpm",
     visibility = ["//visibility:public"],
     deps = [
-        "//examples/scala/src/main/scala/jpm",
+        "//examples/scala/simple/src/main/scala/jpm",
     ]
 )
 
@@ -12,7 +12,7 @@ scala_binary(
     main_class = "simple.Simple",
     visibility = ["//visibility:public"],
     deps = [
-        "//examples/scala/src/main/scala/simple",
+        "//examples/scala/simple/src/main/scala/simple",
     ]
 )
 
@@ -24,8 +24,8 @@ scala_binary(
     main_class = "ammonite.Main",
     visibility = ["//visibility:public"],
     deps = [
-        "//examples/scala/src/main/scala/jpm",
-        "//third_party/maven_deps:com_lihaoyi_ammonite_2_11_11",
+        "//examples/scala/simple/src/main/scala/jpm",
+        "@com_lihaoyi_ammonite_2_11_11//jar",
         "@scala//:scala-compiler",
         "@scala//:scala-xml",
     ]
