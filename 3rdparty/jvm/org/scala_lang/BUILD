@@ -34,15 +34,3 @@ scala_library(
 )
 
 
-
-java_library(
-    name = "scalap",
-    exports = [
-        "//external:jar/org/scala_lang/scalap"
-    ],
-    visibility = [
-        "//visibility:public"
-    ]
-)
-
-
