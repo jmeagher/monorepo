@@ -14,17 +14,19 @@ options:
     - id: "mavencentral"
       type: "default"
       url: https://repo.maven.apache.org/maven2/
-    - id: "maventwitter"
-      type: "default"
-      url: http://maven.twttr.com/
   versionConflictPolicy: highest
 
 dependencies:
-  com.twitter.finatra:
-    finatra:
-      version: "2.1.6"
+      
+  com.typesafe.akka:
+    akka:
+      version: "2.5.8"
       lang: java
-      modules: [http_2.11]
+      modules: [actor_2.11]
+    akka:
+      version: "10.0.11"
+      lang: java
+      modules: [http_2.11, http-testkit_2.11, http-spray-json_2.11]
 
 replacements:
   org.scala-lang:
@@ -39,9 +41,6 @@ replacements:
       target: "@scala//:scala-reflect"
   
   org.scala-lang.modules:
-    scala-parser-combinators:
-      lang: scala
-      target: "@scala//:scala-parser-combinators"
     scala-xml:
       lang: scala
       target: "@scala//:scala-xml"
