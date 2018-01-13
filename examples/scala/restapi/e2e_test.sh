@@ -1,5 +1,7 @@
 #! /bin/sh
 
+set -euo pipefail
+
 finish() {
     echo "Stopping the server and returning $1"
     echo "Finish status: $2"
