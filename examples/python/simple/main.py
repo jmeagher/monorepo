@@ -1,4 +1,4 @@
-from jpm import jpm
+from jpm import jpmlib
 
-print jpm.getIt()
+print jpmlib.getIt()
 

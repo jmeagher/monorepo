@@ -2,12 +2,13 @@ package(default_visibility = ["//visibility:public"])
 
 py_library(
     name = "jpm",
-    srcs = ["jpm.py", "__init__.py"],
+    srcs = ["jpmlib.py", "__init__.py"],
+    imports = [".."],
 )
 
 py_test(
     name = "jpm_test",
-    srcs = ["jpm_test.py", "__init__.py"],
+    srcs = ["test/jpm_test.py"],
     deps = [":jpm"],
     size = "small",
 )

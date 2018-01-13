@@ -22,3 +22,8 @@ toolchain(
     toolchain = "strict_scala_toolchain_impl",
     visibility = ["//visibility:public"]
 )
+
+filegroup(
+    name = "srcs",
+    srcs = ["prelude_bazel"],
+)
