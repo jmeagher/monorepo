@@ -1,4 +1,6 @@
-#! /bin/sh
+#! /bin/bash
+
+set -euo pipefail
 
 finish() {
     echo "Stopping the server and returning $1"

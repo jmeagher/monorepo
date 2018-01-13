@@ -42,5 +42,6 @@ before_install:
 script:
   - bazel test //...
   - bazel build //...
-  - ./examples/scala/restapi/e2e_test.sh
+  - ./test_e2e.sh
+  
 
