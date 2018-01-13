@@ -26,7 +26,7 @@ for R in $(seq 10) ; do
    fi
 done
 
-if [ "$SUCCESS" == false ] ; then
+if [ "$SUCCESS" = "false" ] ; then
   finish 1 "Server health check did not succeed quickly enough"
 fi
 
