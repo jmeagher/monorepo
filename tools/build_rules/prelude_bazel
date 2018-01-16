@@ -4,3 +4,9 @@ load("@io_bazel_rules_scala//scala:scala.bzl", "scala_binary", "scala_library", 
 load("@io_bazel_rules_docker//container:container.bzl",
      "container_image",
      )
+
+# Setup docker test support
+load(
+    "@io_bazel_rules_docker//contrib:test.bzl",
+    "container_test",
+)

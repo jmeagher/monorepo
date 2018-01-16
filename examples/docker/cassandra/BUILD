@@ -11,3 +11,12 @@ container_image(
     name = "cassandra_test",
     base = "@cassandra3//image",
 )
+
+exports_files(glob(["*.yaml"]))
+
+container_test(
+    name = "cassandra_image_test",
+    configs = [":validation-tests.yaml"],
+    image = "@cassandra3//image",
+    size = "small",
+)
