@@ -1,0 +1,20 @@
+schemaVersion: "2.0.0"
+
+# Example test to verify the final executable works when run in docker
+
+
+commandTests:
+  - name: "executable does what it should"
+    command: "/usr/bin/python"
+    args: ["/app/examples/python/simple/main_docker.binary"]
+    expectedOutput: ["1"]
+
+fileExistenceTests:
+  - name: 'binary exists'
+    path: '/app/examples/python/simple/main_docker.binary'
+    shouldExist: true
+    permissions: 'Lrwxrwxrwx'
+
+metadataTest:
+  entrypoint: ["/usr/bin/python", "/app/examples/python/simple/main_docker.binary"]
+  workdir: ["/app"]

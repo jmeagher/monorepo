@@ -43,10 +43,12 @@ trait Service {
   val routes = {
     logRequestResult("akka-http-microservice") {
       pathSingleSlash { get { complete {
+        logger.debug("Hello")
         "Hello World!"
       } } } ~
       pathPrefix("hi") { parameters('name.?) { name => complete {
         val theName = name.getOrElse("unnamed")
+        logger.debug(s"Hi $theName")
         s"Hello $theName"
       } } }
     }
@@ -58,8 +60,12 @@ object RestServerMain extends App with Service {
   override implicit val executor = system.dispatcher
   override implicit val materializer = ActorMaterializer()
 
-  override val config = ConfigFactory.load()
+  override val config = ConfigFactory.load("application.conf")
   override val logger = Logging(system, getClass)
 
-  Http().bindAndHandle(routes, "localhost", 8080)
+  println("Server startup")
+  logger.debug("Server startup")
+  Http().bindAndHandle(routes, "0.0.0.0", 8080)
+  println("Server stopping")
+  logger.debug("Server stopping")
 }
