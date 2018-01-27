@@ -25,5 +25,8 @@ toolchain(
 
 filegroup(
     name = "srcs",
-    srcs = ["prelude_bazel"],
+    srcs = [
+        "prelude_bazel",
+        "rules_loader.bzl",
+    ],
 )

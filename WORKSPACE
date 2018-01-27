@@ -1,19 +1,19 @@
 workspace(name="jmeagher_monorepo")
 
 # Settings to check and update regularly
-rules_scala_version     = "e88c689ec8e581cf6085e89676e427a4ab654498"
-rules_docker_version    = "8aeab63328a82fdb8e8eb12f677a4e5ce6b183b1"
-rules_go_version        = "a390e7f7eac912f6e67dc54acf67aa974d05f9c3"
-rules_python_version    = "73a154a181a53ee9e021668918f8a5bfacbf3b43"
-rules_rust_version      = "3ad4922995627744e0f968d87850da245b0b46fe"
+rules_to_load = [
+    ("scala",    "7522c866450cf7810eda443e91ff44d2a2286ba1", "bazelbuild"),
+    ("docker",   "8aeab63328a82fdb8e8eb12f677a4e5ce6b183b1", "bazelbuild"),
+    ("go",       "a390e7f7eac912f6e67dc54acf67aa974d05f9c3", "bazelbuild"),
+    ("python",   "73a154a181a53ee9e021668918f8a5bfacbf3b43", "bazelbuild"),
+    ("rust",     "3ad4922995627744e0f968d87850da245b0b46fe", "bazelbuild"),
+]
 
-# Setup scala with the custom toolchain
-http_archive(
-             name = "io_bazel_rules_scala",
-             url = "https://github.com/jmeagher/rules_scala/archive/%s.zip"%rules_scala_version,
-             type = "zip",
-             strip_prefix= "rules_scala-%s" % rules_scala_version
-             )
+# Load all the base rules
+load("//tools/build_rules:rules_loader.bzl", "load_build_rules")
+load_build_rules(rules_to_load)
+
+# Scala setup
 load("@io_bazel_rules_scala//scala:scala.bzl", "scala_repositories")
 scala_repositories()
 load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_register_toolchains")
@@ -26,12 +26,6 @@ maven_dependencies()
 
 
 # Go support (used for docker testing)
-http_archive(
-             name = "io_bazel_rules_go",
-             url = "https://github.com/bazelbuild/rules_go/archive/%s.zip"%rules_go_version,
-             type = "zip",
-             strip_prefix= "rules_go-%s" % rules_go_version
-             )
 load("@io_bazel_rules_go//go:def.bzl",
      "go_rules_dependencies", "go_register_toolchains")
 go_rules_dependencies()
@@ -39,12 +33,6 @@ go_register_toolchains()
 
 
 # Setup docker support
-http_archive(
-             name = "io_bazel_rules_docker",
-             url = "https://github.com/bazelbuild/rules_docker/archive/%s.zip"%rules_docker_version,
-             type = "zip",
-             strip_prefix= "rules_docker-%s" % rules_docker_version
-             )
 load(
     "@io_bazel_rules_docker//container:container.bzl",
     "container_pull",
@@ -67,12 +55,6 @@ _scala_image_repos()
 
 
 # Expanded python support for pip import capability
-http_archive(
-             name = "io_bazel_rules_python",
-             url = "https://github.com/bazelbuild/rules_python/archive/%s.zip"%rules_python_version,
-             type = "zip",
-             strip_prefix= "rules_python-%s" % rules_python_version
-             )
 load("@io_bazel_rules_python//python:pip.bzl", "pip_repositories", "pip_import")
 pip_repositories()
 
@@ -85,12 +67,6 @@ pip_install()
 
 
 # Rust support
-http_archive(
-             name = "io_bazel_rules_rust",
-             url = "https://github.com/bazelbuild/rules_rust/archive/%s.zip"%rules_rust_version,
-             type = "zip",
-             strip_prefix= "rules_rust-%s" % rules_rust_version
-             )
 load("@io_bazel_rules_rust//rust:repositories.bzl", "rust_repositories")
 rust_repositories()
 
