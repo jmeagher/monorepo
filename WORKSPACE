@@ -5,6 +5,7 @@ rules_scala_version     = "e88c689ec8e581cf6085e89676e427a4ab654498"
 rules_docker_version    = "8aeab63328a82fdb8e8eb12f677a4e5ce6b183b1"
 rules_go_version        = "a390e7f7eac912f6e67dc54acf67aa974d05f9c3"
 rules_python_version    = "73a154a181a53ee9e021668918f8a5bfacbf3b43"
+rules_rust_version      = "3ad4922995627744e0f968d87850da245b0b46fe"
 
 # Setup scala with the custom toolchain
 http_archive(
@@ -81,6 +82,18 @@ pip_import(
 )
 load("@my_python_deps//:requirements.bzl", "pip_install")
 pip_install()
+
+
+# Rust support
+http_archive(
+             name = "io_bazel_rules_rust",
+             url = "https://github.com/bazelbuild/rules_rust/archive/%s.zip"%rules_rust_version,
+             type = "zip",
+             strip_prefix= "rules_rust-%s" % rules_rust_version
+             )
+load("@io_bazel_rules_rust//rust:repositories.bzl", "rust_repositories")
+rust_repositories()
+
 
 # Load external docker containers
 
