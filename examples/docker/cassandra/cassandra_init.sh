@@ -1,5 +1,5 @@
 #! /bin/bash
-exec > >(tee -i /cassandra-init.log)
+exec > >(tee -i /cassandra_init.log)
 exec 2>&1
 
 set -xeuo pipefail
@@ -10,7 +10,7 @@ if ls /*.cql ; then
 
   while ls /*.cql.to_run ; do
     echo "Sleeping a little"
-    sleep 10s
+    sleep 2s
     for F in /*.cql.to_run ; do
       echo "Trying to run $F"
       cql="${F%.*}"
