@@ -22,20 +22,11 @@ import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.math._
 import spray.json.DefaultJsonProtocol
 
-
-// class HelloWorldController extends Controller {
-
-//   get("/hi") { request: Request =>
-//     info("hi")
-//     "Hello " + request.params.getOrElse("name", "unnamed")
-//   }
-// }
-
-
 trait Service {
   implicit val system: ActorSystem
   implicit def executor: ExecutionContextExecutor
   implicit val materializer: Materializer
+  import GreetingJsonSupport._
 
   def config: Config
   val logger: LoggingAdapter
@@ -50,6 +41,9 @@ trait Service {
         val theName = name.getOrElse("unnamed")
         logger.debug(s"Hi $theName")
         s"Hello $theName"
+      } } } ~
+      pathPrefix("greeting") { post { entity(as[GreetingRequest]) { greetingRequest =>
+        complete { GreetingResponse(s"Greetings of type ${greetingRequest.greeting} for ${greetingRequest.name}")}
       } } }
     }
   }
