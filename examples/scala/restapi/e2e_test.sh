@@ -42,5 +42,10 @@ if [ "Hello foo" != "$(curl -s localhost:8080/hi?name=foo)" ] ; then
   finish 1 "Param test failed"
 fi
 
+echo "Json test"
+if [ "{\"fullGreeting\":\"Greetings of type hello for test\"}" != "$(curl -s -H "Content-Type: application/json" localhost:8080/greeting -d '{"greeting": "hello", "name": "test"}')" ] ; then
+  finish 1 "Json test failed"
+fi
+
 
 finish 0 "Test looks successful"
