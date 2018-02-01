@@ -7,6 +7,7 @@ scala_toolchain(
         "-unchecked",
         "-deprecation",
         "-Xfuture",
+        "-Xlint",
         "-Yno-adapted-args",
         "-Ywarn-dead-code",
         "-Ywarn-numeric-widen",
@@ -20,7 +21,7 @@ toolchain(
     name = "strict_scala_toolchain",
     toolchain_type = "@io_bazel_rules_scala//scala:toolchain_type",
     toolchain = "strict_scala_toolchain_impl",
-    visibility = ["//visibility:public"]
+    visibility = ["//visibility:public"],
 )
 
 filegroup(
