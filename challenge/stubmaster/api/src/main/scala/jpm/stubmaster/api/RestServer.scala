@@ -1,7 +1,4 @@
-package jpm.restapi
-
-// Mostly based on https://github.com/theiterators/akka-http-microservice
-// and https://github.com/akka/akka-http/blob/master/akka-http-tests/src/main/java/akka/http/javadsl/server/examples/petstore/PetStoreExample.java
+package jpm.stubmaster.api
 
 import akka.actor.ActorSystem
 import akka.event.{LoggingAdapter, Logging}
@@ -11,35 +8,33 @@ import akka.stream.{ActorMaterializer, Materializer}
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import scala.concurrent.ExecutionContextExecutor
+import jpm.stubmaster.model.Venue
+
 
 trait Service {
   implicit val system: ActorSystem
   implicit def executor: ExecutionContextExecutor
   implicit val materializer: Materializer
-  import GreetingJsonSupport._
+
+  import jpm.stubmaster.model.ModelJsonSupport._
 
   def config: Config
   val logger: LoggingAdapter
 
   val routes = {
-    logRequestResult("akka-http-microservice") {
+    logRequestResult("stubmaster-api") {
       pathSingleSlash { get { complete {
-        logger.debug("Hello")
+        // Eventually get rid of this
         "Hello World!"
       } } } ~
-      pathPrefix("hi") { parameters('name.?) { name => complete {
-        val theName = name.getOrElse("unnamed")
-        logger.debug(s"Hi $theName")
-        s"Hello $theName"
-      } } } ~
-      pathPrefix("greeting") { post { entity(as[GreetingRequest]) { greetingRequest =>
-        complete { GreetingResponse(s"Greetings of type ${greetingRequest.greeting} for ${greetingRequest.name}")}
-      } } }
+      pathPrefix("venue") {
+        complete(Seq[Venue]())
+      }
     }
   }
 }
 
-object RestServerMain extends App with Service {
+object ApiServerMain extends App with Service {
   override implicit val system = ActorSystem()
   override implicit val executor = system.dispatcher
   override implicit val materializer = ActorMaterializer()

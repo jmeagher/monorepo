@@ -13,6 +13,9 @@ scala_toolchain(
         "-Ywarn-numeric-widen",
         "-Ywarn-value-discard",
         "-Ywarn-unused",
+        "-Ywarn-unused-import",
+        "-Ywarn-infer-any",
+        "-Ywarn-inaccessible",
     ],
     visibility = ["//visibility:public"],
 )
