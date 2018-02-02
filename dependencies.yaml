@@ -28,6 +28,12 @@ dependencies:
       lang: java
       modules: [http_2.11, http-testkit_2.11, http-spray-json_2.11]
 
+  com.datastax.cassandra:
+    cassandra:
+      version: "3.4.0"
+      lang: java
+      modules: [driver-core]
+
 replacements:
   org.scala-lang:
     scala-compiler:
