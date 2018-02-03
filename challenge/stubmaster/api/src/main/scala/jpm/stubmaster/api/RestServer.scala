@@ -7,6 +7,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.pattern.ask
 import akka.stream.{ActorMaterializer, Materializer}
 import akka.util.Timeout
+import com.datastax.driver.core.Session
 import com.typesafe.config.{Config, ConfigFactory}
 import scala.concurrent.ExecutionContextExecutor
 
@@ -52,7 +53,8 @@ object ApiServerMain extends App with Service {
   override val config = ConfigFactory.load("application.conf")
   override val logger = Logging(system, getClass)
 
-  override def venues = null
+  val cassandra: Session = null
+  override def venues = system.actorOf(VenueAccess.props(cassandra))
 
   println("Server startup")
   logger.debug("Server startup")

@@ -1,7 +1,7 @@
 package jpm.stubmaster.repository
 
 
-import akka.actor.{Actor, ActorLogging}
+import akka.actor.{Actor, ActorLogging, Props}
 import akka.pattern.pipe
 import com.datastax.driver.core.Session
 import scala.concurrent.Future
@@ -9,6 +9,7 @@ import scala.concurrent.Future
 import jpm.stubmaster.model.Venue
 
 object VenueAccess {
+  def props(cassandra: Session) = Props(new VenueAccess(cassandra))
   case class VenueList()
   case class GetVenue(uuid: String)
 
