@@ -4,6 +4,7 @@ package jpm.stubmaster.repository
 import akka.actor.{Actor, ActorLogging, Props}
 import akka.pattern.pipe
 import com.datastax.driver.core.Session
+import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
 import jpm.stubmaster.model.Venue
@@ -19,6 +20,7 @@ object VenueAccess {
 class VenueAccess(cassandra: Session) extends Actor with ActorLogging {
   import VenueAccess._
   implicit val ec = context.dispatcher
+  val table = "stubmaster.venues"
 
   override def receive: Receive = {
     case VenueList =>
@@ -32,7 +34,18 @@ class VenueAccess(cassandra: Session) extends Actor with ActorLogging {
   }
 
   def venues(): Future[Seq[Venue]] = {
-    Future{Seq()}
+    Future{
+      val rs = cassandra.execute(s"SELECT uid, name, city, deleted from $table")
+      rs.asScala.flatMap { row =>
+        // Deleted check, ignore deleted venues
+        row.isNull(3) match {
+          case true => {
+            Some(Venue(row.getUUID(0).toString, row.getString(1), row.getString(2)))
+          }
+          case false => None
+        }
+      }.toSeq
+    }
   }
 
   def venue(uuid: String): Future[Option[Venue]] = {
