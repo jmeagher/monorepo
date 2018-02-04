@@ -13,6 +13,8 @@ if [ ! -f WORKSPACE ] ; then
   finish 1 "Error, run this from the top level monorepo folder"
 fi
 
+docker ps | grep monorepo-test-cassandra || ./challenge/stubmaster/services/init_services.sh
+
 echo "Starting server"
 bazel run //challenge/stubmaster/api:stubmaster_api &
 
@@ -33,8 +35,8 @@ if [ "$SUCCESS" = "false" ] ; then
 fi
 
 echo "Venue test"
-if [ "[]" != "$(curl -s localhost:8080/venue)" ] ; then
-  finish 1 "Venue test failed"
+if [ '[{"uuid":"8e4dd23a-058c-11e8-ba89-0ed5f89f718b","name":"Test Venue","city":"Test City"}]' != "$(curl -s localhost:8080/venue)" ] ; then
+  finish 1 "Venue test failed, result: $(curl -s localhost:8080/venue)"
 fi
 
 finish 0 "Test looks successful"

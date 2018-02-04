@@ -33,6 +33,13 @@ dependencies:
       version: "3.4.0"
       lang: java
       modules: [driver-core]
+  
+  io.netty:
+    # Needed due to some of the imports missing from cassandra driver
+    netty:
+      version: "4.0.47.Final"
+      lang: java
+      modules: [all]
 
 replacements:
   org.scala-lang:

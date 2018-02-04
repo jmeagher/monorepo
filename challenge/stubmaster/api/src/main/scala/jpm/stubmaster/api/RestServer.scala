@@ -7,7 +7,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.pattern.ask
 import akka.stream.{ActorMaterializer, Materializer}
 import akka.util.Timeout
-import com.datastax.driver.core.Session
+import com.datastax.driver.core.{Cluster, Session}
 import com.typesafe.config.{Config, ConfigFactory}
 import scala.concurrent.ExecutionContextExecutor
 
@@ -37,7 +37,7 @@ trait Service {
       } } } ~
       pathPrefix("venue") {
         complete {
-          println(s"Here are the venues:  $venues")
+          logger.info(s"Here are the venues:  $venues")
           (venues ? VenueAccess.VenueList).mapTo[Seq[Venue]]
         }
       }
@@ -53,7 +53,13 @@ object ApiServerMain extends App with Service {
   override val config = ConfigFactory.load("application.conf")
   override val logger = Logging(system, getClass)
 
-  val cassandra: Session = null
+  val cassandra: Session = new Cluster
+    .Builder()
+    .addContactPoints("localhost")
+    .withPort(9042)
+    .build()
+    .connect()
+
   override def venues = system.actorOf(VenueAccess.props(cassandra))
 
   println("Server startup")
