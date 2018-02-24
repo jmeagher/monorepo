@@ -42,6 +42,9 @@ before_install:
   - cat .bazelrc.travis >> .bazelrc
 
 script:
+  # Quick test for only things that have changed, include a simple test case just in case no tests that need to be rerun are found
+  - bazel test $(bazel query "kind(test, rdeps(//...,set($(git diff --name-only $TRAVIS_COMMIT_RANGE | xargs -L1 bazel query))))") //examples/python/simple/jpm:jpm_test
+  # Full test, build, and e2e test
   - bazel test //...
   - bazel build //...
   - ./test_e2e.sh
