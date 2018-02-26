@@ -11,7 +11,6 @@ scala_toolchain(
         "-Yno-adapted-args",
         "-Ywarn-dead-code",
         "-Ywarn-numeric-widen",
-        "-Ywarn-value-discard",
         "-Ywarn-unused",
         "-Ywarn-unused-import",
         "-Ywarn-infer-any",
@@ -29,8 +28,5 @@ toolchain(
 
 filegroup(
     name = "srcs",
-    srcs = [
-        "prelude_bazel",
-        "rules_loader.bzl",
-    ],
+    srcs = glob(["*"]),
 )
