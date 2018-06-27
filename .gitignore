@@ -1,3 +1,4 @@
+bazel-app
 bazel-bin
 bazel-genfiles
 bazel-monorepo
