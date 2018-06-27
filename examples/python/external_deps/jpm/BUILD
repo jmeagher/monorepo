@@ -5,6 +5,7 @@ py_library(
     srcs = ["numerics.py", "__init__.py"],
     deps = [
         requirement("pandas"),
+        requirement("six"),
     ],
     imports = [".."],
 )

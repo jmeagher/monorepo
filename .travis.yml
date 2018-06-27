@@ -14,8 +14,8 @@ os:
 
 env:
   # Bazel version to use for testing
-  - V=0.11.1
-  - V=0.12.0
+  - V=0.14.1
+  - V=0.15.0
 
 before_install:
   - |
@@ -47,5 +47,3 @@ script:
   - bazel test //...
   - bazel build //...
   - ./test_e2e.sh
-  
-
