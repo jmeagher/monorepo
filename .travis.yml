@@ -47,7 +47,3 @@ script:
   - bazel test //...
   - bazel build //...
   - ./test_e2e.sh
-  - docker build -t bazbuild
-  - docker run -ti -v `pwd`:/app -v /var/run/docker.sock:/var/run/docker.sock bazbuild bash -c 'bazel build //... && bazel test //...'
-  
-
