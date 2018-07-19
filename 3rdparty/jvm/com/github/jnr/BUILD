@@ -5,7 +5,19 @@ java_library(
         "//external:jar/com/github/jnr/jffi"
     ],
     visibility = [
-        "//visibility:public"
+        "//3rdparty/jvm:__subpackages__"
+    ]
+)
+
+
+
+java_library(
+    name = "jffi_jar_native",
+    exports = [
+        "//external:jar/com/github/jnr/jffi_jar_native"
+    ],
+    visibility = [
+        "//3rdparty/jvm:__subpackages__"
     ]
 )
 
@@ -17,7 +29,7 @@ java_library(
         "//external:jar/com/github/jnr/jnr_constants"
     ],
     visibility = [
-        "//visibility:public"
+        "//3rdparty/jvm:__subpackages__"
     ]
 )
 
@@ -33,10 +45,11 @@ java_library(
         "//3rdparty/jvm/org/ow2/asm:asm_util",
         "//external:jar/com/github/jnr/jnr_ffi",
         ":jffi",
+        ":jffi_jar_native",
         ":jnr_x86asm"
     ],
     visibility = [
-        "//visibility:public"
+        "//3rdparty/jvm:__subpackages__"
     ]
 )
 
@@ -46,10 +59,11 @@ java_library(
     name = "jnr_posix",
     exports = [
         "//external:jar/com/github/jnr/jnr_posix",
-        ":jnr_constants"
+        ":jnr_constants",
+        ":jnr_ffi"
     ],
     visibility = [
-        "//visibility:public"
+        "//3rdparty/jvm:__subpackages__"
     ]
 )
 
@@ -61,7 +75,7 @@ java_library(
         "//external:jar/com/github/jnr/jnr_x86asm"
     ],
     visibility = [
-        "//visibility:public"
+        "//3rdparty/jvm:__subpackages__"
     ]
 )
 

@@ -11,10 +11,3 @@ py_image(
     deps = [":main"],
     main = "main.py",
 )
-
-container_test(
-    name = "main_test",
-    configs = [":docker_validation_test.yaml"],
-    image = ":main_docker",
-    size = "small",
-)

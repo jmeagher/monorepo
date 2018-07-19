@@ -14,12 +14,3 @@ container_image(
     files = glob(['*.sh']),
     visibility = ["//visibility:public"],
 )
-
-exports_files(glob(["*.yaml"]))
-
-container_test(
-    name = "cassandra_image_test",
-    configs = [":validation-tests.yaml"],
-    image = "@cassandra3//image",
-    size = "small",
-)
