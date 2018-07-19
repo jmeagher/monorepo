@@ -1,23 +1,29 @@
 load("@io_bazel_rules_scala//scala:scala_import.bzl", "scala_import")
-java_library(
-    name = "scala_java8_compat_2_11",
+scala_import(
+    name = "scala_java8_compat",
     exports = [
+        "//3rdparty/jvm/org/scala_lang:scala_library"
+    ],
+    jars = [
         "//external:jar/org/scala_lang/modules/scala_java8_compat_2_11"
     ],
     visibility = [
-        "//visibility:public"
+        "//3rdparty/jvm:__subpackages__"
     ]
 )
 
 
 
-java_library(
-    name = "scala_parser_combinators_2_11",
+scala_import(
+    name = "scala_parser_combinators",
     exports = [
+        "//3rdparty/jvm/org/scala_lang:scala_library"
+    ],
+    jars = [
         "//external:jar/org/scala_lang/modules/scala_parser_combinators_2_11"
     ],
     visibility = [
-        "//visibility:public"
+        "//3rdparty/jvm:__subpackages__"
     ]
 )
 
@@ -29,7 +35,7 @@ scala_library(
         "@scala//:scala-xml"
     ],
     visibility = [
-        "//visibility:public"
+        "//3rdparty/jvm:__subpackages__"
     ]
 )
 

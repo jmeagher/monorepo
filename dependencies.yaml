@@ -1,13 +1,13 @@
 # See https://github.com/johnynek/bazel-deps for help
 # To run this:
-# 1) checkout that next to this monorepo folder
+  # 1) checkout that next to this monorepo folder (note: currently using 13bef5b78a9fb8ea508ce5f0d43fee8295921a1f)
 # 2) in that folder run "bazel build src/scala/com/github/johnynek/bazel_deps:parseproject_deploy.jar"
 # 3) in this folder run "../bazel-deps/gen_maven_deps.sh generate -r `pwd` -s 3rdparty/workspace.bzl -d dependencies.yaml"
 #
 # Anytime this file changes those steps need to be rerun and the results validated.
 
 options:
-  languages: [ "java", "scala:2.11.11" ]
+  languages: [ "java", "scala:2.11.12" ]
   buildHeader:
     - load("@io_bazel_rules_scala//scala:scala_import.bzl", "scala_import")
   resolvers: 
@@ -15,6 +15,7 @@ options:
       type: "default"
       url: https://repo.maven.apache.org/maven2/
   versionConflictPolicy: highest
+  resolverType: coursier
 
 dependencies:
       

@@ -14,10 +14,11 @@ java_library(
 java_library(
     name = "netty_buffer",
     exports = [
-        "//external:jar/io/netty/netty_buffer"
+        "//external:jar/io/netty/netty_buffer",
+        ":netty_common"
     ],
     visibility = [
-        "//visibility:public"
+        "//3rdparty/jvm:__subpackages__"
     ]
 )
 
@@ -26,10 +27,23 @@ java_library(
 java_library(
     name = "netty_codec",
     exports = [
-        "//external:jar/io/netty/netty_codec"
+        "//external:jar/io/netty/netty_codec",
+        ":netty_transport"
     ],
     visibility = [
-        "//visibility:public"
+        "//3rdparty/jvm:__subpackages__"
+    ]
+)
+
+
+
+java_library(
+    name = "netty_common",
+    exports = [
+        "//external:jar/io/netty/netty_common"
+    ],
+    visibility = [
+        "//3rdparty/jvm:__subpackages__"
     ]
 )
 
@@ -44,7 +58,7 @@ java_library(
         ":netty_transport"
     ],
     visibility = [
-        "//visibility:public"
+        "//3rdparty/jvm:__subpackages__"
     ]
 )
 
@@ -53,10 +67,11 @@ java_library(
 java_library(
     name = "netty_transport",
     exports = [
-        "//external:jar/io/netty/netty_transport"
+        "//external:jar/io/netty/netty_transport",
+        ":netty_buffer"
     ],
     visibility = [
-        "//visibility:public"
+        "//3rdparty/jvm:__subpackages__"
     ]
 )
 

@@ -5,20 +5,24 @@ java_library(
         "//external:jar/com/typesafe/config"
     ],
     visibility = [
-        "//visibility:public"
+        "//3rdparty/jvm:__subpackages__"
     ]
 )
 
 
 
-java_library(
-    name = "ssl_config_core_2_11",
+scala_import(
+    name = "ssl_config_core",
     exports = [
-        "//3rdparty/jvm/org/scala_lang/modules:scala_parser_combinators_2_11",
+        "//3rdparty/jvm/org/scala_lang/modules:scala_parser_combinators",
+        "//3rdparty/jvm/org/scala_lang:scala_library",
+        ":config"
+    ],
+    jars = [
         "//external:jar/com/typesafe/ssl_config_core_2_11"
     ],
     visibility = [
-        "//visibility:public"
+        "//3rdparty/jvm:__subpackages__"
     ]
 )
 
