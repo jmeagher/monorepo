@@ -2,7 +2,7 @@ workspace(name="jmeagher_monorepo")
 
 # Settings to check and update regularly
 rules_to_load = [
-    ("scala",    "5e61d4e9899b362af8cd6f3bc3bbe6bccdbd0fa9", "bazelbuild"),
+    ("scala",    "6769652c4d6a01c46ebcba0eac3b7d0813e7e70f", "bazelbuild"),
     ("docker",   "ff0b6463a2c88b6d9f149c5308c94ddffc5c8b59", "bazelbuild"),
     ("go",       "f68dbfaa951d1fc90e45600212483ea06eee69b7", "bazelbuild"),
     ("python",   "8b5d0683a7d878b28fffe464779c8a53659fc645", "bazelbuild"),
