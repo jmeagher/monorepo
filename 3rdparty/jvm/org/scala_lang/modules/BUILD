@@ -32,7 +32,7 @@ scala_import(
 scala_library(
     name = "scala_xml",
     exports = [
-        "@scala//:scala-xml"
+        "//external:io_bazel_rules_scala/dependency/scala/scala_xml"
     ],
     visibility = [
         "//3rdparty/jvm:__subpackages__"

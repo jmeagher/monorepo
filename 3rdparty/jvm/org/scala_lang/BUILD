@@ -2,7 +2,7 @@ load("@io_bazel_rules_scala//scala:scala_import.bzl", "scala_import")
 scala_library(
     name = "scala_compiler",
     exports = [
-        "@scala//:scala-compiler"
+        "//external:io_bazel_rules_scala/dependency/scala/scala_compiler"
     ],
     visibility = [
         "//3rdparty/jvm:__subpackages__"
@@ -14,7 +14,7 @@ scala_library(
 scala_library(
     name = "scala_library",
     exports = [
-        "@scala//:scala-library"
+        "//external:io_bazel_rules_scala/dependency/scala/scala_library"
     ],
     visibility = [
         "//3rdparty/jvm:__subpackages__"
@@ -26,7 +26,7 @@ scala_library(
 scala_library(
     name = "scala_reflect",
     exports = [
-        "@scala//:scala-reflect"
+        "//external:io_bazel_rules_scala/dependency/scala/scala_reflect"
     ],
     visibility = [
         "//3rdparty/jvm:__subpackages__"
