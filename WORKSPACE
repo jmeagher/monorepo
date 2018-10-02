@@ -17,8 +17,7 @@ load_build_rules(rules_to_load)
 load("@io_bazel_rules_scala//scala:scala.bzl", "scala_repositories")
 scala_repositories()
 load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_register_toolchains")
-# register_toolchains("//tools/build_rules:strict_scala_toolchain")
-scala_register_toolchains()
+register_toolchains("//tools/build_rules:strict_scala_toolchain")
 
 # Setup importing maven based external dependencies
 # See dependencies.yaml for info about this
