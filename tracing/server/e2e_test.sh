@@ -16,7 +16,7 @@ if [ ! -f WORKSPACE ] ; then
 fi
 
 echo "Starting Flaky server"
-bazel run -- //tracing:flaky --flakepct=0.25 --port $PORT &
+bazel run -- //tracing/server:flaky --flakepct=0.25 --port $PORT &
 
 # Wait for the server to start
 SUCCESS=false
