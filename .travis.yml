@@ -16,6 +16,7 @@ env:
   # Bazel version to use for testing
   - V=0.16.1
   - V=0.17.2
+  - V=0.18.1
 
 before_install:
   - |
