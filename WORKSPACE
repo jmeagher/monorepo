@@ -25,12 +25,19 @@ load("//3rdparty:workspace.bzl", "maven_dependencies")
 maven_dependencies()
 
 
-# Go support (used for docker testing)
+# Go support
+http_archive(
+    name = "bazel_gazelle",
+    urls = ["https://github.com/bazelbuild/bazel-gazelle/archive/d005434308668f13b492ddc98c48c58331a0b595.zip"],
+    type = "zip",
+    strip_prefix= "bazel-gazelle-d005434308668f13b492ddc98c48c58331a0b595",
+)
 load("@io_bazel_rules_go//go:def.bzl",
      "go_rules_dependencies", "go_register_toolchains")
 go_rules_dependencies()
 go_register_toolchains()
-
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
+gazelle_dependencies()
 
 # Setup docker support
 load(
@@ -81,4 +88,12 @@ container_pull(
     # note: couldn't get digest version to work
     tag = "3.11.1",
     # digest = "sha256:cb506985b360983d774e6af46e9071c377af48b9d9be1a3ce7235c34d59a8c40",
+)
+
+
+# Load external golang repos
+go_repository(
+    name = "com_github_opentracing_opentracing_go",
+    importpath = "github.com/opentracing/opentracing-go",
+    commit = "6aa6febac7b98f836100ecaea478c04f30b6dbd0",
 )
