@@ -20,7 +20,7 @@ func main() {
 	listenPort := flag.Int("port", 8080, "port to listen on")
 	flag.Parse()
 
-	jaeger.JaegerInit("tracing_server")
+	jaeger.Init()
 
 	if *flakePct > 0.0 {
 		http.Handle("/", handlers.RandomSplitHandler(
