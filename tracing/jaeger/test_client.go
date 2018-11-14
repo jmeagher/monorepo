@@ -23,12 +23,16 @@ func main() {
 	time.Sleep(100 * time.Millisecond)
 
 	for i := 0; i < 30; i++ {
-		sp := opentracing.StartSpan(fmt.Sprintf("test_request_%d", i))
-		ext.SamplingPriority.Set(sp, 1)
-		ctx := opentracing.ContextWithSpan(context.Background(), sp)
-		doRequest(ctx)
-		sp.Finish()
+		doTest(i)
 	}
+}
+
+func doTest(testRun int) {
+	sp := opentracing.StartSpan(fmt.Sprintf("test_request_%d", testRun))
+	defer sp.Finish()
+	ext.SamplingPriority.Set(sp, 1)
+	ctx := opentracing.ContextWithSpan(context.Background(), sp)
+	doRequest(ctx)
 }
 
 func doRequest(context context.Context) {
@@ -39,23 +43,20 @@ func doRequest(context context.Context) {
 
 		// Transmit the span's TraceContext as HTTP headers on our
 		// outbound request.
-		fmt.Printf("Global tracer: %T\n", opentracing.GlobalTracer())
-		fmt.Printf("Client header1: %v\n", httpReq.Header)
 		opentracing.GlobalTracer().Inject(
 			span.Context(),
 			opentracing.HTTPHeaders,
 			opentracing.HTTPHeadersCarrier(httpReq.Header))
-		fmt.Printf("Client header2: %v\n", httpReq.Header)
 
 		sp := opentracing.StartSpan(
 			"client_call",
 			opentracing.ChildOf(span.Context()))
+		defer sp.Finish()
 		resp, err := httpClient.Do(httpReq)
-		sp.Finish()
-		span.Finish()
 
 		if err != nil {
 			log.Printf("Client error: %s", err.Error())
+			time.Sleep(10 * time.Millisecond)
 			return
 		}
 

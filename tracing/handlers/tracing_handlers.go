@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"net/http/httputil"
 
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
@@ -28,14 +27,11 @@ type openTracingHandler struct {
 
 func (f *openTracingHandler) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 	var request = req
-	fmt.Printf("Server header: %v\n", request.Header)
 	wireContext, err := opentracing.GlobalTracer().Extract(
 		opentracing.HTTPHeaders,
 		opentracing.HTTPHeadersCarrier(request.Header))
 	if err != nil {
 		log.Println("Global Tracer Extract Error: ", err)
-		dump, _ := httputil.DumpRequest(req, true)
-		log.Printf("Server request dump: %q", dump)
 	}
 
 	var serverSpan opentracing.Span
@@ -44,12 +40,18 @@ func (f *openTracingHandler) ServeHTTP(writer http.ResponseWriter, req *http.Req
 		serverSpan = opentracing.StartSpan(
 			f.spanName,
 			ext.RPCServerOption(wireContext))
+		defer serverSpan.Finish()
 		ctx := opentracing.ContextWithSpan(request.Context(), serverSpan)
 		request = request.WithContext(ctx)
+
+		opentracing.GlobalTracer().Inject(
+			serverSpan.Context(),
+			opentracing.HTTPHeaders,
+			opentracing.HTTPHeadersCarrier(request.Header))
+
 	} else {
 		log.Println("No wire context specified?")
 	}
 
 	f.wrapped.ServeHTTP(writer, request)
-	serverSpan.Finish()
 }
