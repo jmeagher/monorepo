@@ -3,7 +3,7 @@ go_binary(
     name = "flaky",
     srcs = ["flaky.go"],
     deps = [
-        "//tracing/handlers:common_handlers",
+        "//tracing/handlers:handlers",
         "//tracing/jaeger:jaeger_init",
     ],
 )

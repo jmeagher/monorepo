@@ -16,13 +16,17 @@ if [ ! -f WORKSPACE ] ; then
 fi
 
 echo "Starting Flaky server"
-bazel run -- //tracing/server:flaky --flakepct=0.25 --port $PORT &
+JAEGER_SERVICE_NAME=e2e_testing \
+  JAEGER_AGENT_HOST=localhost \
+  JAEGER_AGENT_PORT=14268 \
+  bazel run \
+    -- //tracing/server:flaky --flakepct=0.25 --port $PORT &
 
 # Wait for the server to start
 SUCCESS=false
-for r in $(seq 10) ; do
-   sleep 5s
-   if curl -s localhost:$PORT/ | grep "flake" ; then
+for r in $(seq 3) ; do
+   sleep 2s
+   if curl -H "uber-trace-id: a$RANDOM:1:0:0"  -s localhost:$PORT/ | grep "flake" ; then
      SUCCESS=true
      break
    else
@@ -38,7 +42,7 @@ echo "Check Flaky Percent"
 successes=0
 failures=0
 for r in $(seq 100) ; do
-  resp=$(curl -s localhost:$PORT | egrep -o '(false|true)' || echo FAIL )
+  resp=$(curl -H "uber-trace-id: a$RANDOM:1:0:0" -s localhost:$PORT | egrep -o '(false|true)' || echo FAIL )
   if [[ "$resp" == "true" ]] ; then
     successes=$((successes+1))
   elif [[ "$resp" == "false" ]] ; then

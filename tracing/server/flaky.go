@@ -20,18 +20,23 @@ func main() {
 	listenPort := flag.Int("port", 8080, "port to listen on")
 	flag.Parse()
 
-	jaeger.Init()
+	var closer, err = jaeger.Init()
+	if err != nil {
+		log.Fatal("Jaeger Init Fail: ", err)
+		return
+	}
+	defer closer.Close()
 
 	if *flakePct > 0.0 {
-		http.Handle("/", handlers.RandomSplitHandler(
+		http.Handle("/", handlers.GlobalOpenTracingHandler("maybe-flake", handlers.RandomSplitHandler(
 			float32(*flakePct),
-			jsonResponder("flake-ok", 200),
-			jsonResponder("flake-bad", 400)))
+			handlers.GlobalOpenTracingHandler("ok-handler", jsonResponder("flake-ok", 200)),
+			handlers.GlobalOpenTracingHandler("flake-handler", jsonResponder("flake-bad", 400)))))
 	} else {
-		http.Handle("/", jsonResponder("ok", 200))
+		http.Handle("/", handlers.GlobalOpenTracingHandler("always-ok", jsonResponder("ok", 200)))
 	}
 	fmt.Printf("Listening on port %d and will be %.1f percent flaky\n", *listenPort, 100*(*flakePct))
-	err := http.ListenAndServe(fmt.Sprintf(":%d", *listenPort), nil)
+	err = http.ListenAndServe(fmt.Sprintf(":%d", *listenPort), nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
