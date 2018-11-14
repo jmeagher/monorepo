@@ -97,3 +97,16 @@ go_repository(
     importpath = "github.com/opentracing/opentracing-go",
     commit = "6aa6febac7b98f836100ecaea478c04f30b6dbd0",
 )
+
+# go get github.com/scele/rules_go_dep/dep2bazel
+# cline the uber/jaeger-client-go project and from the top level of that run
+# dep2bazel -o ../monorepo/jaeger-go-deps.bzl  Gopkg.lock
+# Change the main function name in the generated .bzl file to jaeger_go_deps
+load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
+load("//:jaeger-go-deps.bzl", "jaeger_go_deps")
+jaeger_go_deps()
+go_repository(
+    name = "com_github_uber_jaeger_client_go",
+    importpath = "github.com/uber/jaeger-client-go",
+    commit = "1a782e2da844727691fef1757c72eb190c2909f0",
+)

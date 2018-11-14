@@ -7,7 +7,23 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 )
+
+// DelayHandler just delays, that's it
+func DelayHandler(delay time.Duration, handler http.Handler) http.Handler {
+	return &delayHandler{delay, handler}
+}
+
+type delayHandler struct {
+	delay   time.Duration
+	handler http.Handler
+}
+
+func (f *delayHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	time.Sleep(f.delay)
+	f.handler.ServeHTTP(w, r)
+}
 
 // StaticHandler to return a static bit of simple content
 func StaticHandler(text string, mimeType string, code int) http.Handler {

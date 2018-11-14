@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/opentracing/opentracing-go"
@@ -30,16 +31,26 @@ func (f *openTracingHandler) ServeHTTP(writer http.ResponseWriter, req *http.Req
 		opentracing.HTTPHeaders,
 		opentracing.HTTPHeadersCarrier(request.Header))
 	if err != nil {
-		// Do something here? Or ignore and just don't trace
+		log.Println("Global Tracer Extract Error: ", err)
 	}
 
+	var serverSpan opentracing.Span
+
 	if wireContext != nil {
-		serverSpan := opentracing.StartSpan(
+		serverSpan = opentracing.StartSpan(
 			f.spanName,
 			ext.RPCServerOption(wireContext))
 		defer serverSpan.Finish()
 		ctx := opentracing.ContextWithSpan(request.Context(), serverSpan)
 		request = request.WithContext(ctx)
+
+		opentracing.GlobalTracer().Inject(
+			serverSpan.Context(),
+			opentracing.HTTPHeaders,
+			opentracing.HTTPHeadersCarrier(request.Header))
+
+	} else {
+		log.Println("No wire context specified?")
 	}
 
 	f.wrapped.ServeHTTP(writer, request)
