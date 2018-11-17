@@ -90,6 +90,13 @@ container_pull(
     # digest = "sha256:cb506985b360983d774e6af46e9071c377af48b9d9be1a3ce7235c34d59a8c40",
 )
 
+container_pull(
+    name = "envoyproxy",
+    registry = "index.docker.io",
+    # Picked a recent build at random from https://hub.docker.com/r/envoyproxy/envoy-alpine/tags/
+    repository = "envoyproxy/envoy-alpine",
+    tag = "200b0e41641be46471c2ce3d230aae395fda7ded",
+)
 
 # Load external golang repos
 go_repository(
