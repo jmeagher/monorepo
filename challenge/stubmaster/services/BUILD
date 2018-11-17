@@ -3,3 +3,8 @@ container_image(
     base = "//examples/docker/cassandra:cassandra_single_node",
     files = glob(['*.cql', '*.csv']),
 )
+
+filegroup(
+    name = "srcs",
+    srcs = glob(["*"]),
+)

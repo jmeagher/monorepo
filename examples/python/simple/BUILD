@@ -11,3 +11,8 @@ py_image(
     deps = [":main"],
     main = "main.py",
 )
+
+filegroup(
+    name = "srcs",
+    srcs = glob(["*"]),
+)

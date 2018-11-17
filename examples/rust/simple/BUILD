@@ -9,3 +9,8 @@ rust_binary(
         "//examples/rust/simple/src:fibonacci",
     ],
 )
+
+filegroup(
+    name = "srcs",
+    srcs = glob(["*"]),
+)
