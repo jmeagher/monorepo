@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -14,6 +15,13 @@ import (
 )
 
 func main() {
+	port := flag.Int("port", 8080, "port to listen on")
+	host := flag.String("host", "localhost", "host to connect to")
+	flag.Parse()
+
+	url := fmt.Sprintf("http://%s:%d", *host, *port)
+	log.Printf("Using server URL: %v\n", url)
+
 	var closer, err = jaeger.Init()
 	if err != nil {
 		log.Fatal("Jaeger Init Fail: ", err)
@@ -23,23 +31,23 @@ func main() {
 	time.Sleep(100 * time.Millisecond)
 
 	for i := 0; i < 30; i++ {
-		doTest(i)
+		doTest(i, url)
 	}
 }
 
-func doTest(testRun int) {
+func doTest(testRun int, url string) {
 	sp := opentracing.StartSpan(fmt.Sprintf("test_request_%d", testRun))
 	defer sp.Finish()
 	ext.SamplingPriority.Set(sp, 1)
 	ctx := opentracing.ContextWithSpan(context.Background(), sp)
-	doRequest(ctx)
+	doRequest(ctx, url)
 }
 
-func doRequest(context context.Context) {
+func doRequest(context context.Context, url string) {
 	if span := opentracing.SpanFromContext(context); span != nil {
 
 		httpClient := &http.Client{}
-		httpReq, _ := http.NewRequest("GET", "http://localhost:18088/", nil)
+		httpReq, _ := http.NewRequest("GET", url, nil)
 
 		// Transmit the span's TraceContext as HTTP headers on our
 		// outbound request.
