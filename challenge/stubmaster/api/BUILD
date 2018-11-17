@@ -27,3 +27,8 @@ container_image(
         "8080",
     ],
 )
+
+filegroup(
+    name = "srcs",
+    srcs = glob(["*"]),
+)

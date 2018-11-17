@@ -24,7 +24,7 @@ func Init() (io.Closer, error) {
 		log.Printf("Could not initialize jaeger tracer: %s", err.Error())
 		return nil, err
 	}
-	log.Printf("JaegerInit, ServiceName: %s, reporter: %s", cfg.ServiceName, cfg.Reporter)
+	log.Printf("JaegerInit, ServiceName: %s", cfg.ServiceName)
 
 	opentracing.SetGlobalTracer(tracer)
 	return closer, nil

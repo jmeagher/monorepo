@@ -7,3 +7,8 @@ go_binary(
         "//tracing/jaeger:jaeger_init",
     ],
 )
+
+filegroup(
+    name = "srcs",
+    srcs = glob(["*"]),
+)
