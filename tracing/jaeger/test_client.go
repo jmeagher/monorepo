@@ -17,6 +17,7 @@ import (
 func main() {
 	port := flag.Int("port", 8080, "port to listen on")
 	host := flag.String("host", "localhost", "host to connect to")
+	requestCount := flag.Int("requests", 10, "number of test requests to make")
 	flag.Parse()
 
 	url := fmt.Sprintf("http://%s:%d", *host, *port)
@@ -30,15 +31,16 @@ func main() {
 	defer closer.Close()
 	time.Sleep(100 * time.Millisecond)
 
-	for i := 0; i < 30; i++ {
+	for i := 0; i < *requestCount; i++ {
 		doTest(i, url)
 	}
 }
 
 func doTest(testRun int, url string) {
-	sp := opentracing.StartSpan(fmt.Sprintf("test_request_%d", testRun))
+	sp := opentracing.StartSpan("test_request")
 	defer sp.Finish()
 	ext.SamplingPriority.Set(sp, 1)
+	sp.SetTag("request_num", testRun)
 	ctx := opentracing.ContextWithSpan(context.Background(), sp)
 	doRequest(ctx, url)
 }
@@ -69,6 +71,7 @@ func doRequest(context context.Context, url string) {
 		}
 
 		if resp != nil {
+			sp.SetTag("http.status", resp.StatusCode)
 			log.Printf("response code: %d\n", resp.StatusCode)
 		}
 	}

@@ -15,10 +15,12 @@ fi
 
 bazel run //tracing/envoyproxy:google_proxy \
  && docker run --rm -d --name google_proxy -p 10000:10000 \
-    bazel/tracing/envoyproxy:google_proxy
-
+    bazel/tracing/envoyproxy:google_proxy || finish 1 "Google proxy startup error"
+# Wait for startup
+sleep 5s
 echo "Simple test of the google proxy"
-curl localhost:10000 | grep 'Google has many special features' > /dev/null \
-  || echo "Test of the proxy seems to have failed"
+curl localhost:10000 | \
+  grep 'Google has many special features' > /dev/null \
+  || finish 1 "Google Test Failure"
 
 finish 0 "Test looks successful"

@@ -34,7 +34,7 @@ sleep 5s
 echo "Starting Flaky server"
 JAEGER_SERVICE_NAME=e2e_testing \
   bazel run \
-    -- //tracing/server:flaky --flakepct=0.25 --port $PORT &
+    -- //tracing/server:flaky -flakepct=0.25 -port $PORT -debug=true &
 
 # Wait for the server to start
 SUCCESS=false
