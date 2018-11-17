@@ -22,6 +22,7 @@ func main() {
 	listenPort := flag.Int("port", 8080, "port to listen on")
 	okDelay := flag.Duration("okdelay", 0*time.Millisecond, "delay to add in for 'ok' responses")
 	errDelay := flag.Duration("errdelay", 0*time.Millisecond, "delay to add in for 'error' responses")
+	debug := flag.Bool("debug", false, "If enabled extra debug request information will be printed")
 	flag.Parse()
 
 	var closer, err = jaeger.Init()
@@ -31,16 +32,22 @@ func main() {
 	}
 	defer closer.Close()
 
+	var handler http.Handler
 	if *flakePct > 0.0 {
-		http.Handle("/", handlers.GlobalOpenTracingHandler("maybe-flake", handlers.RandomSplitHandler(
+		handler = handlers.GlobalOpenTracingHandler("maybe-flake", handlers.RandomSplitHandler(
 			float32(*flakePct),
 			handlers.GlobalOpenTracingHandler("ok-handler", jsonResponder("flake-ok", 200, okDelay)),
-			handlers.GlobalOpenTracingHandler("flake-handler", jsonResponder("flake-bad", 400, errDelay)))))
+			handlers.GlobalOpenTracingHandler("flake-handler", jsonResponder("flake-bad", 400, errDelay))))
 	} else {
-		http.Handle("/", handlers.GlobalOpenTracingHandler("always-ok", jsonResponder("ok", 200, okDelay)))
+		handler = handlers.GlobalOpenTracingHandler("always-ok", jsonResponder("ok", 200, okDelay))
 	}
+	if *debug {
+		handler = handlers.DebugRequestHandler(handler)
+	}
+	http.Handle("/", handler)
+
 	log.Printf("Listening on port %d and will be %.1f percent flaky\n", *listenPort, 100*(*flakePct))
-	log.Printf("  okResponseDelay=%v  errorResponseDelay=%v", *okDelay, *errDelay)
+	log.Printf("  okResponseDelay=%v  errorResponseDelay=%v  debug=%v", *okDelay, *errDelay, *debug)
 	err = http.ListenAndServe(fmt.Sprintf(":%d", *listenPort), nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)

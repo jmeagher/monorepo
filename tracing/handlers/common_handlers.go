@@ -25,6 +25,26 @@ func (f *delayHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	f.handler.ServeHTTP(w, r)
 }
 
+// DebugRequestHandler lots request information going through it
+func DebugRequestHandler(handler http.Handler) http.Handler {
+	return &debugRequestHandler{handler}
+}
+
+type debugRequestHandler struct {
+	handler http.Handler
+}
+
+func (f *debugRequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Starting debug dump ********")
+	for name, headers := range r.Header {
+		name = strings.ToLower(name)
+		for _, h := range headers {
+			fmt.Printf("    %v: %v\n", name, h)
+		}
+	}
+	f.handler.ServeHTTP(w, r)
+}
+
 // StaticHandler to return a static bit of simple content
 func StaticHandler(text string, mimeType string, code int) http.Handler {
 	return &staticHandler{text, mimeType, code}
