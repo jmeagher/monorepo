@@ -18,3 +18,8 @@ go_test(
     srcs = ["common_handlers.go"],
     size = "small",
 )
+
+filegroup(
+    name = "srcs",
+    srcs = glob(["*"]),
+)

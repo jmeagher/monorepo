@@ -20,3 +20,8 @@ go_binary(
         "@com_github_opentracing_opentracing_go//ext:go_default_library",
     ],
 )
+
+filegroup(
+    name = "srcs",
+    srcs = glob(["*"]),
+)
