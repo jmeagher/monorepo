@@ -41,6 +41,7 @@ func (f *openTracingHandler) ServeHTTP(writer http.ResponseWriter, req *http.Req
 			f.spanName,
 			ext.RPCServerOption(wireContext))
 		defer serverSpan.Finish()
+		serverSpan.SetTag("user_agent", request.Header.Get("User-Agent"))
 		ctx := opentracing.ContextWithSpan(request.Context(), serverSpan)
 		request = request.WithContext(ctx)
 

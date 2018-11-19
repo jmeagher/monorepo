@@ -3,6 +3,7 @@
 set -euo pipefail
 
 PORT=18088
+SERVER_SUCCESS_RATE=0.25
 
 finish() {
     echo "Stopping Jaeger server"
@@ -29,12 +30,12 @@ docker run --rm -d --name jaeger \
   -p 14268:14268 \
   -p 9411:9411 \
   jaegertracing/all-in-one:1.7
-sleep 5s
+# sleep 5s
 
 echo "Starting Flaky server"
-JAEGER_SERVICE_NAME=e2e_testing \
+JAEGER_SERVICE_NAME=e2e_testing_server \
   bazel run \
-    -- //tracing/server:flaky -flakepct=0.25 -port $PORT -debug=true &
+    -- //tracing/server:flaky -debug=true -flakepct=$SERVER_SUCCESS_RATE -port $PORT &
 
 # Wait for the server to start
 SUCCESS=false
@@ -53,29 +54,18 @@ if [ "$SUCCESS" = "false" ] ; then
 fi
 
 echo "Check Flaky Percent"
-successes=0
-failures=0
-for r in $(seq 100) ; do
-  resp=$(curl -s localhost:$PORT | egrep -o '(false|true)' || echo FAIL )
-  if [[ "$resp" == "true" ]] ; then
-    successes=$((successes+1))
-  elif [[ "$resp" == "false" ]] ; then
-    failures=$((failures+1))
-  else
-    echo "Got a response of $resp"
-    finish 1 "Got an unexpected response value"
-  fi
-done
+JAEGER_SERVICE_NAME=e2e_flake_client \
+  bazel run \
+    -- //tracing/jaeger:test_client -host=localhost -port $PORT \
+    -expected_sr=$SERVER_SUCCESS_RATE -requests=100 \
+    || finish 1 "Success rate is not what was expected"
 
-
-total=$((successes + failures))
-if [[ successes -lt 23 ]] ; then
-  finish 1 "Got an unexpectedly low number of successes, but got $successes"
-elif [[ failures -lt 72 ]] ; then
-  finish 1 "Got an unexpectedly low number of failures, but got $failures"
-elif [[ total -ne 100 ]] ; then
-  finish 1 "Should have gotten exactly 100 responses, but got $total"
-fi
+echo "Make sure the SR test works by intentionall failing it"
+JAEGER_SERVICE_NAME=e2e_fail_client \
+  bazel run \
+    -- //tracing/jaeger:test_client -host=localhost -port $PORT \
+    -expected_sr=0.99 -sr_threshold=0.00001 -requests=100 \
+    && finish 1 "Success rate test should have failed here"
 
 echo "Validate that tracing is really working"
 ID=$RANDOM
