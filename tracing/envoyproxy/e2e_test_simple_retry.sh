@@ -10,6 +10,12 @@ finish() {
     exit $1
 }
 
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+  SERVICE_HOST=172.17.0.1
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  SERVICE_HOST=host.docker.internal
+fi
+
 if [ ! -f WORKSPACE ] ; then
   finish 1 "Error, run this from the top level monorepo folder"
 fi
@@ -17,7 +23,7 @@ fi
 echo "Starting proxy"
 bazel run //tracing/envoyproxy:simple_retry_proxy \
  && docker run --rm --name simple_retry_proxy -p 10000:10000 \
-    -e SERVICE_HOST=host.docker.internal -e SERVICE_PORT=10001 \
+    -e SERVICE_HOST=$SERVICE_HOST -e SERVICE_PORT=10001 \
     bazel/tracing/envoyproxy:simple_retry_proxy &
 
 echo "Starting Flaky server"
