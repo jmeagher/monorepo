@@ -34,7 +34,7 @@ docker run --rm -d --name jaeger \
 echo "Starting Flaky server"
 JAEGER_SERVICE_NAME=e2e_testing_server \
   bazel run \
-    -- //tracing/server:flaky -debug=true -flakepct=$SERVER_SUCCESS_RATE -port $PORT &
+    -- //tracing/server:flaky -flakepct=$SERVER_SUCCESS_RATE -port $PORT &
 
 # Wait for the server to start
 echo Wait for startup of servers

@@ -33,7 +33,7 @@ while ! nc -z localhost 10001; do
   sleep 0.1
 done
 
-sleep 2s
+sleep 3s
 
 echo "Check SR when querying through the proxy"
 JAEGER_SERVICE_NAME=e2e_retry_client \
