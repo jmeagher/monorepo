@@ -4,7 +4,7 @@ set -euo pipefail
 
 finish() {
     echo "Stopping the server and returning $1"
-    if [ "$1" != "0" ] ; then echo "Build step failed $0" 1>&2 ; fi
+    if [ "$1" != "0" ] ; then echo "Build step failed $0" 1>&2 ; docker logs simple_retry_proxy 1>&2 || true ; fi
     echo "Finish status: $2"
     docker kill simple_retry_proxy || true
     ps ax | grep -v grep | grep flaky | awk '{print $1}' | xargs kill || true
