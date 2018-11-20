@@ -22,6 +22,7 @@ func main() {
 	listenPort := flag.Int("port", 8080, "port to listen on")
 	okDelay := flag.Duration("okdelay", 0*time.Millisecond, "delay to add in for 'ok' responses")
 	errDelay := flag.Duration("errdelay", 0*time.Millisecond, "delay to add in for 'error' responses")
+	errorCode := flag.Int("error_code", 400, "Http status code returned for 'error' responses")
 	debug := flag.Bool("debug", false, "If enabled extra debug request information will be printed")
 	flag.Parse()
 
@@ -37,7 +38,7 @@ func main() {
 		handler = handlers.GlobalOpenTracingHandler("maybe-flake", handlers.RandomSplitHandler(
 			float32(*flakePct),
 			handlers.GlobalOpenTracingHandler("ok-handler", jsonResponder("flake-ok", 200, okDelay)),
-			handlers.GlobalOpenTracingHandler("flake-handler", jsonResponder("flake-bad", 400, errDelay))))
+			handlers.GlobalOpenTracingHandler("flake-handler", jsonResponder("flake-bad", *errorCode, errDelay))))
 	} else {
 		handler = handlers.GlobalOpenTracingHandler("always-ok", jsonResponder("ok", 200, okDelay))
 	}

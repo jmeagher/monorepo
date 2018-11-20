@@ -11,7 +11,7 @@ finish() {
     echo ""
     echo "Stopping the server and returning $1"
     echo "Finish status: $2"
-    ps ax | grep -v grep | grep flaky | awk '{print $1}' | xargs kill
+    ps ax | grep -v grep | grep flaky | awk '{print $1}' | xargs kill || true
     exit $1
 }
 
@@ -30,7 +30,6 @@ docker run --rm -d --name jaeger \
   -p 14268:14268 \
   -p 9411:9411 \
   jaegertracing/all-in-one:1.7
-# sleep 5s
 
 echo "Starting Flaky server"
 JAEGER_SERVICE_NAME=e2e_testing_server \
@@ -38,20 +37,11 @@ JAEGER_SERVICE_NAME=e2e_testing_server \
     -- //tracing/server:flaky -debug=true -flakepct=$SERVER_SUCCESS_RATE -port $PORT &
 
 # Wait for the server to start
-SUCCESS=false
-for r in $(seq 3) ; do
-   sleep 2s
-   if curl -s localhost:$PORT/ | grep "flake" ; then
-     SUCCESS=true
-     break
-   else
-     echo "Server is not up yet"
-   fi
+echo Wait for startup of servers
+while ! nc -z localhost $PORT; do   
+  sleep 0.1
 done
-
-if [ "$SUCCESS" = "false" ] ; then
-  finish 1 "Server health check did not succeed quickly enough"
-fi
+sleep 2s
 
 echo "Check Flaky Percent"
 JAEGER_SERVICE_NAME=e2e_flake_client \
