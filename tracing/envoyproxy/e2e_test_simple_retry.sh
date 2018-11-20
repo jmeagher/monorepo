@@ -4,7 +4,6 @@ set -euo pipefail
 
 finish() {
     echo "Stopping the server and returning $1"
-    if [ "$1" != "0" ] ; then echo "Build step failed $0" 1>&2 ; docker logs simple_retry_proxy 1>&2 || true ; fi
     echo "Finish status: $2"
     docker kill simple_retry_proxy || true
     ps ax | grep -v grep | grep flaky | awk '{print $1}' | xargs kill || true
@@ -17,9 +16,9 @@ fi
 
 echo "Starting proxy"
 bazel run //tracing/envoyproxy:simple_retry_proxy \
- && docker run --rm -d --name simple_retry_proxy -p 10000:10000 \
+ && docker run --rm --name simple_retry_proxy -p 10000:10000 \
     -e SERVICE_HOST=host.docker.internal -e SERVICE_PORT=10001 \
-    bazel/tracing/envoyproxy:simple_retry_proxy || finish 1 "Proxy startup error"
+    bazel/tracing/envoyproxy:simple_retry_proxy &
 
 echo "Starting Flaky server"
 JAEGER_SERVICE_NAME=e2e_retry_server \

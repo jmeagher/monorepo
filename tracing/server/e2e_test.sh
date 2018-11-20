@@ -8,7 +8,6 @@ SERVER_SUCCESS_RATE=0.25
 finish() {
     echo ""
     echo "Stopping the server and returning $1"
-    if [ "$1" != "0" ] ; then echo "Build step failed $0" 1>&2 ; docker logs jaeger 1>&2 ; fi
     echo "Finish status: $2"
     docker kill jaeger || true
     ps ax | grep -v grep | grep flaky | awk '{print $1}' | xargs kill || true
@@ -20,7 +19,7 @@ if [ ! -f WORKSPACE ] ; then
 fi
 
 echo "Starting all-in-one Jaeger server"
-docker run --rm -d --name jaeger \
+docker run --rm --name jaeger \
   -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
   -p 5775:5775/udp \
   -p 6831:6831/udp \
@@ -29,7 +28,7 @@ docker run --rm -d --name jaeger \
   -p 16686:16686 \
   -p 14268:14268 \
   -p 9411:9411 \
-  jaegertracing/all-in-one:1.7
+  jaegertracing/all-in-one:1.7 &
 
 echo "Starting Flaky server"
 JAEGER_SERVICE_NAME=e2e_testing_server \

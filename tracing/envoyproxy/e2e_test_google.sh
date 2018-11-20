@@ -4,7 +4,6 @@ set -euo pipefail
 
 finish() {
     echo "Stopping the server and returning $1"
-    if [ "$1" != "0" ] ; then echo "Build step failed $0" 1>&2 ; fi
     echo "Finish status: $2"
     docker kill google_proxy || true
     exit $1
@@ -15,8 +14,8 @@ if [ ! -f WORKSPACE ] ; then
 fi
 
 bazel run //tracing/envoyproxy:google_proxy \
- && docker run --rm -d --name google_proxy -p 10000:10000 \
-    bazel/tracing/envoyproxy:google_proxy || finish 1 "Google proxy startup error"
+ && docker run --rm --name google_proxy -p 10000:10000 \
+    bazel/tracing/envoyproxy:google_proxy &
 
 while ! nc -z localhost 10000; do
   sleep 0.1
