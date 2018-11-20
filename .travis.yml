@@ -43,9 +43,10 @@ before_install:
 
 script:
   # Debugging stuff
-  - echo $TRAVIS_COMMIT_RANGE
-  - git diff --name-only $TRAVIS_COMMIT_RANGE || true
-  - git diff --name-only $TRAVIS_COMMIT_RANGE | xargs -L1 bazel query || true
+  - ifconfig
+  # - echo $TRAVIS_COMMIT_RANGE
+  # - git diff --name-only $TRAVIS_COMMIT_RANGE || true
+  # - git diff --name-only $TRAVIS_COMMIT_RANGE | xargs -L1 bazel query || true
   - bazel query "kind(test, rdeps(//...,set($(git diff --name-only $TRAVIS_COMMIT_RANGE | xargs -L1 bazel query))))" || true
 
   # Ensure every file is a bazel asset
@@ -55,6 +56,6 @@ script:
   - bazel test $(bazel query "kind(test, rdeps(//...,set($(git diff --name-only $TRAVIS_COMMIT_RANGE | xargs -L1 bazel query))))") //examples/python/simple/jpm:jpm_test
 
   # Full test, build, and e2e test
-  - bazel test //...
-  - bazel build //...
+  #- bazel test //...
+  #- bazel build //...
   - ./test_e2e.sh
