@@ -6,11 +6,11 @@ PORT=18088
 SERVER_SUCCESS_RATE=0.25
 
 finish() {
-    echo "Stopping Jaeger server"
-    docker kill jaeger || true
     echo ""
     echo "Stopping the server and returning $1"
+    if [ "$1" != "0" ] ; then echo "Build step failed $0" 1>&2 ; docker logs jaeger 1>&2 ; fi
     echo "Finish status: $2"
+    docker kill jaeger || true
     ps ax | grep -v grep | grep flaky | awk '{print $1}' | xargs kill || true
     exit $1
 }

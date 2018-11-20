@@ -4,6 +4,7 @@ set -euo pipefail
 
 finish() {
     echo "Stopping the server and returning $1"
+    if [ "$1" != "0" ] ; then echo "Build step failed $0" 1>&2 ; fi
     echo "Finish status: $2"
     docker kill google_proxy || true
     exit $1
