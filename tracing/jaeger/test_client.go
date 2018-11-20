@@ -99,7 +99,6 @@ func doRequest(context context.Context, url string) (*http.Response, error) {
 
 	if resp != nil {
 		sp.SetTag("http.status", resp.StatusCode)
-		log.Printf("response code: %d\n", resp.StatusCode)
 	}
 	return resp, err
 }

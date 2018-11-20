@@ -6,12 +6,11 @@ PORT=18088
 SERVER_SUCCESS_RATE=0.25
 
 finish() {
-    echo "Stopping Jaeger server"
-    docker kill jaeger || true
     echo ""
     echo "Stopping the server and returning $1"
     echo "Finish status: $2"
-    ps ax | grep -v grep | grep flaky | awk '{print $1}' | xargs kill
+    docker kill jaeger || true
+    ps ax | grep -v grep | grep flaky | awk '{print $1}' | xargs kill || true
     exit $1
 }
 
@@ -20,7 +19,7 @@ if [ ! -f WORKSPACE ] ; then
 fi
 
 echo "Starting all-in-one Jaeger server"
-docker run --rm -d --name jaeger \
+docker run --rm --name jaeger \
   -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
   -p 5775:5775/udp \
   -p 6831:6831/udp \
@@ -29,29 +28,19 @@ docker run --rm -d --name jaeger \
   -p 16686:16686 \
   -p 14268:14268 \
   -p 9411:9411 \
-  jaegertracing/all-in-one:1.7
-# sleep 5s
+  jaegertracing/all-in-one:1.7 &
 
 echo "Starting Flaky server"
 JAEGER_SERVICE_NAME=e2e_testing_server \
   bazel run \
-    -- //tracing/server:flaky -debug=true -flakepct=$SERVER_SUCCESS_RATE -port $PORT &
+    -- //tracing/server:flaky -flakepct=$SERVER_SUCCESS_RATE -port $PORT &
 
 # Wait for the server to start
-SUCCESS=false
-for r in $(seq 3) ; do
-   sleep 2s
-   if curl -s localhost:$PORT/ | grep "flake" ; then
-     SUCCESS=true
-     break
-   else
-     echo "Server is not up yet"
-   fi
+echo Wait for startup of servers
+while ! nc -z localhost $PORT; do   
+  sleep 0.1
 done
-
-if [ "$SUCCESS" = "false" ] ; then
-  finish 1 "Server health check did not succeed quickly enough"
-fi
+sleep 2s
 
 echo "Check Flaky Percent"
 JAEGER_SERVICE_NAME=e2e_flake_client \

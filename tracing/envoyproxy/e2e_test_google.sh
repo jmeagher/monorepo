@@ -14,10 +14,14 @@ if [ ! -f WORKSPACE ] ; then
 fi
 
 bazel run //tracing/envoyproxy:google_proxy \
- && docker run --rm -d --name google_proxy -p 10000:10000 \
-    bazel/tracing/envoyproxy:google_proxy || finish 1 "Google proxy startup error"
-# Wait for startup
-sleep 5s
+ && docker run --rm --name google_proxy -p 10000:10000 \
+    bazel/tracing/envoyproxy:google_proxy &
+
+while ! nc -z localhost 10000; do
+  sleep 0.1
+done
+sleep 2s
+
 echo "Simple test of the google proxy"
 curl localhost:10000 | \
   grep 'Google has many special features' > /dev/null \
