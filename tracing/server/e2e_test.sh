@@ -40,7 +40,7 @@ echo Wait for startup of servers
 while ! curl -s localhost:$PORT > /dev/null ; do
   sleep 0.1
 done
-sleep 1s
+sleep 3s
 
 echo "Check Flaky Percent"
 JAEGER_SERVICE_NAME=e2e_flake_client \
