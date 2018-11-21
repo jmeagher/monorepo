@@ -32,14 +32,13 @@ JAEGER_SERVICE_NAME=e2e_retry_server \
     -- //tracing/server:flaky -flakepct=0.29 -port 10001 -error_code 500 &
 
 echo Wait for startup of servers
-while ! nc -z localhost 10000; do
+while ! curl -s localhost:10001 > /dev/null ; do
   sleep 0.1
 done
-while ! nc -z localhost 10001; do
+while ! curl -s localhost:10000 > /dev/null ; do
   sleep 0.1
 done
-
-sleep 3s
+sleep 1s
 
 echo "Check SR when querying through the proxy"
 JAEGER_SERVICE_NAME=e2e_retry_client \
