@@ -19,7 +19,7 @@ Basic Local Testing
     ````
 1. Launch a client with
     ````
-    JAEGER_SERVICE_NAME=e2e_testing_client bazel run -- //tracing/jaeger:test_client -port 8090 -host localhost
+    JAEGER_SERVICE_NAME=e2e_testing_client bazel run -- //tracing/client:test_client -port 8090 -host localhost
     ````
 
 This will run a few requests through the system and should provide some traces in Jaeger. The traces should be available in the [search UI](http://localhost:16686/search).
