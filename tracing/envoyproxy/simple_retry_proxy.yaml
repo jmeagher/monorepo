@@ -40,7 +40,12 @@ static_resources:
     # Comment out the following line to test on v6 networks
     dns_lookup_family: V4_ONLY
     lb_policy: ROUND_ROBIN
-    hosts:
-      - socket_address:
-          address: ${SERVICE_HOST}
-          port_value: ${SERVICE_PORT}
+    load_assignment:
+      cluster_name: retry_service
+      endpoints:
+      - lb_endpoints:
+          endpoint:
+            address:
+              socket_address:
+                address: ${SERVICE_HOST}
+                port_value: ${SERVICE_PORT}

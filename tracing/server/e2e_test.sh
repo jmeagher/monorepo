@@ -45,14 +45,14 @@ sleep 3s
 echo "Check Flaky Percent"
 JAEGER_SERVICE_NAME=e2e_flake_client \
   bazel run \
-    -- //tracing/jaeger:test_client -host=localhost -port $PORT \
+    -- //tracing/client:test_client -host=localhost -port $PORT \
     -expected_sr=$SERVER_SUCCESS_RATE -requests=100 \
     || finish 1 "Success rate is not what was expected"
 
 echo "Make sure the SR test works by intentionall failing it"
 JAEGER_SERVICE_NAME=e2e_fail_client \
   bazel run \
-    -- //tracing/jaeger:test_client -host=localhost -port $PORT \
+    -- //tracing/client:test_client -host=localhost -port $PORT \
     -expected_sr=0.99 -sr_threshold=0.00001 -requests=100 \
     && finish 1 "Success rate test should have failed here"
 
