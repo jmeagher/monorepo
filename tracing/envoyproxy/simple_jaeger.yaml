@@ -31,19 +31,25 @@ static_resources:
   clusters:
   - name: flaky_service
     connect_timeout: 0.250s
-    type: strict_dns
-    lb_policy: round_robin
-    hosts:
-    - socket_address:
-        address: docker.for.mac.localhost
-        port_value: 18090
+    type: LOGICAL_DNS
+    dns_lookup_family: V4_ONLY
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: retry_service
+      endpoints:
+      - lb_endpoints:
+          endpoint:
+            address:
+              socket_address:
+                address: ${SERVICE_HOST}
+                port_value: ${SERVICE_PORT}
   - name: jaeger
     connect_timeout: 1s
     type: strict_dns
     lb_policy: round_robin
     hosts:
     - socket_address:
-        address: docker.for.mac.localhost
+        address: ${SERVICE_HOST}
         port_value: 9411
 tracing:
   http:
@@ -56,7 +62,7 @@ tracing:
           type: const
           param: 1
         reporter:
-          localAgentHostPort: docker.for.mac.localhost:6831
+          localAgentHostPort: ${SERVICE_HOST}:6831
         headers:
           jaegerDebugHeader: jaeger-debug-id
           jaegerBaggageHeader: jaeger-baggage
