@@ -29,7 +29,7 @@ bazel run //tracing/envoyproxy:simple_retry_proxy \
 echo "Starting Flaky server"
 JAEGER_SERVICE_NAME=e2e_retry_server \
   bazel run \
-    -- //tracing/server:flaky -flakepct=0.29 -port 10001 -error_code 500 &
+    -- //tracing/server:flaky --success_rate=0.29 -port 10001 -error_code 500 &
 
 echo Wait for startup of servers
 while ! curl -s localhost:10001 > /dev/null ; do
