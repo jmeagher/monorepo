@@ -15,7 +15,7 @@ Basic Local Testing
       ````
 1. Launch a flaky server with something like
     ````
-    JAEGER_SERVICE_NAME=e2e_testing_server bazel run -- //tracing/server:flaky -successPct=0.5 -port 8090 -errdelay=0.2s -debug=true
+    JAEGER_SERVICE_NAME=e2e_testing_server bazel run -- //tracing/server:flaky --success_rate=0.5 -port 8090 -errdelay=0.2s -debug=true
     ````
 1. Launch a client with
     ````
