@@ -40,7 +40,7 @@ bazel run //tracing/envoyproxy:simple_jaeger \
 
 echo "Starting Flaky server"
 JAEGER_SERVICE_NAME=flaky_server bazel run \
-    -- //tracing/server:flaky -flakepct=0.5 -port 10001 -debug=true &
+    -- //tracing/server:flaky -successPct=0.5 -port 10001 -debug=true &
 
 sleep 8s
 

@@ -18,7 +18,7 @@ func jsonResponder(text string, code int, delay *time.Duration) http.Handler {
 
 func main() {
 
-	flakePct := flag.Float64("flakepct", 0.0, "percentage of responses to fail")
+	successPct := flag.Float64("success_rate", 0.0, "percentage of responses to succeed")
 	listenPort := flag.Int("port", 8080, "port to listen on")
 	okDelay := flag.Duration("okdelay", 0*time.Millisecond, "delay to add in for 'ok' responses")
 	errDelay := flag.Duration("errdelay", 0*time.Millisecond, "delay to add in for 'error' responses")
@@ -34,9 +34,9 @@ func main() {
 	defer closer.Close()
 
 	var handler http.Handler
-	if *flakePct > 0.0 {
+	if *successPct < 1.0 {
 		handler = handlers.GlobalOpenTracingHandler("maybe-flake", handlers.RandomSplitHandler(
-			float32(*flakePct),
+			float32(*successPct),
 			handlers.GlobalOpenTracingHandler("ok-handler", jsonResponder("flake-ok", 200, okDelay)),
 			handlers.GlobalOpenTracingHandler("flake-handler", jsonResponder("flake-bad", *errorCode, errDelay))))
 	} else {
@@ -47,7 +47,7 @@ func main() {
 	}
 	http.Handle("/", handler)
 
-	log.Printf("Listening on port %d and will be %.1f percent flaky\n", *listenPort, 100*(*flakePct))
+	log.Printf("Listening on port %d and will be %.1f percent flaky\n", *listenPort, 100*(*successPct))
 	log.Printf("  okResponseDelay=%v  errorResponseDelay=%v  debug=%v", *okDelay, *errDelay, *debug)
 	err = http.ListenAndServe(fmt.Sprintf(":%d", *listenPort), nil)
 	if err != nil {
