@@ -1,6 +1,8 @@
-bazel-app
-bazel-bin
-bazel-genfiles
-bazel-monorepo
-bazel-out
-bazel-testlogs
+/bazel-app
+/bazel-bin
+/bazel-genfiles
+/bazel-monorepo
+/bazel-out
+/bazel-testlogs
+
+/user.bazelrc
