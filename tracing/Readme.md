@@ -11,7 +11,7 @@ Basic Local Testing
       -p 16686:16686 \
       -p 14268:14268 \
       -p 9411:9411 \
-      jaegertracing/all-in-one:1.7
+      jaegertracing/all-in-one:1.8
       ````
 1. Launch a flaky server with something like
     ````

@@ -128,17 +128,18 @@ func doRequest(context context.Context, url string) (*http.Response, error) {
 
 	httpReq.Header.Set("x-my-client-name", os.Getenv("JAEGER_SERVICE_NAME"))
 
-	// Transmit the span's TraceContext as HTTP headers on our
-	// outbound request.
-	opentracing.GlobalTracer().Inject(
-		span.Context(),
-		opentracing.HTTPHeaders,
-		opentracing.HTTPHeadersCarrier(httpReq.Header))
-
 	sp := opentracing.StartSpan(
 		"client_call",
 		opentracing.ChildOf(span.Context()))
 	defer sp.Finish()
+
+	// Transmit the span's TraceContext as HTTP headers on our
+	// outbound request.
+	opentracing.GlobalTracer().Inject(
+		sp.Context(),
+		opentracing.HTTPHeaders,
+		opentracing.HTTPHeadersCarrier(httpReq.Header))
+
 	resp, err := httpClient.Do(httpReq)
 
 	if resp != nil {

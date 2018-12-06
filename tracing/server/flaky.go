@@ -18,7 +18,7 @@ func jsonResponder(text string, code int, delay *time.Duration) http.Handler {
 
 func main() {
 
-	successPct := flag.Float64("success_rate", 0.0, "percentage of responses to succeed")
+	successPct := flag.Float64("success_rate", 0.9, "percentage of responses to succeed")
 	listenPort := flag.Int("port", 8080, "port to listen on")
 	okDelay := flag.Duration("okdelay", 0*time.Millisecond, "delay to add in for 'ok' responses")
 	errDelay := flag.Duration("errdelay", 0*time.Millisecond, "delay to add in for 'error' responses")
