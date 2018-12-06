@@ -31,7 +31,7 @@ docker run --rm --name jaeger \
   -p 16686:16686 \
   -p 14268:14268 \
   -p 9411:9411 \
-  jaegertracing/all-in-one:1.7 &
+  jaegertracing/all-in-one:1.8 &
 
 bazel run //tracing/envoyproxy:simple_jaeger \
 && docker run -d --rm --name simple_jaeger_proxy -p 9090:10000 \
@@ -40,14 +40,14 @@ bazel run //tracing/envoyproxy:simple_jaeger \
 
 echo "Starting Flaky server"
 JAEGER_SERVICE_NAME=flaky_server bazel run \
-    -- //tracing/server:flaky --success_rate=0.5 -port 10001 -debug=true &
+    -- //tracing/server:flaky --success_rate=0.5 -port 10001 &
 
-sleep 8s
+sleep 10s
 
 echo "Validate that tracing is really working"
 ID=$RANDOM
 curl -H "Uber-Trace-Id: $ID:$ID:0:3" localhost:9090 || finish 1 "curl failed"
-sleep 5s
+sleep 8s
 curl -v http://localhost:16686/api/traces/$ID || true
 if [ "$(curl -v http://localhost:16686/api/traces/$ID | grep -o "\"traceID\":\"$ID\"" | wc -l)" != "7" ] ; then
   finish 1 "Did not find the trace in Jaeger"
@@ -59,8 +59,11 @@ JAEGER_SERVICE_NAME=simple_jaeger_test_client \
   bazel run -- //tracing/client:test_client -port 9090 \
   -host localhost -expected_sr=0.5 -sr_threshold=0.3 -requests 10 || finish 1 "client failed"
 
+sleep 10s 
+curl "http://localhost:16686/api/traces?limit=200&lookback=1h&service=simple_jaeger_test_client"
 echo "Check for the jaeger span for the client"
-curl "http://localhost:16686/api/traces?limit=20&lookback=1h&service=simple_jaeger_test_client"
+curl "http://localhost:16686/api/traces?limit=200&lookback=1h&service=simple_jaeger_test_client" \
+  | grep -o "traceID\":\"[0-9a-z]*\"" | sort | uniq -c || finish 1 "Failed finding bulk requests"
 
 
 finish 0 "Test looks successful"

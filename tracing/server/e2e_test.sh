@@ -28,7 +28,7 @@ docker run --rm --name jaeger \
   -p 16686:16686 \
   -p 14268:14268 \
   -p 9411:9411 \
-  jaegertracing/all-in-one:1.7 &
+  jaegertracing/all-in-one:1.8 &
 
 echo "Starting Flaky server"
 JAEGER_SERVICE_NAME=e2e_testing_server \
