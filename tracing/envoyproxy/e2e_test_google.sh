@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+source tracing/common_stuff.sh
+
 finish() {
     echo "Stopping the server and returning $1"
     echo "Finish status: $2"
@@ -17,10 +19,9 @@ bazel run //tracing/envoyproxy:google_proxy \
  && docker run --rm --name google_proxy -p 10000:10000 \
     bazel/tracing/envoyproxy:google_proxy &
 
-while ! curl -s localhost:10000 > /dev/null ; do
-  sleep 0.1
-done
-sleep 1s
+docker run jwilder/dockerize \
+  -wait http://$SERVICE_HOST:10000 \
+  -timeout 20s || finish 1 "Servers appear to not be started"
 
 
 echo "Simple test of the google proxy"

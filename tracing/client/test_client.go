@@ -13,16 +13,36 @@ import (
 	"github.com/jmeagher/monorepo/tracing/jaeger"
 	opentracing "github.com/opentracing/opentracing-go"
 
+	"github.com/kelseyhightower/envconfig"
 	"github.com/opentracing/opentracing-go/ext"
 )
 
+type Config struct {
+	ExpectedSuccessRate  float64       `default:"1.0"`
+	SuccessRateThreshold float64       `default:"1.0"`
+	Debug                bool          `default:"false"`
+	RequestCount         int           `default:"10"`
+	ServerPort           int           `default:"8080"`
+	ServerHost           string        `default:"localhost"`
+	Parallelism          int           `default:"1"`
+	StartupDelay         time.Duration `default:"0"`
+}
+
 func main() {
-	port := flag.Int("port", 8080, "port to listen on")
-	host := flag.String("host", "localhost", "host to connect to")
-	requestCount := flag.Int("requests", 10, "number of test requests to make")
-	parallelism := flag.Int("parallelism", 1, "requests to make in parallel")
-	expectedSuccessRate := flag.Float64("expected_sr", -1, "The expected success rate, if set between 0.0 and 1.0 this will cause the process to fail if the success rate is not close to this setting")
-	expectedSuccessRateThreshold := flag.Float64("sr_threshold", 0.05, "Sets the range +- the expected_sr that is acceptable for the expected_sr check")
+	var cfg Config
+
+	var err = envconfig.Process("", &cfg)
+	if err != nil {
+		log.Fatal("Config parsing failure: ", err)
+		return
+	}
+
+	port := flag.Int("port", cfg.ServerPort, "port to connect to")
+	host := flag.String("host", cfg.ServerHost, "host to connect to")
+	requestCount := flag.Int("requests", cfg.RequestCount, "number of test requests to make")
+	parallelism := flag.Int("parallelism", cfg.Parallelism, "requests to make in parallel")
+	expectedSuccessRate := flag.Float64("expected_sr", cfg.ExpectedSuccessRate, "The expected success rate, if set between 0.0 and 1.0 this will cause the process to fail if the success rate is not close to this setting")
+	expectedSuccessRateThreshold := flag.Float64("sr_threshold", cfg.SuccessRateThreshold, "Sets the range +- the expected_sr that is acceptable for the expected_sr check")
 	flag.Parse()
 
 	url := fmt.Sprintf("http://%s:%d", *host, *port)
@@ -30,6 +50,8 @@ func main() {
 
 	min := *expectedSuccessRate - *expectedSuccessRateThreshold
 	max := *expectedSuccessRate + *expectedSuccessRateThreshold
+
+	time.Sleep(cfg.StartupDelay)
 
 	status, success := runTest(url, *requestCount, min, max, *parallelism)
 	if success {
@@ -144,6 +166,10 @@ func doRequest(context context.Context, url string) (*http.Response, error) {
 
 	if resp != nil {
 		sp.SetTag("http.status", resp.StatusCode)
+		sp.SetTag("error", resp.StatusCode >= 500)
+	} else {
+		sp.SetTag("error", true)
+		sp.SetTag("error.details", err.Error())
 	}
 	return resp, err
 }

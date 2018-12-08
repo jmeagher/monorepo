@@ -11,4 +11,6 @@ wget -O /usr/local/lib/libjaegertracing_plugin.so https://github.com/jaegertraci
 apk add gettext
 envsubst < $2 > $2.subst.yaml
 
+cat $2.subst.yaml
+
 /usr/local/bin/envoy --v2-config-only -c $2.subst.yaml -l $LOGLVL --service-cluster $1

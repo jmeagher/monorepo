@@ -60,6 +60,11 @@ load(
 )
 _scala_image_repos()
 
+load(
+    "@io_bazel_rules_docker//go:image.bzl",
+    _go_image_repos = "repositories",
+)
+_go_image_repos()
 
 # Expanded python support for pip import capability
 load("@io_bazel_rules_python//python:pip.bzl", "pip_repositories", "pip_import")
@@ -103,6 +108,11 @@ go_repository(
     name = "com_github_opentracing_opentracing_go",
     importpath = "github.com/opentracing/opentracing-go",
     commit = "6aa6febac7b98f836100ecaea478c04f30b6dbd0",
+)
+go_repository(
+    name = "com_github_kelseyhightower_envconfig",
+    importpath = "github.com/kelseyhightower/envconfig",
+    commit = "dd1402a4d99de9ac2f396cd6fcb957bc2c695ec1",
 )
 
 # go get github.com/scele/rules_go_dep/dep2bazel
