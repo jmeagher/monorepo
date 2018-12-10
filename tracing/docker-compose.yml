@@ -37,6 +37,23 @@ services:
       - SERVERPORT=10001
       - STARTUPDELAY=10s
 
+  retry_client:
+    image: bazel/tracing/client:test_client_image
+    depends_on:
+      - jaeger
+      - flaky1
+      - simple_retry_envoy
+    networks:
+      envoymesh:
+        aliases:
+          - retry_client
+    environment:
+      - JAEGER_SERVICE_NAME=retry_client
+      - JAEGER_AGENT_HOST=jaeger
+      - SERVERHOST=simple_retry_envoy
+      - SERVERPORT=10002
+      - STARTUPDELAY=9s
+
   simple_jaeger_envoy:
     image: bazel/tracing/envoyproxy:simple_jaeger
     depends_on:
@@ -67,7 +84,10 @@ services:
         aliases:
           - simple_retry_envoy
     environment:
+      - JAEGER_SERVICE_NAME=envoy-retry
+      - JAEGER_AGENT_HOST=jaeger
       - LISTEN_PORT=10002
+      - SERVICE_NAME=retry_envoy
       - SERVICE_HOST=flaky1
       - SERVICE_PORT=11001
     expose:
