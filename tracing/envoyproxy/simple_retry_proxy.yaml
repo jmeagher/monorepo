@@ -1,47 +1,44 @@
-admin:
-  access_log_path: /tmp/admin_access.log
-  address:
-    socket_address:
-      protocol: TCP
-      address: 127.0.0.1
-      port_value: 9901
 static_resources:
   listeners:
-  - name: listener_0
-    address:
+  - address:
       socket_address:
-        protocol: TCP
         address: 0.0.0.0
         port_value: ${LISTEN_PORT}
     filter_chains:
     - filters:
       - name: envoy.http_connection_manager
         config:
+          tracing:
+            operation_name: ingress
+          codec_type: auto
           stat_prefix: ingress_http
           route_config:
             name: local_route
             virtual_hosts:
-            - name: local_service
-              domains: ["*"]
+            - name: backend
+              domains:
+              - "*"
               routes:
               - match:
                   prefix: "/"
                 route:
-                  cluster: retry_service
+                  cluster: ${SERVICE_NAME}
                   retry_policy:
-                   retry_on: "5xx"
-                   num_retries: 1
+                    retry_on: "5xx"
+                    num_retries: 1
+                decorator:
+                  operation: ${SERVICE_NAME}
           http_filters:
           - name: envoy.router
+            config: {}
   clusters:
-  - name: retry_service
-    connect_timeout: 0.5s
+  - name: ${SERVICE_NAME}
+    connect_timeout: 0.250s
     type: LOGICAL_DNS
-    # Comment out the following line to test on v6 networks
     dns_lookup_family: V4_ONLY
     lb_policy: ROUND_ROBIN
     load_assignment:
-      cluster_name: retry_service
+      cluster_name: ${SERVICE_NAME}
       endpoints:
       - lb_endpoints:
           endpoint:
@@ -49,3 +46,36 @@ static_resources:
               socket_address:
                 address: ${SERVICE_HOST}
                 port_value: ${SERVICE_PORT}
+  - name: jaeger
+    connect_timeout: 1s
+    type: strict_dns
+    lb_policy: round_robin
+    hosts:
+    - socket_address:
+        address: ${JAEGER_AGENT_HOST}
+        port_value: 9411
+tracing:
+  http:
+    name: envoy.dynamic.ot
+    config:
+      library: /usr/local/lib/libjaegertracing_plugin.so
+      config:
+        service_name: ${JAEGER_SERVICE_NAME}
+        sampler:
+          type: const
+          param: 1
+        reporter:
+          localAgentHostPort: ${JAEGER_AGENT_HOST}:6831
+        headers:
+          jaegerDebugHeader: jaeger-debug-id
+          jaegerBaggageHeader: jaeger-baggage
+          traceBaggageHeaderPrefix: uberctx-
+        baggage_restrictions:
+          denyBaggageOnInitializationFailure: false
+          hostPort: ""
+admin:
+  access_log_path: "/dev/null"
+  address:
+    socket_address:
+      address: 0.0.0.0
+      port_value: 8001

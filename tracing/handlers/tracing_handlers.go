@@ -27,6 +27,8 @@ type openTracingHandler struct {
 
 func (f *openTracingHandler) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 	var request = req
+	wrap := WrapResponse(&writer)
+
 	wireContext, err := opentracing.GlobalTracer().Extract(
 		opentracing.HTTPHeaders,
 		opentracing.HTTPHeadersCarrier(request.Header))
@@ -50,9 +52,41 @@ func (f *openTracingHandler) ServeHTTP(writer http.ResponseWriter, req *http.Req
 			opentracing.HTTPHeaders,
 			opentracing.HTTPHeadersCarrier(request.Header))
 
+		finalStatus := func() {
+			serverSpan.SetTag("http.status", wrap.StatusCode)
+			serverSpan.SetTag("response.bytes", wrap.ResponseBytes)
+			serverSpan.SetTag("error", wrap.StatusCode >= 500)
+		}
+		defer finalStatus()
 	} else {
 		log.Println("No wire context specified?")
 	}
 
-	f.wrapped.ServeHTTP(writer, request)
+	f.wrapped.ServeHTTP(wrap, request)
+}
+
+func WrapResponse(writer *http.ResponseWriter) *ResponseWrapper {
+	wrapper := ResponseWrapper{}
+	wrapper.wrapped = writer
+	return &wrapper
+}
+
+type ResponseWrapper struct {
+	wrapped       *http.ResponseWriter
+	StatusCode    int
+	ResponseBytes int
+}
+
+func (w *ResponseWrapper) Header() http.Header {
+	return (*w.wrapped).Header()
+}
+
+func (w *ResponseWrapper) Write(bytes []byte) (int, error) {
+	w.ResponseBytes += len(bytes)
+	return (*w.wrapped).Write(bytes)
+}
+
+func (w *ResponseWrapper) WriteHeader(status int) {
+	w.StatusCode = status
+	(*w.wrapped).WriteHeader(status)
 }
