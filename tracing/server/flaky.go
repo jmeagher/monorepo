@@ -9,7 +9,17 @@ import (
 
 	"github.com/jmeagher/monorepo/tracing/handlers"
 	"github.com/jmeagher/monorepo/tracing/jaeger"
+	"github.com/kelseyhightower/envconfig"
 )
+
+type Config struct {
+	SuccessRate  float64       `default:"0.8"`
+	Debug        bool          `default:"false"`
+	ErrorCode    int           `default:"400"`
+	ListenPort   int           `default:"8080"`
+	ErrorDelay   time.Duration `default:"0"`
+	SuccessDelay time.Duration `default:"0"`
+}
 
 func jsonResponder(text string, code int, delay *time.Duration) http.Handler {
 	json := fmt.Sprintf("{\"text\": \"%s\", \"success\": %t}", text, code < 300)
@@ -17,18 +27,25 @@ func jsonResponder(text string, code int, delay *time.Duration) http.Handler {
 }
 
 func main() {
+	var cfg Config
 
-	successPct := flag.Float64("success_rate", 0.9, "percentage of responses to succeed")
-	listenPort := flag.Int("port", 8080, "port to listen on")
-	okDelay := flag.Duration("okdelay", 0*time.Millisecond, "delay to add in for 'ok' responses")
-	errDelay := flag.Duration("errdelay", 0*time.Millisecond, "delay to add in for 'error' responses")
-	errorCode := flag.Int("error_code", 400, "Http status code returned for 'error' responses")
-	debug := flag.Bool("debug", false, "If enabled extra debug request information will be printed")
+	var err = envconfig.Process("", &cfg)
+	if err != nil {
+		log.Fatal("Config parsing failure: ", err)
+		return
+	}
+
+	successPct := flag.Float64("success_rate", cfg.SuccessRate, "percentage of responses to succeed")
+	listenPort := flag.Int("port", cfg.ListenPort, "port to listen on")
+	okDelay := flag.Duration("successdelay", cfg.SuccessDelay, "delay to add in for successful responses")
+	errDelay := flag.Duration("errdelay", cfg.ErrorDelay, "delay to add in for 'error' responses")
+	errorCode := flag.Int("error_code", cfg.ErrorCode, "Http status code returned for 'error' responses")
+	debug := flag.Bool("debug", cfg.Debug, "If enabled extra debug request information will be printed")
 	flag.Parse()
 
-	var closer, err = jaeger.Init()
-	if err != nil {
-		log.Fatal("Jaeger Init Fail: ", err)
+	var closer, e = jaeger.Init()
+	if e != nil {
+		log.Fatal("Jaeger Init Fail: ", e)
 		return
 	}
 	defer closer.Close()

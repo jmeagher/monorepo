@@ -5,65 +5,45 @@ set -euo pipefail
 finish() {
     echo "Stopping the server and returning $1"
     echo "Finish status: $2"
-    docker kill jaeger || true
-    ps ax | grep -v grep | grep flaky | awk '{print $1}' | xargs kill || true
-    docker kill simple_jaeger_proxy || true
+    (cd tracing && docker-compose down -v || echo "Docker compose down problem")
     exit $1
 }
 
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
-  SERVICE_HOST=172.17.0.1
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-  SERVICE_HOST=host.docker.internal
-fi
+source tracing/common_stuff.sh
+images envoyproxy:simple_jaeger server:flaky_image
 
-if [ ! -f WORKSPACE ] ; then
-  finish 1 "Error, run this from the top level monorepo folder"
-fi
+(cd tracing && docker-compose up -d simple_jaeger_envoy jaeger)
 
-echo "Starting all-in-one Jaeger server"
-docker run --rm --name jaeger \
-  -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
-  -p 5775:5775/udp \
-  -p 6831:6831/udp \
-  -p 6832:6832/udp \
-  -p 5778:5778 \
-  -p 16686:16686 \
-  -p 14268:14268 \
-  -p 9411:9411 \
-  jaegertracing/all-in-one:1.8 &
+echo Wait for startup of servers
+dockerize \
+  -wait http://$SERVICE_HOST:10001 \
+  -wait http://$SERVICE_HOST:11001 \
+  -wait http://$SERVICE_HOST:16686 \
+  -timeout 20s || finish 1 "Servers appear to not be started"
 
-bazel run //tracing/envoyproxy:simple_jaeger \
-&& docker run -d --rm --name simple_jaeger_proxy -p 9090:10000 \
-   -e SERVICE_HOST=$SERVICE_HOST -e SERVICE_PORT=10001 \
-   bazel/tracing/envoyproxy:simple_jaeger || finish 1 "Docker run failed"
-
-echo "Starting Flaky server"
-JAEGER_SERVICE_NAME=flaky_server bazel run \
-    -- //tracing/server:flaky --success_rate=0.5 -port 10001 &
-
-sleep 10s
+sleep 1s
 
 echo "Validate that tracing is really working"
 ID=$RANDOM
-curl -H "Uber-Trace-Id: $ID:$ID:0:3" localhost:9090 || finish 1 "curl failed"
-sleep 8s
-curl -v http://localhost:16686/api/traces/$ID || true
+curl -vf -H "Uber-Trace-Id: $ID:$ID:0:3" localhost:10001 || finish 1 "curl failed"
+dockerize \
+  -wait http://$SERVICE_HOST:16686/api/traces/$ID \
+  -timeout 20s || finish 1 "Trace did not show up in Jaeger"
+
+sleep 10s  # Gotta wait a while for all the traces to show up
+curl -v http://localhost:16686/api/traces/$ID | jq .
 if [ "$(curl -v http://localhost:16686/api/traces/$ID | grep -o "\"traceID\":\"$ID\"" | wc -l)" != "7" ] ; then
   finish 1 "Did not find the trace in Jaeger"
 fi
 
-
 echo "Bulk test of the jaeger proxy"
 JAEGER_SERVICE_NAME=simple_jaeger_test_client \
-  bazel run -- //tracing/client:test_client -port 9090 \
-  -host localhost -expected_sr=0.5 -sr_threshold=0.3 -requests 10 || finish 1 "client failed"
+  bazel run -- //tracing/client:test_client -port 10001 \
+  -host localhost -expected_sr=0.7 -sr_threshold=0.3 -requests 10 || finish 1 "client failed"
 
-sleep 10s 
-curl "http://localhost:16686/api/traces?limit=200&lookback=1h&service=simple_jaeger_test_client"
+sleep 5s
 echo "Check for the jaeger span for the client"
-curl "http://localhost:16686/api/traces?limit=200&lookback=1h&service=simple_jaeger_test_client" \
+curl -f "http://localhost:16686/api/traces?limit=200&lookback=1h&service=simple_jaeger_test_client" \
   | grep -o "traceID\":\"[0-9a-z]*\"" | sort | uniq -c || finish 1 "Failed finding bulk requests"
-
 
 finish 0 "Test looks successful"

@@ -1,0 +1,96 @@
+version: '3'
+services:
+
+  flaky1:
+    image: bazel/tracing/server:flaky_image
+    depends_on:
+      - jaeger
+    networks:
+      envoymesh:
+        aliases:
+          - flaky1
+    environment:
+      - JAEGER_SERVICE_NAME=flaky1
+      - JAEGER_AGENT_HOST=jaeger
+      - LISTENPORT=11001
+      - SUCCESSRATE=0.7
+      - ERRORCODE=500
+    expose:
+      - "11001"
+    ports:
+      - "11001:11001"
+
+  basic_client:
+    image: bazel/tracing/client:test_client_image
+    depends_on:
+      - jaeger
+      - flaky1
+      - simple_jaeger_envoy
+    networks:
+      envoymesh:
+        aliases:
+          - basic_client
+    environment:
+      - JAEGER_SERVICE_NAME=basic_client
+      - JAEGER_AGENT_HOST=jaeger
+      - SERVERHOST=simple_jaeger_envoy
+      - SERVERPORT=10001
+      - STARTUPDELAY=10s
+
+  simple_jaeger_envoy:
+    image: bazel/tracing/envoyproxy:simple_jaeger
+    depends_on:
+      - jaeger
+      - flaky1
+    networks:
+      envoymesh:
+        aliases:
+          - simple_jaeger_envoy
+    environment:
+      - JAEGER_SERVICE_NAME=envoy-jaeger
+      - JAEGER_AGENT_HOST=jaeger
+      - LISTEN_PORT=10001
+      - SERVICE_NAME=flaky1
+      - SERVICE_HOST=flaky1
+      - SERVICE_PORT=11001
+    expose:
+      - "10001"
+    ports:
+      - "10001:10001"
+
+  simple_retry_envoy:
+    image: bazel/tracing/envoyproxy:simple_retry_proxy
+    depends_on:
+      - flaky1
+    networks:
+      envoymesh:
+        aliases:
+          - simple_retry_envoy
+    environment:
+      - LISTEN_PORT=10002
+      - SERVICE_HOST=flaky1
+      - SERVICE_PORT=11001
+    expose:
+      - "10002"
+    ports:
+      - "10002:10002"
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.8
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+    networks:
+      envoymesh:
+        aliases:
+          - jaeger
+    expose:
+      - "6831"
+      - "9411"
+      - "16686"
+    ports:
+      - "6831:6831/udp"
+      - "9411:9411"
+      - "16686:16686"
+
+networks:
+  envoymesh: {}
