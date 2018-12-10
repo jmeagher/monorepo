@@ -11,6 +11,7 @@ finish() {
 }
 
 source tracing/common_stuff.sh
+images server:flaky_image
 
 (cd tracing && docker-compose up -d flaky1 jaeger)
 

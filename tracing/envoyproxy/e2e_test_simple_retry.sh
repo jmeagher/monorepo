@@ -10,6 +10,7 @@ finish() {
 }
 
 source tracing/common_stuff.sh
+images envoyproxy:simple_retry_proxy server:flaky_image
 
 (cd tracing && docker-compose up -d simple_retry_envoy)
 

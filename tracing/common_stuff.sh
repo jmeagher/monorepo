@@ -12,3 +12,9 @@ fi
 dockerize() {
 docker run jwilder/dockerize:0.6.0 "$@"
 }
+
+images() {
+  for I in $@ ; do
+    bazel run //tracing/$I -- --norun
+  done
+}

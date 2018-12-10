@@ -3,6 +3,7 @@
 set -euo pipefail
 
 source tracing/common_stuff.sh
+images envoyproxy:google_proxy
 
 finish() {
     echo "Stopping the server and returning $1"

@@ -10,6 +10,7 @@ finish() {
 }
 
 source tracing/common_stuff.sh
+images envoyproxy:simple_jaeger server:flaky_image
 
 (cd tracing && docker-compose up -d simple_jaeger_envoy jaeger)
 
