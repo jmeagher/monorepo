@@ -20,7 +20,7 @@ bazel run //tracing/envoyproxy:google_proxy \
  && docker run --rm --name google_proxy -p 10000:10000 \
     bazel/tracing/envoyproxy:google_proxy &
 
-docker run jwilder/dockerize \
+dockerize \
   -wait http://$SERVICE_HOST:10000 \
   -timeout 20s || finish 1 "Servers appear to not be started"
 

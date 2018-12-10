@@ -42,10 +42,8 @@ JAEGER_SERVICE_NAME=simple_jaeger_test_client \
   -host localhost -expected_sr=0.7 -sr_threshold=0.3 -requests 10 || finish 1 "client failed"
 
 sleep 5s
-curl -f "http://localhost:16686/api/traces?limit=200&lookback=1h&service=simple_jaeger_test_client"
 echo "Check for the jaeger span for the client"
 curl -f "http://localhost:16686/api/traces?limit=200&lookback=1h&service=simple_jaeger_test_client" \
   | grep -o "traceID\":\"[0-9a-z]*\"" | sort | uniq -c || finish 1 "Failed finding bulk requests"
-
 
 finish 0 "Test looks successful"
