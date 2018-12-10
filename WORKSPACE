@@ -2,11 +2,11 @@ workspace(name="jmeagher_monorepo")
 
 # Settings to check and update regularly
 rules_to_load = [
-    ("scala",    "f33c6a659e3af540de35df1413f57f31d36d70c7", "bazelbuild"),
-    ("docker",   "0ef3e002e90434c794b86a86609d3ba59b1ddeeb", "bazelbuild"),
-    ("go",       "00a664876d6300951e7fa8766e0dfd42cdac67ad", "bazelbuild"),
-    ("python",   "8b5d0683a7d878b28fffe464779c8a53659fc645", "bazelbuild"),
-    ("rust",     "88022d175adb48aa5f8904f95dfc716c543b3f1e", "bazelbuild"),
+    ("scala",    "7348e9f9954e7104cbae16bc6a3adf43d5b6e05c", "bazelbuild"),
+    ("docker",   "e5785ceaef4eb7e0cc28bdb909fd1b10d5b991c3", "bazelbuild"),
+    ("go",       "e56822c37c2f3d4e6aff7937b570e9db9ab753ff", "bazelbuild"),
+    ("python",   "f3a6a8d00a51a1f0e6d61bc7065c19fea2b3dd7a", "bazelbuild"),
+    ("rust",     "b3c8badf2c10ebad8b71a106d3398e28804728d0", "bazelbuild"),
 ]
 
 # Load all the base rules
