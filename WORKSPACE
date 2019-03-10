@@ -8,6 +8,7 @@ rules_to_load = [
     ("python",   "88532b624f74ab17138fb638d3c62750b5af5f9a", "bazelbuild"),
     ("rust",     "4a9d0e0b6c66f1e98d15cbd3cccc8100a0454fc9", "bazelbuild"),
 ]
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # Base part needed for at least rust
 http_archive(
