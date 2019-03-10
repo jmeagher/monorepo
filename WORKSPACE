@@ -2,12 +2,21 @@ workspace(name="jmeagher_monorepo")
 
 # Settings to check and update regularly
 rules_to_load = [
-    ("scala",    "7348e9f9954e7104cbae16bc6a3adf43d5b6e05c", "bazelbuild"),
-    ("docker",   "e5785ceaef4eb7e0cc28bdb909fd1b10d5b991c3", "bazelbuild"),
-    ("go",       "e56822c37c2f3d4e6aff7937b570e9db9ab753ff", "bazelbuild"),
-    ("python",   "f3a6a8d00a51a1f0e6d61bc7065c19fea2b3dd7a", "bazelbuild"),
-    ("rust",     "b3c8badf2c10ebad8b71a106d3398e28804728d0", "bazelbuild"),
+    ("scala",    "9cb85352a060248a558fedecaa46832abbb2864b", "bazelbuild"),
+    ("docker",   "f962c24d59127ff3446756c06ff63af68c22645a", "bazelbuild"),
+    ("go",       "76925662d5f671bdc049b0aac493dafcd856ed3a", "bazelbuild"),
+    ("python",   "88532b624f74ab17138fb638d3c62750b5af5f9a", "bazelbuild"),
+    ("rust",     "4a9d0e0b6c66f1e98d15cbd3cccc8100a0454fc9", "bazelbuild"),
 ]
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# Base part needed for at least rust
+http_archive(
+    name = "bazel_skylib",
+    sha256 = "eb5c57e4c12e68c0c20bc774bfbc60a568e800d025557bc4ea022c6479acc867",
+    strip_prefix = "bazel-skylib-0.6.0",
+    url = "https://github.com/bazelbuild/bazel-skylib/archive/0.6.0.tar.gz",
+)
 
 # Load all the base rules
 load("//tools/build_rules:rules_loader.bzl", "load_build_rules")
@@ -81,6 +90,9 @@ pip_install()
 # Rust support
 load("@io_bazel_rules_rust//rust:repositories.bzl", "rust_repositories")
 rust_repositories()
+
+load("@io_bazel_rules_rust//:workspace.bzl", "bazel_version")
+bazel_version(name = "bazel_version")
 
 
 # Load external docker containers
