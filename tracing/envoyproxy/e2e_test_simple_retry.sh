@@ -24,7 +24,7 @@ echo "Check SR when querying through the proxy"
 JAEGER_SERVICE_NAME=e2e_retry_client \
   bazel run \
     -- //tracing/client:test_client -host=localhost -port 10002 \
-    -expected_sr=0.91 -sr_threshold=0.02 -requests=300 \
+    -expected_sr=0.4375 -sr_threshold=0.02 -requests=300 \
     || finish 1 "Success rate failure"
 
 finish 0 "Test looks successful"

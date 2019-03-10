@@ -100,7 +100,7 @@ container_pull(
     registry = "index.docker.io",
     # Picked a recent build at random from https://hub.docker.com/r/envoyproxy/envoy-alpine/tags/
     repository = "envoyproxy/envoy-alpine",
-    tag = "200b0e41641be46471c2ce3d230aae395fda7ded",
+    tag = "298dbf97a95f6b87906369c6aba5898244adbee8",
 )
 
 # Load external golang repos

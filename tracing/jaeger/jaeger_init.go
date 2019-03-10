@@ -28,6 +28,8 @@ func Init() (io.Closer, error) {
 		return nil, err
 	}
 	log.Printf("JaegerInit, ServiceName: %s", cfg.ServiceName)
+
 	opentracing.SetGlobalTracer(tracer)
+
 	return closer, nil
 }

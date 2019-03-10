@@ -1,6 +1,11 @@
 version: '3'
 services:
 
+  # #####################################################
+  #
+  # Basic server definitions that other things build from
+  #
+
   flaky1:
     image: bazel/tracing/server:flaky_image
     depends_on:
@@ -15,16 +20,41 @@ services:
       - LISTENPORT=11001
       - SUCCESSRATE=0.7
       - ERRORCODE=500
+      - ERRORDELAY=50ms
     expose:
       - "11001"
     ports:
       - "11001:11001"
 
+  flaky2:
+    image: bazel/tracing/server:flaky_image
+    depends_on:
+      - jaeger
+    networks:
+      envoymesh:
+        aliases:
+          - flaky2
+    environment:
+      - JAEGER_SERVICE_NAME=flaky2
+      - JAEGER_AGENT_HOST=jaeger
+      - LISTENPORT=11002
+      - SUCCESSRATE=0.25
+      - ERRORCODE=500
+      - ERRORDELAY=20ms
+    expose:
+      - "11002"
+    ports:
+      - "11002:11002"
+
+  # #####################################################
+  #
+  # Client configurations that call the different components
+  #
+  
   basic_client:
     image: bazel/tracing/client:test_client_image
     depends_on:
       - jaeger
-      - flaky1
       - simple_jaeger_envoy
     networks:
       envoymesh:
@@ -36,12 +66,15 @@ services:
       - SERVERHOST=simple_jaeger_envoy
       - SERVERPORT=10001
       - STARTUPDELAY=10s
+      - REQUESTCOUNT=100
+      - PARALLELISM=5
+      - EXPECTEDSUCCESSRATE=0.7
+      - SUCCESSRATETHRESHOLD=0.08
 
   retry_client:
     image: bazel/tracing/client:test_client_image
     depends_on:
       - jaeger
-      - flaky1
       - simple_retry_envoy
     networks:
       envoymesh:
@@ -53,7 +86,38 @@ services:
       - SERVERHOST=simple_retry_envoy
       - SERVERPORT=10002
       - STARTUPDELAY=9s
+      - REQUESTCOUNT=300
+      - PARALLELISM=10
+      - EXPECTEDSUCCESSRATE=0.91
+      - SUCCESSRATETHRESHOLD=0.02
 
+  priority_retry_client:
+    image: bazel/tracing/client:test_client_image
+    depends_on:
+      - jaeger
+      - priority_with_failover_proxy
+    networks:
+      envoymesh:
+        aliases:
+          - retry_client
+    environment:
+      - JAEGER_SERVICE_NAME=priority_retry_client
+      - JAEGER_AGENT_HOST=jaeger
+      - SERVERHOST=priority_with_failover_proxy
+      - SERVERPORT=10003
+      - STARTUPDELAY=9s
+      - REQUESTCOUNT=100
+      - PARALLELISM=10
+      - EXPECTEDSUCCESSRATE=0.775
+      - SUCCESSRATETHRESHOLD=0.02
+
+
+
+  # #####################################################
+  #
+  # Proxy configurations between the clients and servers
+  #
+  
   simple_jaeger_envoy:
     image: bazel/tracing/envoyproxy:simple_jaeger
     depends_on:
@@ -95,6 +159,35 @@ services:
     ports:
       - "10002:10002"
 
+  priority_with_failover_proxy:
+    image: bazel/tracing/envoyproxy:priority_with_failover
+    depends_on:
+      - flaky1
+      - flaky2
+    networks:
+      envoymesh:
+        aliases:
+          - priority_with_failover_proxy
+    environment:
+      - JAEGER_SERVICE_NAME=envoy-priority-retry
+      - JAEGER_AGENT_HOST=jaeger
+      - LISTEN_PORT=10003
+      - SERVICE_NAME=priority_retry_envoy
+      - SERVICE_HOST2=flaky1
+      - SERVICE_PORT2=11001
+      - SERVICE_HOST1=flaky2
+      - SERVICE_PORT1=11002
+    expose:
+      - "10003"
+    ports:
+      - "10003:10003"
+
+
+  # #####################################################
+  #
+  # Underlying stuff used by everything else
+  #
+  
   jaeger:
     image: jaegertracing/all-in-one:1.8
     environment:
