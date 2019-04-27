@@ -3,12 +3,21 @@ package httphelpers
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 )
+
+func echoHandler(text string) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if len(text) > 0 {
+			io.WriteString(w, text)
+		}
+	}
+}
 
 func ExampleCachedHTTPRequestBody() {
 
@@ -22,6 +31,7 @@ func ExampleCachedHTTPRequestBody() {
 		fmt.Println(len(body))
 		// Do something with the new request like send it to another handler
 		fmt.Println(newRequest.ContentLength)
+		echoHandler("test")(w, newRequest)
 	}
 	req, err := http.NewRequest("POST", "/health-check", strings.NewReader("test123"))
 	if err != nil {
@@ -82,6 +92,81 @@ func TestCachedHTTPRequestBody(t *testing.T) {
 		v := req2.Context().Value(requestBodyKey)
 		if v == nil {
 			t.Errorf("Context doesn't have the cached body")
+		}
+	})
+
+}
+
+func ExampleCachedResponseWriter() {
+	myHandler := func(w http.ResponseWriter, r *http.Request) {
+		cache, newRequest := CachedResponseWriter(w, r)
+		// Send the cached request and writer down the chain
+		echoHandler("test")(cache, newRequest)
+		// Use the cached version of the response body
+		fmt.Println(string(cache.Body()))
+	}
+	req, err := http.NewRequest("POST", "/health-check", strings.NewReader("test123"))
+	if err != nil {
+		log.Panic(err)
+	}
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(myHandler)
+	handler.ServeHTTP(rr, req.WithContext(context.Background()))
+
+	fmt.Println(rr.Code)
+	// Output:
+	// test
+	// 200
+}
+
+func TestCachedResponseWriter(t *testing.T) {
+	t.Run("cachedResponseHolder is a responseWriter", func(t *testing.T) {
+		var rw http.ResponseWriter = &cachedResponseHolder{}
+		if rw == nil {
+			t.Errorf("silly check")
+		}
+	})
+
+	t.Run("no response body works", func(t *testing.T) {
+		req, _ := http.NewRequest("GET", "/test", nil)
+		req2 := req.WithContext(context.Background())
+		var rr http.ResponseWriter = httptest.NewRecorder()
+		cache, newRequest := CachedResponseWriter(rr, req2)
+		if cache == nil {
+			t.Errorf("Cache should not be nil")
+		}
+		if req2 == newRequest {
+			t.Errorf("Expected to get back a different request than was passed in")
+		}
+
+		handler := http.HandlerFunc(echoHandler(""))
+		handler.ServeHTTP(cache, newRequest)
+		if len(cache.Body()) != 0 {
+			t.Errorf("Expected empty cached body")
+		}
+	})
+
+	t.Run("it really caches", func(t *testing.T) {
+		req, _ := http.NewRequest("GET", "/test", nil)
+		req2 := req.WithContext(context.Background())
+		var rr http.ResponseWriter = httptest.NewRecorder()
+		cache1, newRequest1 := CachedResponseWriter(rr, req2)
+		if req2 == newRequest1 {
+			t.Errorf("Expected to get back a different request than was passed in")
+		}
+
+		cache2, newRequest2 := CachedResponseWriter(cache1, newRequest1)
+		if newRequest2 != newRequest1 {
+			t.Errorf("Expected already cached request to be unchanged")
+		}
+		if cache1 != cache2 {
+			t.Errorf("Expected already cached response writer to be unchanged")
+		}
+
+		handler := http.HandlerFunc(echoHandler(""))
+		handler.ServeHTTP(cache2, newRequest2)
+		if len(cache2.Body()) != 0 {
+			t.Errorf("Expected empty cached body")
 		}
 	})
 
