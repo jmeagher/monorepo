@@ -163,10 +163,10 @@ func TestCachedResponseWriter(t *testing.T) {
 			t.Errorf("Expected already cached response writer to be unchanged")
 		}
 
-		handler := http.HandlerFunc(echoHandler(""))
+		handler := http.HandlerFunc(echoHandler("test"))
 		handler.ServeHTTP(cache2, newRequest2)
-		if len(cache2.Body()) != 0 {
-			t.Errorf("Expected empty cached body")
+		if len(cache2.Body()) != 4 {
+			t.Errorf("Expected cached2 body to work")
 		}
 	})
 
