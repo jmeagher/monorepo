@@ -3,6 +3,7 @@ go_library(
     name = "httphelpers",
     srcs = [
         "cached_bodies.go",
+        "simple_retry.go",
     ],
     deps = [
         # "@com_github_opentracing_opentracing_go//:go_default_library",
@@ -14,7 +15,10 @@ go_library(
 
 go_test(
     name = "httphelpers_test",
-    srcs = ["cached_bodies.go", "cached_bodies_test.go"],
+    srcs = [
+        "cached_bodies.go", "cached_bodies_test.go",
+        "simple_retry.go", "simple_retry_test.go",
+        ],
     deps = [":httphelpers"],
     args = ["-test.v"],
     size = "small",
