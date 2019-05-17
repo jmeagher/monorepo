@@ -43,7 +43,6 @@ func (r *retryHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	// TODO: validate this, it's probably missing some key edge cases
 	respHeader := w.Header()
 	for k, values := range resp.HeaderMap {
 		for _, v := range values {

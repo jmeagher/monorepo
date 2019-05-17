@@ -2,8 +2,11 @@ package httphelpers
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strings"
+	"testing"
 )
 
 func ExampleSimpleRetryHandler() {
@@ -44,4 +47,83 @@ func ExampleSimpleRetryHandler() {
 	// redirect handler
 	// ok handler
 	// status 201
+}
+
+func testRunner(t *testing.T, handler http.Handler, runner func(t *testing.T, handler http.Handler)) {
+	wrappedHandler := SimpleRetryHandler(handler)
+	// Ensure the retry wrapper works the same as the direct handler
+	t.Run("direct handler", func(t *testing.T) {
+		runner(t, handler)
+	})
+	t.Run("wrapped handler", func(t *testing.T) {
+		runner(t, wrappedHandler)
+	})
+}
+
+func TestGetHandling(t *testing.T) {
+	basicGet := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(201)
+		w.Header().Set("Content-Type", "plain/text")
+		w.Header().Set("X-test-header", "hi")
+		fmt.Fprintf(w, "testing %s %s", r.Method, r.URL.Path)
+	})
+	getValidation := func(t *testing.T, handler http.Handler) {
+		req, _ := http.NewRequest("GET", "/test", nil)
+		resp := httptest.NewRecorder()
+
+		handler.ServeHTTP(resp, req)
+		body, err1 := ioutil.ReadAll(resp.Body)
+		if err1 != nil {
+			t.Fatal(err1)
+		}
+		if string(body) != "testing GET /test" {
+			t.Fatalf("Body validation error '%s'", body)
+		}
+
+		if ct := resp.HeaderMap.Get("Content-Type"); ct != "plain/text" {
+			t.Fatalf("content type validation failure '%s'", ct)
+		}
+
+		if status := resp.Code; status != 201 {
+			t.Fatalf("status validation fail %d", status)
+		}
+
+		if custHeader := resp.HeaderMap.Get("X-test-header"); custHeader != "hi" {
+			t.Fatalf("custom header failed '%s'", custHeader)
+		}
+	}
+	testRunner(t, basicGet, getValidation)
+}
+
+func TestPostHandling(t *testing.T) {
+	basicpost := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(201)
+		w.Header().Set("Content-Type", r.Header.Get("Content-Type"))
+		body, _ := ioutil.ReadAll(r.Body)
+		fmt.Fprintf(w, "testing %s %s ", r.Method, r.URL.Path)
+		w.Write(body)
+	})
+	postValidation := func(t *testing.T, handler http.Handler) {
+		req, _ := http.NewRequest("POST", "/test", strings.NewReader("post test"))
+		req.Header.Set("Content-Type", "plain/text")
+		resp := httptest.NewRecorder()
+
+		handler.ServeHTTP(resp, req)
+		body, err1 := ioutil.ReadAll(resp.Body)
+		if err1 != nil {
+			t.Fatal(err1)
+		}
+		if string(body) != "testing POST /test post test" {
+			t.Fatalf("Body validation error '%s'", body)
+		}
+
+		if ct := resp.HeaderMap.Get("Content-Type"); ct != "plain/text" {
+			t.Fatalf("content type validation failure '%s'", ct)
+		}
+
+		if status := resp.Code; status != 201 {
+			t.Fatalf("status validation fail %d", status)
+		}
+	}
+	testRunner(t, basicpost, postValidation)
 }
