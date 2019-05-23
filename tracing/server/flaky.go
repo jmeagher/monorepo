@@ -52,12 +52,16 @@ func main() {
 
 	var handler http.Handler
 	if *successPct < 1.0 {
-		handler = handlers.GlobalOpenTracingHandler("maybe-flake", handlers.RandomSplitHandler(
+		tmp := handlers.GlobalOpenTracingHandler("maybe-flake", handlers.RandomSplitHandler(
 			float32(*successPct),
 			handlers.GlobalOpenTracingHandler("ok-handler", jsonResponder("flake-ok", 200, okDelay)),
 			handlers.GlobalOpenTracingHandler("flake-handler", jsonResponder("flake-bad", *errorCode, errDelay))))
+		tmp.AddHandlerTag("static-tag", "just a test of flaky server")
+		handler = tmp
 	} else {
-		handler = handlers.GlobalOpenTracingHandler("always-ok", jsonResponder("ok", 200, okDelay))
+		tmp := handlers.GlobalOpenTracingHandler("always-ok", jsonResponder("ok", 200, okDelay))
+		tmp.AddHandlerTag("static-tag", "just a test always ok")
+		handler = tmp
 	}
 	if *debug {
 		handler = handlers.DebugRequestHandler(handler)

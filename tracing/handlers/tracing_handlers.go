@@ -11,19 +11,30 @@ import (
 )
 
 // GlobalOpenTracingHandler wraps an existing handler with open-tracing calls using the global tracer
-func GlobalOpenTracingHandler(spanName string, wrapped http.Handler) http.Handler {
+func GlobalOpenTracingHandler(spanName string, wrapped http.Handler) TaggableHandler {
 	return OpenTracingHandler(opentracing.GlobalTracer(), spanName, wrapped)
 }
 
 // OpenTracingHandler wraps an existing handler with open-tracing calls using the tracer
-func OpenTracingHandler(tracer opentracing.Tracer, spanName string, wrapped http.Handler) http.Handler {
-	return &openTracingHandler{tracer, fmt.Sprintf("http.server.%s", spanName), wrapped}
+func OpenTracingHandler(tracer opentracing.Tracer, spanName string, wrapped http.Handler) TaggableHandler {
+	return &openTracingHandler{tracer, fmt.Sprintf("http.server.%s", spanName), wrapped, make(map[string]interface{})}
+}
+
+// TaggableHandler allows passing in a static set of tags that will be added to every span
+type TaggableHandler interface {
+	http.Handler
+	AddHandlerTag(string, interface{})
 }
 
 type openTracingHandler struct {
-	tracer   opentracing.Tracer
-	spanName string
-	wrapped  http.Handler
+	tracer    opentracing.Tracer
+	spanName  string
+	wrapped   http.Handler
+	tagsToAdd map[string]interface{}
+}
+
+func (f *openTracingHandler) AddHandlerTag(tag string, value interface{}) {
+	f.tagsToAdd[tag] = value
 }
 
 func (f *openTracingHandler) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
@@ -47,6 +58,11 @@ func (f *openTracingHandler) ServeHTTP(writer http.ResponseWriter, req *http.Req
 			ext.RPCServerOption(wireContext))
 		defer serverSpan.Finish()
 		serverSpan.SetTag("user_agent", request.Header.Get("User-Agent"))
+
+		for tag, value := range f.tagsToAdd {
+			serverSpan.SetTag(tag, value)
+		}
+
 		ctx := opentracing.ContextWithSpan(request.Context(), serverSpan)
 		request = request.WithContext(ctx)
 

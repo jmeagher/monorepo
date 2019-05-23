@@ -40,9 +40,11 @@ echo "Validate that tracing is really working"
 ID=$RANDOM
 curl -H "Uber-Trace-Id: $ID:$ID:0:3" localhost:11001
 sleep 1s
-curl -v http://localhost:16686/api/traces/$ID | grep "\"traceID\":\"$ID\"" && FOUND=true || FOUND=false
-if [[ $FOUND != true ]] ; then
+if ! curl -sv http://localhost:16686/api/traces/$ID | grep "\"traceID\":\"$ID\"" ; then
   finish 1 "Did not find the trace in Jaeger"
+fi
+if ! curl -sv http://localhost:16686/api/traces/$ID | grep "static-tag" ; then
+  finish 1 "Did not find the static span tag in Jaeger"
 fi
 
 finish 0 "Test looks successful"
