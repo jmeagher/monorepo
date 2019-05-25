@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/jmeagher/monorepo/golang/httphelpers"
 	"github.com/jmeagher/monorepo/tracing/handlers"
 	"github.com/jmeagher/monorepo/tracing/jaeger"
 	"github.com/kelseyhightower/envconfig"
@@ -23,7 +24,7 @@ type Config struct {
 
 func jsonResponder(text string, code int, delay *time.Duration) http.Handler {
 	json := fmt.Sprintf("{\"text\": \"%s\", \"success\": %t}", text, code < 300)
-	return handlers.DelayHandler(*delay, handlers.StaticHandler(json, "application/json", code))
+	return httphelpers.DelayHandler(*delay, httphelpers.StaticHandler(json, "application/json", code))
 }
 
 func main() {
@@ -52,7 +53,7 @@ func main() {
 
 	var handler http.Handler
 	if *successPct < 1.0 {
-		tmp := handlers.GlobalOpenTracingHandler("maybe-flake", handlers.RandomSplitHandler(
+		tmp := handlers.GlobalOpenTracingHandler("maybe-flake", httphelpers.RandomSplitHandler(
 			float32(*successPct),
 			handlers.GlobalOpenTracingHandler("ok-handler", jsonResponder("flake-ok", 200, okDelay)),
 			handlers.GlobalOpenTracingHandler("flake-handler", jsonResponder("flake-bad", *errorCode, errDelay))))
@@ -64,7 +65,7 @@ func main() {
 		handler = tmp
 	}
 	if *debug {
-		handler = handlers.DebugRequestHandler(handler)
+		handler = httphelpers.DebugRequestHandler(handler)
 	}
 	http.Handle("/", handler)
 

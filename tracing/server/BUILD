@@ -4,6 +4,7 @@ go_binary(
     srcs = ["flaky.go"],
     deps = [
         "@com_github_kelseyhightower_envconfig//:go_default_library",
+        "//golang/httphelpers:httphelpers",
         "//tracing/handlers:handlers",
         "//tracing/jaeger:jaeger_init",
     ],
@@ -14,6 +15,7 @@ go_image(
     srcs = ["flaky.go"],
     deps = [
         "@com_github_kelseyhightower_envconfig//:go_default_library",
+        "//golang/httphelpers:httphelpers",
         "//tracing/handlers:handlers",
         "//tracing/jaeger:jaeger_init",
     ],

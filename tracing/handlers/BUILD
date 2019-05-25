@@ -2,7 +2,6 @@
 go_library(
     name = "handlers",
     srcs = [
-        "common_handlers.go",
         "tracing_handlers.go",
     ],
     deps = [
@@ -12,13 +11,6 @@ go_library(
         ],
     importpath = "github.com/jmeagher/monorepo/tracing/handlers",
     visibility = ["//visibility:public"],
-)
-
-go_test(
-    name = "common_handlers_test",
-    srcs = ["common_handlers.go", "common_handlers_test.go"],
-    deps = [":handlers"],
-    size = "small",
 )
 
 filegroup(

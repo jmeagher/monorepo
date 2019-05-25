@@ -3,6 +3,7 @@ go_library(
     name = "httphelpers",
     srcs = [
         "cached_bodies.go",
+        "common_handlers.go",
         "simple_retry.go",
     ],
     deps = [
@@ -17,6 +18,7 @@ go_test(
     name = "httphelpers_test",
     srcs = [
         "cached_bodies.go", "cached_bodies_test.go",
+        "common_handlers.go", "common_handlers_test.go",
         "simple_retry.go", "simple_retry_test.go",
         ],
     deps = [":httphelpers"],
