@@ -10,6 +10,7 @@ go_library(
     srcs = [
         "cached_bodies.go",
         "common_handlers.go",
+        "logger.go",
         "simple_retry.go",
     ],
     importpath = "github.com/jmeagher/monorepo/golang/httphelpers",
@@ -22,6 +23,7 @@ go_test(
     srcs = [
         "cached_bodies_test.go",
         "common_handlers_test.go",
+        "logger_test.go",
         "simple_retry_test.go",
     ],
     args = ["-test.v"],
