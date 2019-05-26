@@ -4,6 +4,7 @@ go_library(
     srcs = [
         "cached_bodies.go",
         "common_handlers.go",
+        "logger.go",
         "simple_retry.go",
     ],
     deps = [
@@ -19,6 +20,7 @@ go_test(
     srcs = [
         "cached_bodies.go", "cached_bodies_test.go",
         "common_handlers.go", "common_handlers_test.go",
+        "logger.go", "logger_test.go",
         "simple_retry.go", "simple_retry_test.go",
         ],
     deps = [":httphelpers"],
