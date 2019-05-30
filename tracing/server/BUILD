@@ -8,13 +8,7 @@ go_binary(
 
 go_image(
     name = "flaky_image",
-    srcs = ["flaky.go"],
-    deps = [
-        "@com_github_kelseyhightower_envconfig//:go_default_library",
-        "//golang/httphelpers:httphelpers",
-        "//tracing/handlers:handlers",
-        "//tracing/jaeger:jaeger_init",
-    ],
+    embed = [":go_default_library"],
     goarch = "amd64",
     goos = "linux",
     pure = "on",
@@ -30,5 +24,10 @@ go_library(
     srcs = ["flaky.go"],
     importpath = "github.com/jmeagher/monorepo/tracing/server",
     visibility = ["//visibility:private"],
-    deps = ["@com_github_kelseyhightower_envconfig//:go_default_library"],
+    deps = [
+        "//golang/httphelpers:go_default_library",
+        "//tracing/handlers:go_default_library",
+        "//tracing/jaeger:go_default_library",
+        "@com_github_kelseyhightower_envconfig//:go_default_library",
+    ],
 )

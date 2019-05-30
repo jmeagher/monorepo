@@ -8,14 +8,7 @@ go_binary(
 
 go_image(
     name = "test_client_image",
-    srcs = ["test_client.go"],
-    deps = [
-        "//tracing/jaeger:jaeger_init",
-        "//tracing/handlers:handlers",
-        "@com_github_opentracing_opentracing_go//:go_default_library",
-        "@com_github_opentracing_opentracing_go//ext:go_default_library",
-        "@com_github_kelseyhightower_envconfig//:go_default_library",
-    ],
+    embed = [":go_default_library"],
     goarch = "amd64",
     goos = "linux",
     pure = "on",
@@ -32,6 +25,7 @@ go_library(
     importpath = "github.com/jmeagher/monorepo/tracing/client",
     visibility = ["//visibility:private"],
     deps = [
+        "//tracing/jaeger:go_default_library",
         "@com_github_kelseyhightower_envconfig//:go_default_library",
         "@com_github_opentracing_opentracing_go//:go_default_library",
         "@com_github_opentracing_opentracing_go//ext:go_default_library",
