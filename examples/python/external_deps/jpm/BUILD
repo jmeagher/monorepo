@@ -2,7 +2,10 @@ package(default_visibility = ["//visibility:public"])
 
 py_library(
     name = "numerics",
-    srcs = ["numerics.py", "__init__.py"],
+    srcs = [
+        "numerics.py",
+        "__init__.py",
+    ],
     deps = [
         requirement("pandas"),
         requirement("six"),

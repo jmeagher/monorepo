@@ -1,39 +1,34 @@
 load("@io_bazel_rules_scala//scala:scala_import.bzl", "scala_import")
+
 java_library(
     name = "jffi",
     exports = [
-        "//external:jar/com/github/jnr/jffi"
+        "//external:jar/com/github/jnr/jffi",
     ],
     visibility = [
-        "//3rdparty/jvm:__subpackages__"
-    ]
+        "//3rdparty/jvm:__subpackages__",
+    ],
 )
-
-
 
 java_library(
     name = "jffi_jar_native",
     exports = [
-        "//external:jar/com/github/jnr/jffi_jar_native"
+        "//external:jar/com/github/jnr/jffi_jar_native",
     ],
     visibility = [
-        "//3rdparty/jvm:__subpackages__"
-    ]
+        "//3rdparty/jvm:__subpackages__",
+    ],
 )
-
-
 
 java_library(
     name = "jnr_constants",
     exports = [
-        "//external:jar/com/github/jnr/jnr_constants"
+        "//external:jar/com/github/jnr/jnr_constants",
     ],
     visibility = [
-        "//3rdparty/jvm:__subpackages__"
-    ]
+        "//3rdparty/jvm:__subpackages__",
+    ],
 )
-
-
 
 java_library(
     name = "jnr_ffi",
@@ -46,37 +41,31 @@ java_library(
         "//external:jar/com/github/jnr/jnr_ffi",
         ":jffi",
         ":jffi_jar_native",
-        ":jnr_x86asm"
+        ":jnr_x86asm",
     ],
     visibility = [
-        "//3rdparty/jvm:__subpackages__"
-    ]
+        "//3rdparty/jvm:__subpackages__",
+    ],
 )
-
-
 
 java_library(
     name = "jnr_posix",
     exports = [
         "//external:jar/com/github/jnr/jnr_posix",
         ":jnr_constants",
-        ":jnr_ffi"
+        ":jnr_ffi",
     ],
     visibility = [
-        "//3rdparty/jvm:__subpackages__"
-    ]
+        "//3rdparty/jvm:__subpackages__",
+    ],
 )
-
-
 
 java_library(
     name = "jnr_x86asm",
     exports = [
-        "//external:jar/com/github/jnr/jnr_x86asm"
+        "//external:jar/com/github/jnr/jnr_x86asm",
     ],
     visibility = [
-        "//3rdparty/jvm:__subpackages__"
-    ]
+        "//3rdparty/jvm:__subpackages__",
+    ],
 )
-
-

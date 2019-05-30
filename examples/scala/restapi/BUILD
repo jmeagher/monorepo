@@ -6,7 +6,7 @@ scala_binary(
         "//examples/scala/restapi/src/main/scala/jpm/restapi",
     ],
     resources = [
-        "application.conf"
+        "application.conf",
     ],
     resource_strip_prefix = "examples/scala/restapi",
 )
@@ -16,13 +16,13 @@ scala_repl(
     visibility = ["//visibility:public"],
     deps = [
         "//examples/scala/restapi/src/main/scala/jpm/restapi",
-    ]
+    ],
 )
 
 scala_image(
     name = "tmp",
     deps = [
-        ":scala_rest"
+        ":scala_rest",
     ],
     main_class = "jpm.restapi.RestServerMain",
 )

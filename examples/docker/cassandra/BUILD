@@ -1,4 +1,3 @@
-
 # Still figuring this out
 # This will get the image installed in the local docker:
 #   bazel run //examples/docker/cassandra:cassandra_test
@@ -10,7 +9,7 @@
 container_image(
     name = "cassandra_single_node",
     base = "@cassandra3//image",
-    entrypoint = '/load_data_and_run.sh',
-    files = glob(['*.sh']),
+    entrypoint = "/load_data_and_run.sh",
+    files = glob(["*.sh"]),
     visibility = ["//visibility:public"],
 )

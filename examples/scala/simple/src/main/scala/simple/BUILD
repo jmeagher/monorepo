@@ -3,5 +3,5 @@ scala_library(
     srcs = glob(["*.scala"]),
     visibility = ["//visibility:public"],
     deps = [
-    ]
+    ],
 )

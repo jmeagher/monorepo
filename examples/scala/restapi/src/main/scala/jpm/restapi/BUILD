@@ -1,4 +1,3 @@
-
 scala_library(
     name = "restapi",
     srcs = glob(["*.scala"]),
