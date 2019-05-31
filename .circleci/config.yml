@@ -5,6 +5,8 @@ commands:
       - run:
           name: Install bazel
           command: |
+            sudo apt-get update -q
+            sudo apt-get install libxml2-utils python-dev -y # Install some basics needed for python
             curl -OL https://github.com/bazelbuild/bazel/releases/download/$BAZEL_VER/bazel-$BAZEL_VER-installer-linux-x86_64.sh
             chmod +x bazel-$BAZEL_VER-installer-linux-x86_64.sh
             sudo ./bazel-$BAZEL_VER-installer-linux-x86_64.sh
@@ -48,7 +50,6 @@ commands:
 jobs:
   build:
     docker:
-      # Mostly arbitrary choice for the base image
       - image: circleci/openjdk:8
     working_directory: ~/app/
     environment:
