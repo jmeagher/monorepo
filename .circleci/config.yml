@@ -37,9 +37,9 @@ commands:
   e2e-test:
     steps:
       - run:
-          name: Test with bazel
+          name: End to end tests
           command: |
-            ./test-e2e.sh
+            ./test_e2e.sh
 
   restore-caches:
     steps:
