@@ -36,19 +36,20 @@ commands:
     steps:
       - restore_cache:
           keys:
-            - "bazel_cache"
+            - "bazel_cache_$BAZEL_VER"
 
   save-caches:
     steps:
       - save_cache:
-          key: "bazel_cache"
+          key: "bazel_cache_$BAZEL_VER"
           paths:
             - "/home/circleci/.cache/bazel/"
 
 jobs:
   build:
     docker:
-      - image: ubuntu:14.04
+      # Mostly arbitrary choice for the base image
+      - image: circleci/openjdk:8
     working_directory: ~/app/
     environment:
       BAZEL_VER: "0.22.0"
