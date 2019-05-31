@@ -48,12 +48,12 @@ commands:
             - "/home/circleci/.cache/bazel/"
 
 jobs:
-  build:
+  build-template: &build-template
     docker:
       - image: circleci/openjdk:8
     working_directory: ~/app/
     environment:
-      BAZEL_VER: "0.22.0"
+      BAZEL_VER: "override_this"
     steps:
       - checkout
       - install-bazel
@@ -63,8 +63,18 @@ jobs:
       - e2e-test
       - save-caches
 
+  build-bazel-019:
+    <<: *build-template
+    environment:
+      BAZEL_VER: "0.19.2"
+  build-bazel-022:
+    <<: *build-template
+    environment:
+      BAZEL_VER: "0.22.0"
+
 workflows:
   version: 2
   default_workflow:
     jobs:
-      - build
+      - build-bazel-019
+      - build-bazel-022
