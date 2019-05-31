@@ -12,7 +12,6 @@ go_library(
         "common_handlers.go",
         "logger.go",
         "simple_retry.go",
-        "structured_log.go",
     ],
     importpath = "github.com/jmeagher/monorepo/golang/httphelpers",
     visibility = ["//visibility:public"],
