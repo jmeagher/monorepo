@@ -36,14 +36,16 @@ commands:
 
   restore-caches:
     steps:
+      - run: echo "$BAZEL_VER" > _cache_ver_tmp
       - restore_cache:
           keys:
-            - "bazel_cache_$BAZEL_VER"
+            - bazel_cache_{{ checksum "_cache_ver_tmp" }}
 
   save-caches:
     steps:
+      - run: echo "$BAZEL_VER" > _cache_ver_tmp
       - save_cache:
-          key: "bazel_cache_$BAZEL_VER"
+          key: bazel_cache_{{ checksum "_cache_ver_tmp" }}
           paths:
             - "/home/circleci/.cache/bazel/"
 
