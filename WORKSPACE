@@ -42,9 +42,9 @@ maven_dependencies()
 # Go support
 http_archive(
     name = "bazel_gazelle",
-    urls = ["https://github.com/bazelbuild/bazel-gazelle/archive/587e0e9cc7ab78ac7926caa0d3378d29bc71080a.zip"],
+    urls = ["https://github.com/bazelbuild/bazel-gazelle/archive/ddff739eca1ac0d5cc3530fc6af2ccfe19becc78.zip"],
     type = "zip",
-    strip_prefix = "bazel-gazelle-587e0e9cc7ab78ac7926caa0d3378d29bc71080a",
+    strip_prefix = "bazel-gazelle-ddff739eca1ac0d5cc3530fc6af2ccfe19becc78",
 )
 
 load(
