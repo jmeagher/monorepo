@@ -1,5 +1,3 @@
-
-
 rust_binary(
     name = "fibonacci",
     srcs = [

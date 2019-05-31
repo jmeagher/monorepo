@@ -4,7 +4,7 @@ scala_binary(
     visibility = ["//visibility:public"],
     deps = [
         "//examples/scala/simple/src/main/scala/jpm",
-    ]
+    ],
 )
 
 scala_binary(
@@ -13,7 +13,7 @@ scala_binary(
     visibility = ["//visibility:public"],
     deps = [
         "//examples/scala/simple/src/main/scala/simple",
-    ]
+    ],
 )
 
 scala_repl(
@@ -21,5 +21,5 @@ scala_repl(
     visibility = ["//visibility:public"],
     deps = [
         "//examples/scala/simple/src/main/scala/jpm",
-    ]
+    ],
 )

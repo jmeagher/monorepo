@@ -54,3 +54,7 @@ script:
   - bazel test //...
   - bazel build //...
   - ./test_e2e.sh
+
+  # This command modifies bazel build files, it's used here for the incidental linting checks it does.
+  # Nothing should get modified from the gazelle command
+  - bazel run //:gazelle && git diff --exit-code
