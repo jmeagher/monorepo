@@ -50,9 +50,6 @@ jobs:
     docker:
       - image: ubuntu:14.04
     working_directory: ~/app/
-    machine:
-      enabled: true
-      image: circleci/golang:1.12.5
     environment:
       BAZEL_VER: "0.22.0"
     steps:
