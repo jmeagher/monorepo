@@ -52,14 +52,6 @@ def jaeger_go_deps():
     )
 
     go_repository(
-        name = "com_github_opentracing_opentracing_go",
-        importpath = "github.com/opentracing/opentracing-go",
-        urls = ["https://github.com/opentracing/opentracing-go/archive/1949ddbfd147afd4d964a9f00b24eb291e0e7c38.tar.gz"],
-        strip_prefix = "opentracing-go-1949ddbfd147afd4d964a9f00b24eb291e0e7c38/",
-        build_file_proto_mode = "default",
-    )
-
-    go_repository(
         name = "com_github_pkg_errors",
         importpath = "github.com/pkg/errors",
         urls = ["https://github.com/pkg/errors/archive/645ef00459ed84a119197bfb8d8205042c6df63d.tar.gz"],
