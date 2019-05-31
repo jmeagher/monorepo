@@ -15,7 +15,6 @@ go_library(
     ],
     importpath = "github.com/jmeagher/monorepo/golang/httphelpers",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_sirupsen_logrus//:go_default_library"],
 )
 
 go_test(
