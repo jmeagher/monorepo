@@ -5,13 +5,20 @@ commands:
       - run:
           name: Install bazel
           command: |
-            sudo apt-get update -q
-            sudo apt-get install libxml2-utils python-dev -y # Install some basics needed for python
             curl -OL https://github.com/bazelbuild/bazel/releases/download/$BAZEL_VER/bazel-$BAZEL_VER-installer-linux-x86_64.sh
             chmod +x bazel-$BAZEL_VER-installer-linux-x86_64.sh
             sudo ./bazel-$BAZEL_VER-installer-linux-x86_64.sh
             rm ./bazel-$BAZEL_VER-installer-linux-x86_64.sh
             bazel info release
+
+  pre-run-setup:
+    steps:
+      - run:
+          name: Prepare to run bazel
+          command: |
+            sudo apt-get update -q
+            sudo apt-get install libxml2-utils python-dev -y # Install some basics needed for python
+            cat .bazelrc.travis >> .bazelrc
 
   bazel-build:
     steps:
@@ -58,6 +65,7 @@ jobs:
       BAZEL_VER: "override_this"
     steps:
       - checkout
+      - pre-run-setup
       - install-bazel
       - restore-caches
       - bazel-build
