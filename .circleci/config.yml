@@ -1,0 +1,69 @@
+version: 2.1
+commands:
+  install-bazel:
+    steps:
+      - run:
+          name: Install bazel
+          command: |
+            curl -OL https://github.com/bazelbuild/bazel/releases/download/$BAZEL_VER/bazel-$BAZEL_VER-installer-linux-x86_64.sh
+            chmod +x bazel-$BAZEL_VER-installer-linux-x86_64.sh
+            sudo ./bazel-$BAZEL_VER-installer-linux-x86_64.sh
+            rm ./bazel-$BAZEL_VER-installer-linux-x86_64.sh
+            bazel info release
+
+  bazel-build:
+    steps:
+      - run:
+          name: Build with bazel
+          command: |
+            bazel build //...
+
+  bazel-test:
+    steps:
+      - run:
+          name: Test with bazel
+          command: |
+            bazel test //...
+
+  e2e-test:
+    steps:
+      - run:
+          name: Test with bazel
+          command: |
+            ./test-e2e.sh
+
+  restore-caches:
+    steps:
+      - restore_cache:
+          keys:
+            - "bazel_cache"
+
+  save-caches:
+    steps:
+      - save_cache:
+          key: "bazel_cache"
+          paths:
+            - "/home/circleci/.cache/bazel/"
+
+jobs:
+  build:
+    working_directory: ~/app/
+    machine:
+      enabled: true
+      image: circleci/golang:1.12.5
+    environment:
+      BAZEL_VER: "0.22.0"
+    steps:
+      - checkout
+      - install-bazel
+      - restore-caches
+      - bazel-build
+      - bazel-test
+      - e2e-test
+      - save-caches
+
+workflows:
+  version: 2
+  default_workflow:
+    jobs:
+      - build
