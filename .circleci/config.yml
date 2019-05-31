@@ -47,6 +47,8 @@ commands:
 
 jobs:
   build:
+    docker:
+      - image: ubuntu:14.04
     working_directory: ~/app/
     machine:
       enabled: true
