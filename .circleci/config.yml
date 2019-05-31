@@ -64,14 +64,16 @@ jobs:
     environment:
       BAZEL_VER: "override_this"
     steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
       - checkout
       - pre-run-setup
       - install-bazel
       - restore-caches
       - bazel-build
       - bazel-test
-      - e2e-test
       - save-caches
+      - e2e-test
 
   build-bazel-019:
     <<: *build-template
