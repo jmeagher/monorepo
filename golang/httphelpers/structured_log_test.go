@@ -26,5 +26,5 @@ func ExampleStructuredLogger() {
 	// Note: time related output is disabled to make this testing easier
 
 	// Output:
-	// level=debug content-type=text/plain my-header=test-header non-existent-header= requestLength=0 responseCode=201 responseLength=4
+	// level=debug content-type=text/plain http.methd=GET http.status_code=201 http.url_details.path=/test my-header=test-header network.bytes_read=0 network.bytes_written=4 non-existent-header=
 }

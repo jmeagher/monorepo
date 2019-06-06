@@ -36,11 +36,13 @@ func (r *StructuredLogger) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	logFunc := func() {
 		logFields := logs.Fields{}
 
-		logFields["responseCode"] = resp.Status()
-		logFields["requestLength"] = len(requestBody)
-		logFields["responseLength"] = len(resp.Body())
+		logFields["http.url_details.path"] = req.URL.Path
+		logFields["http.methd"] = req.Method
+		logFields["http.status_code"] = resp.Status()
+		logFields["network.bytes_read"] = len(requestBody)
+		logFields["network.bytes_written"] = len(resp.Body())
 		if !r.DisableDuration {
-			logFields["timeSec"] = time.Now().Sub(startTime).Seconds()
+			logFields["duration_seconds"] = time.Now().Sub(startTime).Seconds()
 		}
 
 		toLog := r.Logger.WithFields(logFields)
