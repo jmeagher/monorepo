@@ -6,3 +6,6 @@
 /bazel-testlogs
 
 /user.bazelrc
+
+# Bazel handles version details
+/go.sum
