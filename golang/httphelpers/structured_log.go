@@ -7,6 +7,18 @@ import (
 	logs "github.com/sirupsen/logrus"
 )
 
+// LogRequest pulls together all the key information about the request and response so any additional
+// log fields can be saved
+type LogRequest struct {
+	RequestBody     []byte
+	ResponseBody    []byte
+	OriginalRequest *http.Request
+	ResponseHeaders http.Header
+}
+
+// AddFields allows adding extra structured data based on the request and/or response
+type AddFields func(logs.Fields, *LogRequest)
+
 // NewStructuredLogger builds a basic logger that can then be customized
 func NewStructuredLogger(logger *logs.Logger, nextHandler http.Handler) *StructuredLogger {
 	return &StructuredLogger{
@@ -35,8 +47,9 @@ type StructuredLogger struct {
 	// The log level used for outputting the logs. Defaults to logrus.DebugLevel
 	logs.Level
 
-	logger      *logs.Logger
-	nextHandler http.Handler
+	extraLogging []AddFields
+	logger       *logs.Logger
+	nextHandler  http.Handler
 }
 
 func (r *StructuredLogger) ServeHTTP(w http.ResponseWriter, req *http.Request) {
@@ -60,6 +73,18 @@ func (r *StructuredLogger) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			logFields["duration_seconds"] = time.Now().Sub(startTime).Seconds()
 		}
 
+		if len(r.extraLogging) != 0 {
+			lr := &LogRequest{
+				requestBody,
+				resp.Body(),
+				req,
+				resp.Header(),
+			}
+			for _, adder := range r.extraLogging {
+				adder(logFields, lr)
+			}
+		}
+
 		toLog := r.logger.WithFields(logFields)
 		toLog = toLog.WithFields(logHeaders(req.Header, r.RequestHeaders))
 		toLog = toLog.WithFields(logHeaders(resp.Header(), r.ResponseHeaders))
@@ -78,27 +103,42 @@ func logHeaders(header http.Header, toCapture map[string]string) logs.Fields {
 }
 
 // CaptureRequestHeaders is a helper to add request headers to capture under the same logged name as the header
-func (r *StructuredLogger) CaptureRequestHeaders(headers ...string) {
+// Returns the original structured logger for chaining.
+func (r *StructuredLogger) CaptureRequestHeaders(headers ...string) *StructuredLogger {
 	for _, header := range headers {
 		r.CaptureRequestHeaderAs(header, header)
 	}
+	return r
 }
 
 // CaptureRequestHeaderAs outputs the value of the request header under the outputField.
 // Example: log.CaptureRequestHeaderAs("User-Agent", "http.useragent")
-func (r *StructuredLogger) CaptureRequestHeaderAs(header string, outputField string) {
+// Returns the original structured logger for chaining.
+func (r *StructuredLogger) CaptureRequestHeaderAs(header string, outputField string) *StructuredLogger {
 	r.RequestHeaders[header] = outputField
+	return r
 }
 
 // CaptureResponseHeaders is a helper to add response headers to capture under the same logged name as the header
-func (r *StructuredLogger) CaptureResponseHeaders(headers ...string) {
+// Returns the original structured logger for chaining.
+func (r *StructuredLogger) CaptureResponseHeaders(headers ...string) *StructuredLogger {
 	for _, header := range headers {
 		r.CaptureResponseHeaderAs(header, header)
 	}
+	return r
 }
 
 // CaptureResponseHeaderAs outputs the value of the response header under the outputField.
 // Example: log.CaptureRequestHeaderAs("Content-Type", "http.content-type")
-func (r *StructuredLogger) CaptureResponseHeaderAs(header string, outputField string) {
+// Returns the original structured logger for chaining.
+func (r *StructuredLogger) CaptureResponseHeaderAs(header string, outputField string) *StructuredLogger {
 	r.ResponseHeaders[header] = outputField
+	return r
+}
+
+// AddExtraFields allows custom code to add more fields to the structured logs.
+// Returns the original structured logger for chaining.
+func (r *StructuredLogger) AddExtraFields(adder AddFields) *StructuredLogger {
+	r.extraLogging = append(r.extraLogging, adder)
+	return r
 }
