@@ -11,7 +11,7 @@ import (
 	logs "github.com/sirupsen/logrus"
 )
 
-func ExampleStructuredLogger() {
+func ExampleStructuredLogger_simpleUse() {
 	logger := logs.New()
 	logger.SetFormatter(&logs.TextFormatter{DisableTimestamp: true})
 	logger.SetLevel(logs.DebugLevel)
@@ -34,6 +34,27 @@ func ExampleStructuredLogger() {
 	// level=debug content-type=text/plain http.method=GET http.status_code=201 http.url_details.path=/test http.useragent=monorepo-test my-header=test-header network.bytes_read=0 network.bytes_written=4 non-existent-header=
 }
 
+func ExampleStructuredLogger_customFields() {
+	logger := logs.New()
+	logger.SetFormatter(&logs.TextFormatter{DisableTimestamp: true})
+	logger.SetLevel(logs.DebugLevel)
+	logger.Out = os.Stdout
+
+	handler := NewStructuredLogger(logger, StaticHandler("test", "text/plain", 201))
+	handler.DisableDuration = true
+
+	handler.AddExtraFields(func(fields logs.Fields, logReq *LogRequest) {
+		fields["my_custom"] = "test"
+		fields["more_custom"] = logReq.OriginalRequest.URL.Path
+	})
+
+	req, _ := http.NewRequest("GET", "/test", nil)
+	handler.ServeHTTP(httptest.NewRecorder(), req)
+
+	// Output:
+	// level=debug http.method=GET http.status_code=201 http.url_details.path=/test more_custom=/test my_custom=test network.bytes_read=0 network.bytes_written=4
+}
+
 func BenchmarkNoBodyStructuredLogger(b *testing.B) { RunBenchmarkStructuredLogger(0, b) }
 func Benchmark1KStructuredLogger(b *testing.B)     { RunBenchmarkStructuredLogger(1000, b) }
 func Benchmark1MStructuredLogger(b *testing.B)     { RunBenchmarkStructuredLogger(1000*1000, b) }
@@ -48,6 +69,10 @@ func RunBenchmarkStructuredLogger(bodySize int, b *testing.B) {
 	b.ReportAllocs()
 
 	handler := NewStructuredLogger(logger, StaticHandler("test", "text/plain", 201))
+	handler.AddExtraFields(func(fields logs.Fields, logReq *LogRequest) {
+		fields["more_custom"] = logReq.OriginalRequest.URL.Path
+	})
+
 	var body []byte
 	if bodySize > 0 {
 		body = make([]byte, bodySize)
