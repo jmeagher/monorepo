@@ -6,9 +6,12 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"sync"
 	"testing"
 
 	logs "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus/hooks/test"
+	"github.com/stretchr/testify/assert"
 )
 
 func ExampleStructuredLogger_simpleUse() {
@@ -81,4 +84,54 @@ func RunBenchmarkStructuredLogger(bodySize int, b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		handler.ServeHTTP(httptest.NewRecorder(), req)
 	}
+}
+
+func TestConcurrentLogging(t *testing.T) {
+	logger, hook := test.NewNullLogger()
+
+	waiting := sync.WaitGroup{}
+	wait := make(chan struct{})
+	handler := NewStructuredLogger(logger, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		waiting.Done()
+		<-wait
+	}))
+	handler.IncludeConcurrentCount = true
+	handler.Level = logs.ErrorLevel // So logs are output by default
+
+	req, _ := http.NewRequest("GET", "/test", nil)
+	wg := sync.WaitGroup{}
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		waiting.Add(1)
+		go func() {
+			defer wg.Done()
+			handler.ServeHTTP(httptest.NewRecorder(), req)
+		}()
+	}
+
+	// Wait until everything is inside the internal handler so they should all be concurrent
+	waiting.Wait()
+	// Close to allow the internal handler to proceed
+	close(wait)
+	// Wait for all internal handlers to finish
+	wg.Wait()
+	assert.Equal(t, 10, len(hook.Entries))
+	min := 1000
+	max := -1
+	for _, e := range hook.Entries {
+		raw := e.Data["concurrent"]
+		vu, ok := raw.(uint32)
+		if !ok {
+			t.Fatalf("Concurrent field was not convertable to an int, got %#v", raw)
+		}
+		v := int(vu)
+		if v < min {
+			min = v
+		}
+		if v > max {
+			max = v
+		}
+	}
+	assert.Equal(t, 10, max)
+	assert.Equal(t, 1, min)
 }
