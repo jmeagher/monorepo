@@ -31,5 +31,9 @@ go_test(
     ],
     args = ["-test.v"],
     embed = [":go_default_library"],
-    deps = ["@com_github_sirupsen_logrus//:go_default_library"],
+    deps = [
+        "@com_github_sirupsen_logrus//:go_default_library",
+        "@com_github_sirupsen_logrus//hooks/test:go_default_library",
+        "@com_github_stretchr_testify//assert:go_default_library",
+    ],
 )

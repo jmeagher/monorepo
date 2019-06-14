@@ -46,8 +46,8 @@ def my_go_repositories():
     go_repository(
         name = "com_github_stretchr_testify",
         importpath = "github.com/stretchr/testify",
-        sum = "h1:bSDNvY7ZPG5RlJ8otE/7V6gMiyenm9RtJ7IUVIAoJ1w=",
-        version = "v1.2.2",
+        sum = "h1:TivCn/peBQ7UY8ooIcPgZFpTNSz0Q2U6UrFlUfqbe0Q=",
+        version = "v1.3.0",
     )
     go_repository(
         name = "org_golang_x_sys",

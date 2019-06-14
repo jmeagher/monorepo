@@ -2,6 +2,7 @@ package httphelpers
 
 import (
 	"net/http"
+	"sync/atomic"
 	"time"
 
 	logs "github.com/sirupsen/logrus"
@@ -47,12 +48,22 @@ type StructuredLogger struct {
 	// The log level used for outputting the logs. Defaults to logrus.DebugLevel
 	logs.Level
 
+	// When set to true IncludeConcurrentCount outputs the number of concurrent requests
+	// this logger is considering
+	IncludeConcurrentCount bool
+
 	extraLogging []AddFields
 	logger       *logs.Logger
 	nextHandler  http.Handler
+	concurrent   uint32
 }
 
 func (r *StructuredLogger) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	var concurrentVal uint32
+	if r.IncludeConcurrentCount {
+		concurrentVal = atomic.AddUint32(&r.concurrent, 1)
+		defer func() { atomic.AddUint32(&r.concurrent, ^uint32(0)) }()
+	}
 	requestBody, newRequest, err := CachedHTTPRequestBody(req)
 	if err != nil {
 		http.Error(w, "Problem reading cached request body", 500)
@@ -71,6 +82,10 @@ func (r *StructuredLogger) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		logFields["network.bytes_written"] = len(resp.Body())
 		if !r.DisableDuration {
 			logFields["duration_seconds"] = time.Now().Sub(startTime).Seconds()
+		}
+
+		if r.IncludeConcurrentCount {
+			logFields["concurrent"] = concurrentVal
 		}
 
 		if len(r.extraLogging) != 0 {
