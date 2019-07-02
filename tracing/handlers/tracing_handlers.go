@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -17,13 +16,20 @@ func GlobalOpenTracingHandler(spanName string, wrapped http.Handler) TaggableHan
 
 // OpenTracingHandler wraps an existing handler with open-tracing calls using the tracer
 func OpenTracingHandler(tracer opentracing.Tracer, spanName string, wrapped http.Handler) TaggableHandler {
-	return &openTracingHandler{tracer, fmt.Sprintf("http.server.%s", spanName), wrapped, make(map[string]interface{})}
+	return &openTracingHandler{
+		tracer,
+		spanName,
+		wrapped,
+		make(map[string]interface{}),
+		false,
+	}
 }
 
 // TaggableHandler allows passing in a static set of tags that will be added to every span
 type TaggableHandler interface {
 	http.Handler
 	AddHandlerTag(string, interface{})
+	LogErrors(bool)
 }
 
 type openTracingHandler struct {
@@ -31,23 +37,28 @@ type openTracingHandler struct {
 	spanName  string
 	wrapped   http.Handler
 	tagsToAdd map[string]interface{}
+	logErrors bool
 }
 
 func (f *openTracingHandler) AddHandlerTag(tag string, value interface{}) {
 	f.tagsToAdd[tag] = value
 }
 
+func (f *openTracingHandler) LogErrors(v bool) {
+	f.logErrors = v
+}
+
 func (f *openTracingHandler) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 	response, tmpRequest := httphelpers.CachedResponseWriter(writer, req)
-	body, request, err1 := httphelpers.CachedHTTPRequestBody(tmpRequest)
-	if err1 != nil {
-		log.Println("Problem reading cached request body: ", err1)
+	body, request, err := httphelpers.CachedHTTPRequestBody(tmpRequest)
+	if err != nil && f.logErrors {
+		log.Println("Problem reading cached request body: ", err)
 	}
-	wireContext, err := opentracing.GlobalTracer().Extract(
+	wireContext, err := f.tracer.Extract(
 		opentracing.HTTPHeaders,
 		opentracing.HTTPHeadersCarrier(request.Header))
-	if err != nil {
-		log.Println("Global Tracer Extract Error: ", err)
+	if err != nil && f.logErrors {
+		log.Println("Tracer Extract Error: ", err)
 	}
 
 	var serverSpan opentracing.Span
@@ -66,7 +77,7 @@ func (f *openTracingHandler) ServeHTTP(writer http.ResponseWriter, req *http.Req
 		ctx := opentracing.ContextWithSpan(request.Context(), serverSpan)
 		request = request.WithContext(ctx)
 
-		opentracing.GlobalTracer().Inject(
+		f.tracer.Inject(
 			serverSpan.Context(),
 			opentracing.HTTPHeaders,
 			opentracing.HTTPHeadersCarrier(request.Header))
@@ -78,7 +89,7 @@ func (f *openTracingHandler) ServeHTTP(writer http.ResponseWriter, req *http.Req
 			serverSpan.SetTag("error", response.Status() >= 500)
 		}
 		defer finalStatus()
-	} else {
+	} else if f.logErrors {
 		log.Println("No wire context specified?")
 	}
 
