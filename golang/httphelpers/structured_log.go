@@ -2,6 +2,7 @@ package httphelpers
 
 import (
 	"net/http"
+	"reflect"
 	"sync/atomic"
 	"time"
 
@@ -52,6 +53,11 @@ type StructuredLogger struct {
 	// this logger is considering
 	IncludeConcurrentCount bool
 
+	// DisableContextErrors allows turning off logging of context error logging.
+	// These come up when something outside the scope of this cancels or
+	// otherwise causes an error in the context of the request.
+	DisableContextErrors bool
+
 	extraLogging []AddFields
 	logger       *logs.Logger
 	nextHandler  http.Handler
@@ -83,9 +89,15 @@ func (r *StructuredLogger) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		if !r.DisableDuration {
 			logFields["duration_seconds"] = time.Now().Sub(startTime).Seconds()
 		}
-
 		if r.IncludeConcurrentCount {
 			logFields["concurrent"] = concurrentVal
+		}
+
+		if !r.DisableContextErrors {
+			if ctxErr := req.Context().Err(); ctxErr != nil {
+				logFields["context.error"] = ctxErr
+				logFields["context.error.type"] = reflect.TypeOf(ctxErr).Name()
+			}
 		}
 
 		if len(r.extraLogging) != 0 {

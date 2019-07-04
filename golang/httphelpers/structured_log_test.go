@@ -2,12 +2,14 @@ package httphelpers
 
 import (
 	"bytes"
+	"context"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"sync"
 	"testing"
+	"time"
 
 	logs "github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
@@ -134,4 +136,45 @@ func TestConcurrentLogging(t *testing.T) {
 	}
 	assert.Equal(t, 10, max)
 	assert.Equal(t, 1, min)
+}
+
+func TestContextCancellation(t *testing.T) {
+	// See https://play.golang.org/p/RXsEchB8wOo
+	// This makes sure the logger handles client cancellations and timeouts in a reasonable way
+	logger, hook := test.NewNullLogger()
+
+	waiting := sync.WaitGroup{}
+	wait := make(chan struct{})
+	loggingDone := make(chan struct{})
+	handler := NewStructuredLogger(logger, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		waiting.Done()
+		t.Log("Handler starting wait")
+		<-wait
+		t.Log("Handler wait is done")
+		close(loggingDone)
+	}))
+	handler.Level = logs.ErrorLevel // So logs are output by default
+
+	req, _ := http.NewRequest("GET", "/test", nil)
+	waiting.Add(1)
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
+	go func() {
+		defer cancel()
+		ctxReq := req.WithContext(ctx)
+		handler.ServeHTTP(httptest.NewRecorder(), ctxReq)
+	}()
+
+	// Make sure the handler is blocked
+	waiting.Wait()
+	// Wait for context cancellation
+	<-ctx.Done()
+	t.Log("Test wait is over")
+	// Close to allow the internal handler to proceed
+	close(wait)
+	// Wait for the structured logger to actually log
+	<-loggingDone
+	assert.Equal(t, 1, len(hook.Entries))
+	entry := hook.LastEntry()
+	assert.Equal(t, "deadlineExceededError", entry.Data["context.error.type"])
+	assert.Equal(t, context.DeadlineExceeded, entry.Data["context.error"])
 }
