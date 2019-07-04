@@ -145,23 +145,23 @@ func TestContextCancellation(t *testing.T) {
 
 	waiting := sync.WaitGroup{}
 	wait := make(chan struct{})
-	loggingDone := make(chan struct{})
 	handler := NewStructuredLogger(logger, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		waiting.Done()
 		t.Log("Handler starting wait")
 		<-wait
 		t.Log("Handler wait is done")
-		close(loggingDone)
 	}))
 	handler.Level = logs.ErrorLevel // So logs are output by default
 
 	req, _ := http.NewRequest("GET", "/test", nil)
 	waiting.Add(1)
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
+	loggingDone := make(chan struct{})
 	go func() {
 		defer cancel()
 		ctxReq := req.WithContext(ctx)
 		handler.ServeHTTP(httptest.NewRecorder(), ctxReq)
+		defer close(loggingDone)
 	}()
 
 	// Make sure the handler is blocked
