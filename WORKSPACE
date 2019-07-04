@@ -6,7 +6,7 @@ rules_to_load = [
     ("docker", "f962c24d59127ff3446756c06ff63af68c22645a", "bazelbuild"),
     ("go", "76925662d5f671bdc049b0aac493dafcd856ed3a", "bazelbuild"),
     ("python", "88532b624f74ab17138fb638d3c62750b5af5f9a", "bazelbuild"),
-    ("rust", "4a9d0e0b6c66f1e98d15cbd3cccc8100a0454fc9", "bazelbuild"),
+    # ("rust", "4a9d0e0b6c66f1e98d15cbd3cccc8100a0454fc9", "bazelbuild"),
 ]
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
@@ -108,13 +108,11 @@ load("@my_python_deps//:requirements.bzl", "pip_install")
 pip_install()
 
 # Rust support
-load("@io_bazel_rules_rust//rust:repositories.bzl", "rust_repositories")
-
-rust_repositories()
-
-load("@io_bazel_rules_rust//:workspace.bzl", "bazel_version")
-
-bazel_version(name = "bazel_version")
+# Removed for now since it's been delicate to maintain and I'm not working with it now
+# load("@io_bazel_rules_rust//rust:repositories.bzl", "rust_repositories")
+# rust_repositories()
+# load("@io_bazel_rules_rust//:workspace.bzl", "bazel_version")
+# bazel_version(name = "bazel_version")
 
 # Load external docker containers
 
