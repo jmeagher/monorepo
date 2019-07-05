@@ -5,7 +5,7 @@ rules_to_load = [
     ("scala", "8092d5f6165a8d9c4797d5f089c1ba4eee3326b1", "bazelbuild", "io_bazel_rules_%s"),
     ("jvm_external", "0a67f52558976208ea85d49ea36cfd708dad30da", "bazelbuild", "rules_%s"),
     ("docker", "f962c24d59127ff3446756c06ff63af68c22645a", "bazelbuild", "io_bazel_rules_%s"),
-    ("go", "76925662d5f671bdc049b0aac493dafcd856ed3a", "bazelbuild", "io_bazel_rules_%s"),
+    ("go", "6fc21c78143ff1d4ea98100e8fd7a928d45abd00", "bazelbuild", "io_bazel_rules_%s"),
     ("python", "88532b624f74ab17138fb638d3c62750b5af5f9a", "bazelbuild", "io_bazel_rules_%s"),
     # ("rust", "4a9d0e0b6c66f1e98d15cbd3cccc8100a0454fc9", "bazelbuild", "io_bazel_rules_%s"),
 ]
@@ -33,19 +33,19 @@ scala_repositories()
 load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_register_toolchains")
 
 register_toolchains("//tools/build_rules:strict_scala_toolchain")
+# load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_register_toolchains")
+# scala_register_toolchains()
 
+# Java version details
+scala_dep_ver = "2.11"
+akka_ver = "2.5.8"
+akka_http_ver = "10.0.11"
 # Setup importing maven based external dependencies
 # When modifying this pin specific versions with bazel run @unpinned_maven//:pin
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 maven_install(
     artifacts = [
-        "com.typesafe.akka:akka-actor_2.11:2.5.8",
-        "com.typesafe.akka:akka-http_2.11:10.0.11",
-        "com.typesafe.akka:akka-http-testkit_2.11:10.0.11",
-        "com.typesafe.akka:akka-http-spray-json_2.11:10.0.11",
         "com.datastax.cassandra:cassandra-driver-core:3.4.0",
-        "io.netty:netty-all:4.0.47.Final",
-        "io.spray:spray-json_2.11:1.3.4",
     ], 
         repositories = [
             "https://repo.maven.apache.org/maven2/",
@@ -65,7 +65,7 @@ http_archive(
 )
 
 load(
-    "@io_bazel_rules_go//go:def.bzl",
+    "@io_bazel_rules_go//go:deps.bzl",
     "go_rules_dependencies",
     "go_register_toolchains",
 )

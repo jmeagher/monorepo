@@ -99,167 +99,6 @@
                 "url": "https://repo.maven.apache.org/maven2/com/google/guava/guava/19.0/guava-19.0.jar"
             },
             {
-                "coord": "com.typesafe.akka:akka-actor_2.11:2.5.8",
-                "dependencies": [
-                    "org.scala-lang.modules:scala-java8-compat_2.11:0.7.0",
-                    "org.scala-lang:scala-library:2.11.11",
-                    "com.typesafe:config:1.3.2"
-                ],
-                "file": "v1/https/repo.maven.apache.org/maven2/com/typesafe/akka/akka-actor_2.11/2.5.8/akka-actor_2.11-2.5.8.jar",
-                "sha256": "adf53b0bffe6570ac89587025aadf5f209dfae4e42b169f63ac2f17a8fb0f60e",
-                "url": "https://repo.maven.apache.org/maven2/com/typesafe/akka/akka-actor_2.11/2.5.8/akka-actor_2.11-2.5.8.jar"
-            },
-            {
-                "coord": "com.typesafe.akka:akka-http-core_2.11:10.0.11",
-                "dependencies": [
-                    "com.typesafe:ssl-config-core_2.11:0.2.1",
-                    "com.typesafe.akka:akka-parsing_2.11:10.0.11",
-                    "com.typesafe.akka:akka-actor_2.11:2.5.8",
-                    "org.scala-lang.modules:scala-java8-compat_2.11:0.7.0",
-                    "org.reactivestreams:reactive-streams:1.0.0",
-                    "org.scala-lang.modules:scala-parser-combinators_2.11:1.0.4",
-                    "org.scala-lang:scala-library:2.11.11",
-                    "com.typesafe.akka:akka-stream_2.11:2.4.20",
-                    "com.typesafe:config:1.3.2"
-                ],
-                "file": "v1/https/repo.maven.apache.org/maven2/com/typesafe/akka/akka-http-core_2.11/10.0.11/akka-http-core_2.11-10.0.11.jar",
-                "sha256": "03ff8de666d8084248f970af7d6c7e46a04c4c080ca0c540aa40a77a36dc0878",
-                "url": "https://repo.maven.apache.org/maven2/com/typesafe/akka/akka-http-core_2.11/10.0.11/akka-http-core_2.11-10.0.11.jar"
-            },
-            {
-                "coord": "com.typesafe.akka:akka-http-spray-json_2.11:10.0.11",
-                "dependencies": [
-                    "com.typesafe:ssl-config-core_2.11:0.2.1",
-                    "com.typesafe.akka:akka-parsing_2.11:10.0.11",
-                    "com.typesafe.akka:akka-http-core_2.11:10.0.11",
-                    "com.typesafe.akka:akka-actor_2.11:2.5.8",
-                    "org.scala-lang.modules:scala-java8-compat_2.11:0.7.0",
-                    "io.spray:spray-json_2.11:1.3.4",
-                    "com.typesafe.akka:akka-http_2.11:10.0.11",
-                    "org.reactivestreams:reactive-streams:1.0.0",
-                    "org.scala-lang.modules:scala-parser-combinators_2.11:1.0.4",
-                    "org.scala-lang:scala-library:2.11.11",
-                    "com.typesafe.akka:akka-stream_2.11:2.4.20",
-                    "com.typesafe:config:1.3.2"
-                ],
-                "file": "v1/https/repo.maven.apache.org/maven2/com/typesafe/akka/akka-http-spray-json_2.11/10.0.11/akka-http-spray-json_2.11-10.0.11.jar",
-                "sha256": "8b26e508459ed6206f376b48e9d0382717f27c80d8920c6758207e9ddfdc0dde",
-                "url": "https://repo.maven.apache.org/maven2/com/typesafe/akka/akka-http-spray-json_2.11/10.0.11/akka-http-spray-json_2.11-10.0.11.jar"
-            },
-            {
-                "coord": "com.typesafe.akka:akka-http-testkit_2.11:10.0.11",
-                "dependencies": [
-                    "com.typesafe:ssl-config-core_2.11:0.2.1",
-                    "com.typesafe.akka:akka-parsing_2.11:10.0.11",
-                    "com.typesafe.akka:akka-http-core_2.11:10.0.11",
-                    "com.typesafe.akka:akka-actor_2.11:2.5.8",
-                    "org.scala-lang.modules:scala-java8-compat_2.11:0.7.0",
-                    "com.typesafe.akka:akka-stream-testkit_2.11:2.4.20",
-                    "com.typesafe.akka:akka-http_2.11:10.0.11",
-                    "org.reactivestreams:reactive-streams:1.0.0",
-                    "com.typesafe.akka:akka-testkit_2.11:2.4.20",
-                    "org.scala-lang.modules:scala-parser-combinators_2.11:1.0.4",
-                    "org.scala-lang:scala-library:2.11.11",
-                    "com.typesafe.akka:akka-stream_2.11:2.4.20",
-                    "com.typesafe:config:1.3.2"
-                ],
-                "file": "v1/https/repo.maven.apache.org/maven2/com/typesafe/akka/akka-http-testkit_2.11/10.0.11/akka-http-testkit_2.11-10.0.11.jar",
-                "sha256": "1aa21b1fc38ab334756e40c1f665a08ad5b300dfaffe1f0ddcb5223320dacc05",
-                "url": "https://repo.maven.apache.org/maven2/com/typesafe/akka/akka-http-testkit_2.11/10.0.11/akka-http-testkit_2.11-10.0.11.jar"
-            },
-            {
-                "coord": "com.typesafe.akka:akka-http_2.11:10.0.11",
-                "dependencies": [
-                    "com.typesafe:ssl-config-core_2.11:0.2.1",
-                    "com.typesafe.akka:akka-parsing_2.11:10.0.11",
-                    "com.typesafe.akka:akka-http-core_2.11:10.0.11",
-                    "com.typesafe.akka:akka-actor_2.11:2.5.8",
-                    "org.scala-lang.modules:scala-java8-compat_2.11:0.7.0",
-                    "org.reactivestreams:reactive-streams:1.0.0",
-                    "org.scala-lang.modules:scala-parser-combinators_2.11:1.0.4",
-                    "org.scala-lang:scala-library:2.11.11",
-                    "com.typesafe.akka:akka-stream_2.11:2.4.20",
-                    "com.typesafe:config:1.3.2"
-                ],
-                "file": "v1/https/repo.maven.apache.org/maven2/com/typesafe/akka/akka-http_2.11/10.0.11/akka-http_2.11-10.0.11.jar",
-                "sha256": "57cad6dbb548e4fdbf34bcc81c29d3a48fc21b4137985228d91591637b2fb0eb",
-                "url": "https://repo.maven.apache.org/maven2/com/typesafe/akka/akka-http_2.11/10.0.11/akka-http_2.11-10.0.11.jar"
-            },
-            {
-                "coord": "com.typesafe.akka:akka-parsing_2.11:10.0.11",
-                "dependencies": [
-                    "org.scala-lang.modules:scala-java8-compat_2.11:0.7.0",
-                    "com.typesafe.akka:akka-actor_2.11:2.5.8",
-                    "org.scala-lang:scala-library:2.11.11",
-                    "com.typesafe:config:1.3.2"
-                ],
-                "file": "v1/https/repo.maven.apache.org/maven2/com/typesafe/akka/akka-parsing_2.11/10.0.11/akka-parsing_2.11-10.0.11.jar",
-                "sha256": "a8519d05a2565a34f433c2899e30ccb22724357c8c786595cb79a7fd30dc8909",
-                "url": "https://repo.maven.apache.org/maven2/com/typesafe/akka/akka-parsing_2.11/10.0.11/akka-parsing_2.11-10.0.11.jar"
-            },
-            {
-                "coord": "com.typesafe.akka:akka-stream-testkit_2.11:2.4.20",
-                "dependencies": [
-                    "com.typesafe:ssl-config-core_2.11:0.2.1",
-                    "com.typesafe.akka:akka-actor_2.11:2.5.8",
-                    "org.scala-lang.modules:scala-java8-compat_2.11:0.7.0",
-                    "org.reactivestreams:reactive-streams:1.0.0",
-                    "com.typesafe.akka:akka-testkit_2.11:2.4.20",
-                    "org.scala-lang.modules:scala-parser-combinators_2.11:1.0.4",
-                    "org.scala-lang:scala-library:2.11.11",
-                    "com.typesafe.akka:akka-stream_2.11:2.4.20",
-                    "com.typesafe:config:1.3.2"
-                ],
-                "file": "v1/https/repo.maven.apache.org/maven2/com/typesafe/akka/akka-stream-testkit_2.11/2.4.20/akka-stream-testkit_2.11-2.4.20.jar",
-                "sha256": "b34ce74ce2cfd0f594e574f8bcded2d52e00c5c1d5b6f5df0c19fc33842ee08c",
-                "url": "https://repo.maven.apache.org/maven2/com/typesafe/akka/akka-stream-testkit_2.11/2.4.20/akka-stream-testkit_2.11-2.4.20.jar"
-            },
-            {
-                "coord": "com.typesafe.akka:akka-stream_2.11:2.4.20",
-                "dependencies": [
-                    "com.typesafe:ssl-config-core_2.11:0.2.1",
-                    "com.typesafe.akka:akka-actor_2.11:2.5.8",
-                    "org.scala-lang.modules:scala-java8-compat_2.11:0.7.0",
-                    "org.reactivestreams:reactive-streams:1.0.0",
-                    "org.scala-lang.modules:scala-parser-combinators_2.11:1.0.4",
-                    "org.scala-lang:scala-library:2.11.11",
-                    "com.typesafe:config:1.3.2"
-                ],
-                "file": "v1/https/repo.maven.apache.org/maven2/com/typesafe/akka/akka-stream_2.11/2.4.20/akka-stream_2.11-2.4.20.jar",
-                "sha256": "1bb3f475a150f56cd6045c1799a858a9e13836c7769a532d86a7e16aa8588754",
-                "url": "https://repo.maven.apache.org/maven2/com/typesafe/akka/akka-stream_2.11/2.4.20/akka-stream_2.11-2.4.20.jar"
-            },
-            {
-                "coord": "com.typesafe.akka:akka-testkit_2.11:2.4.20",
-                "dependencies": [
-                    "org.scala-lang.modules:scala-java8-compat_2.11:0.7.0",
-                    "com.typesafe.akka:akka-actor_2.11:2.5.8",
-                    "org.scala-lang:scala-library:2.11.11",
-                    "com.typesafe:config:1.3.2"
-                ],
-                "file": "v1/https/repo.maven.apache.org/maven2/com/typesafe/akka/akka-testkit_2.11/2.4.20/akka-testkit_2.11-2.4.20.jar",
-                "sha256": "9c814a201f3241f6dbac21de83fbdf27666b173aa7d902c8a8090ff35a957526",
-                "url": "https://repo.maven.apache.org/maven2/com/typesafe/akka/akka-testkit_2.11/2.4.20/akka-testkit_2.11-2.4.20.jar"
-            },
-            {
-                "coord": "com.typesafe:config:1.3.2",
-                "dependencies": [],
-                "file": "v1/https/repo.maven.apache.org/maven2/com/typesafe/config/1.3.2/config-1.3.2.jar",
-                "sha256": "6563d1723f3300bf596f41e40bc03e54986108b5c45d0ac34ebc66d48c2e25a3",
-                "url": "https://repo.maven.apache.org/maven2/com/typesafe/config/1.3.2/config-1.3.2.jar"
-            },
-            {
-                "coord": "com.typesafe:ssl-config-core_2.11:0.2.1",
-                "dependencies": [
-                    "org.scala-lang:scala-library:2.11.11",
-                    "org.scala-lang.modules:scala-parser-combinators_2.11:1.0.4",
-                    "com.typesafe:config:1.3.2"
-                ],
-                "file": "v1/https/repo.maven.apache.org/maven2/com/typesafe/ssl-config-core_2.11/0.2.1/ssl-config-core_2.11-0.2.1.jar",
-                "sha256": "61f5f035659880982acd634690bc282787c7a7b0adb8d6037a3243b41f0114e4",
-                "url": "https://repo.maven.apache.org/maven2/com/typesafe/ssl-config-core_2.11/0.2.1/ssl-config-core_2.11-0.2.1.jar"
-            },
-            {
                 "coord": "io.dropwizard.metrics:metrics-core:3.2.2",
                 "dependencies": [
                     "org.slf4j:slf4j-api:1.7.25"
@@ -267,13 +106,6 @@
                 "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/metrics/metrics-core/3.2.2/metrics-core-3.2.2.jar",
                 "sha256": "5c6f685e41664d10c70c65837cba9e58d39ff3896811e3b5707a934b11c85ad0",
                 "url": "https://repo.maven.apache.org/maven2/io/dropwizard/metrics/metrics-core/3.2.2/metrics-core-3.2.2.jar"
-            },
-            {
-                "coord": "io.netty:netty-all:4.0.47.Final",
-                "dependencies": [],
-                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-all/4.0.47.Final/netty-all-4.0.47.Final.jar",
-                "sha256": "d65b489b926627341b9ca08db9a1c7a7c333f92d2ace5ba46d97dd70417f4206",
-                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-all/4.0.47.Final/netty-all-4.0.47.Final.jar"
             },
             {
                 "coord": "io.netty:netty-buffer:4.0.47.Final",
@@ -325,15 +157,6 @@
                 "url": "https://repo.maven.apache.org/maven2/io/netty/netty-transport/4.0.47.Final/netty-transport-4.0.47.Final.jar"
             },
             {
-                "coord": "io.spray:spray-json_2.11:1.3.4",
-                "dependencies": [
-                    "org.scala-lang:scala-library:2.11.11"
-                ],
-                "file": "v1/https/repo.maven.apache.org/maven2/io/spray/spray-json_2.11/1.3.4/spray-json_2.11-1.3.4.jar",
-                "sha256": "21d3fb410346fd513c1e0cf0545ba64a29194bbd3f163fd4662d86ad2783e11d",
-                "url": "https://repo.maven.apache.org/maven2/io/spray/spray-json_2.11/1.3.4/spray-json_2.11-1.3.4.jar"
-            },
-            {
                 "coord": "org.ow2.asm:asm-analysis:5.0.3",
                 "dependencies": [
                     "org.ow2.asm:asm:5.0.3",
@@ -378,38 +201,6 @@
                 "file": "v1/https/repo.maven.apache.org/maven2/org/ow2/asm/asm/5.0.3/asm-5.0.3.jar",
                 "sha256": "71c4f78e437b8fdcd9cc0dfd2abea8c089eb677005a6a5cff320206cc52b46cc",
                 "url": "https://repo.maven.apache.org/maven2/org/ow2/asm/asm/5.0.3/asm-5.0.3.jar"
-            },
-            {
-                "coord": "org.reactivestreams:reactive-streams:1.0.0",
-                "dependencies": [],
-                "file": "v1/https/repo.maven.apache.org/maven2/org/reactivestreams/reactive-streams/1.0.0/reactive-streams-1.0.0.jar",
-                "sha256": "ef867702a614b96eb6c64fb65a8f5e14bdfcabbc1ae056f78a1643f7b79ca0eb",
-                "url": "https://repo.maven.apache.org/maven2/org/reactivestreams/reactive-streams/1.0.0/reactive-streams-1.0.0.jar"
-            },
-            {
-                "coord": "org.scala-lang.modules:scala-java8-compat_2.11:0.7.0",
-                "dependencies": [
-                    "org.scala-lang:scala-library:2.11.11"
-                ],
-                "file": "v1/https/repo.maven.apache.org/maven2/org/scala-lang/modules/scala-java8-compat_2.11/0.7.0/scala-java8-compat_2.11-0.7.0.jar",
-                "sha256": "e02b7066fc04d8014d5da30ebf7ed63d3d30f84bb6e2c03fa0193deba2a10347",
-                "url": "https://repo.maven.apache.org/maven2/org/scala-lang/modules/scala-java8-compat_2.11/0.7.0/scala-java8-compat_2.11-0.7.0.jar"
-            },
-            {
-                "coord": "org.scala-lang.modules:scala-parser-combinators_2.11:1.0.4",
-                "dependencies": [
-                    "org.scala-lang:scala-library:2.11.11"
-                ],
-                "file": "v1/https/repo.maven.apache.org/maven2/org/scala-lang/modules/scala-parser-combinators_2.11/1.0.4/scala-parser-combinators_2.11-1.0.4.jar",
-                "sha256": "0dfaafce29a9a245b0a9180ec2c1073d2bd8f0330f03a9f1f6a74d1bc83f62d6",
-                "url": "https://repo.maven.apache.org/maven2/org/scala-lang/modules/scala-parser-combinators_2.11/1.0.4/scala-parser-combinators_2.11-1.0.4.jar"
-            },
-            {
-                "coord": "org.scala-lang:scala-library:2.11.11",
-                "dependencies": [],
-                "file": "v1/https/repo.maven.apache.org/maven2/org/scala-lang/scala-library/2.11.11/scala-library-2.11.11.jar",
-                "sha256": "f2ba1550a39304e5d06caaddfa226cdf0a4cbccee189828fa8c1ddf1110c4872",
-                "url": "https://repo.maven.apache.org/maven2/org/scala-lang/scala-library/2.11.11/scala-library-2.11.11.jar"
             },
             {
                 "coord": "org.slf4j:slf4j-api:1.7.25",
