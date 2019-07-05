@@ -3,7 +3,7 @@ scala_binary(
     main_class = "jpm.stubmaster.api.ApiServerMain",
     visibility = ["//visibility:public"],
     deps = [
-        "//3rdparty/jvm/io/netty:netty_all",
+        "@maven//:io_netty_netty_all",
         "//challenge/stubmaster/api/src/main/scala/jpm/stubmaster/api",
     ],
     resources = [

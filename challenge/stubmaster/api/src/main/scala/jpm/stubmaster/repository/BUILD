@@ -4,7 +4,7 @@ scala_library(
     visibility = ["//visibility:public"],
     deps = [
         "//challenge/stubmaster/api/src/main/scala/jpm/stubmaster/model",
-        "//3rdparty/jvm/com/datastax/cassandra:cassandra_driver_core",
-        "//3rdparty/jvm/com/typesafe/akka:akka_http_2_11",
+        "@maven//:com_datastax_cassandra_cassandra_driver_core",
+        "@maven//:com_typesafe_akka_akka_http_2_11",
     ],
 )
