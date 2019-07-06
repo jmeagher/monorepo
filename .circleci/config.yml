@@ -83,10 +83,36 @@ jobs:
     <<: *build-template
     environment:
       BAZEL_VER: "0.22.0"
+  build-bazel-023:
+    <<: *build-template
+    environment:
+      BAZEL_VER: "0.23.2"
+  build-bazel-024:
+    <<: *build-template
+    environment:
+      BAZEL_VER: "0.24.1"
+  build-bazel-025:
+    <<: *build-template
+    environment:
+      BAZEL_VER: "0.25.3"
+  build-bazel-026:
+    <<: *build-template
+    environment:
+      BAZEL_VER: "0.26.1"
+  build-bazel-027:
+    <<: *build-template
+    environment:
+      BAZEL_VER: "0.27.1"
 
 workflows:
   version: 2
   default_workflow:
     jobs:
-      - build-bazel-019
-      - build-bazel-022
+      # Commented out means the version does not work
+      # - build-bazel-019
+      # - build-bazel-022
+      # - build-bazel-023
+      # - build-bazel-024
+      - build-bazel-025
+      - build-bazel-026
+      # - build-bazel-027

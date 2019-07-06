@@ -1,0 +1,215 @@
+{
+    "dependency_tree": {
+        "conflict_resolution": {},
+        "dependencies": [
+            {
+                "coord": "com.datastax.cassandra:cassandra-driver-core:3.4.0",
+                "dependencies": [
+                    "org.ow2.asm:asm-tree:5.0.3",
+                    "io.netty:netty-buffer:4.0.47.Final",
+                    "com.github.jnr:jffi:1.2.10",
+                    "com.github.jnr:jffi:jar:native:1.2.10",
+                    "org.ow2.asm:asm:5.0.3",
+                    "io.netty:netty-transport:4.0.47.Final",
+                    "com.google.guava:guava:19.0",
+                    "org.ow2.asm:asm-commons:5.0.3",
+                    "org.slf4j:slf4j-api:1.7.25",
+                    "org.ow2.asm:asm-analysis:5.0.3",
+                    "io.netty:netty-codec:4.0.47.Final",
+                    "io.netty:netty-handler:4.0.47.Final",
+                    "io.netty:netty-common:4.0.47.Final",
+                    "com.github.jnr:jnr-constants:0.9.0",
+                    "com.github.jnr:jnr-ffi:2.0.7",
+                    "org.ow2.asm:asm-util:5.0.3",
+                    "com.github.jnr:jnr-x86asm:1.0.2",
+                    "io.dropwizard.metrics:metrics-core:3.2.2",
+                    "com.github.jnr:jnr-posix:3.0.27"
+                ],
+                "file": "v1/https/repo.maven.apache.org/maven2/com/datastax/cassandra/cassandra-driver-core/3.4.0/cassandra-driver-core-3.4.0.jar",
+                "sha256": "e227712b4cfa898998b382b75db92946ba9ca4fade2b581e39b46bbb60dd3283",
+                "url": "https://repo.maven.apache.org/maven2/com/datastax/cassandra/cassandra-driver-core/3.4.0/cassandra-driver-core-3.4.0.jar"
+            },
+            {
+                "coord": "com.github.jnr:jffi:1.2.10",
+                "dependencies": [],
+                "file": "v1/https/repo.maven.apache.org/maven2/com/github/jnr/jffi/1.2.10/jffi-1.2.10.jar",
+                "sha256": "acf67c23f3320b69c8caae389f64e4d98ead14b591bac84b3f2592cbcf36a33e",
+                "url": "https://repo.maven.apache.org/maven2/com/github/jnr/jffi/1.2.10/jffi-1.2.10.jar"
+            },
+            {
+                "coord": "com.github.jnr:jffi:jar:native:1.2.10",
+                "dependencies": [],
+                "file": "v1/https/repo.maven.apache.org/maven2/com/github/jnr/jffi/1.2.10/jffi-1.2.10-native.jar",
+                "sha256": "c8bc5bce45a2bcb5520902b6195b8395e9caba1518c6b72ce69de6b9844e72ae",
+                "url": "https://repo.maven.apache.org/maven2/com/github/jnr/jffi/1.2.10/jffi-1.2.10-native.jar"
+            },
+            {
+                "coord": "com.github.jnr:jnr-constants:0.9.0",
+                "dependencies": [],
+                "file": "v1/https/repo.maven.apache.org/maven2/com/github/jnr/jnr-constants/0.9.0/jnr-constants-0.9.0.jar",
+                "sha256": "fef43ba363a6c5cc5dab671b2ea06d06511cf73ed32ac1ee82e893a840ed2733",
+                "url": "https://repo.maven.apache.org/maven2/com/github/jnr/jnr-constants/0.9.0/jnr-constants-0.9.0.jar"
+            },
+            {
+                "coord": "com.github.jnr:jnr-ffi:2.0.7",
+                "dependencies": [
+                    "org.ow2.asm:asm-tree:5.0.3",
+                    "com.github.jnr:jffi:1.2.10",
+                    "com.github.jnr:jffi:jar:native:1.2.10",
+                    "org.ow2.asm:asm:5.0.3",
+                    "org.ow2.asm:asm-commons:5.0.3",
+                    "org.ow2.asm:asm-analysis:5.0.3",
+                    "org.ow2.asm:asm-util:5.0.3",
+                    "com.github.jnr:jnr-x86asm:1.0.2"
+                ],
+                "file": "v1/https/repo.maven.apache.org/maven2/com/github/jnr/jnr-ffi/2.0.7/jnr-ffi-2.0.7.jar",
+                "sha256": "9406dfaad59bc3fc0de97abf8a455e70d460c294d6f445407d5080db93239643",
+                "url": "https://repo.maven.apache.org/maven2/com/github/jnr/jnr-ffi/2.0.7/jnr-ffi-2.0.7.jar"
+            },
+            {
+                "coord": "com.github.jnr:jnr-posix:3.0.27",
+                "dependencies": [
+                    "org.ow2.asm:asm-tree:5.0.3",
+                    "com.github.jnr:jffi:1.2.10",
+                    "com.github.jnr:jffi:jar:native:1.2.10",
+                    "org.ow2.asm:asm:5.0.3",
+                    "org.ow2.asm:asm-commons:5.0.3",
+                    "org.ow2.asm:asm-analysis:5.0.3",
+                    "com.github.jnr:jnr-constants:0.9.0",
+                    "com.github.jnr:jnr-ffi:2.0.7",
+                    "org.ow2.asm:asm-util:5.0.3",
+                    "com.github.jnr:jnr-x86asm:1.0.2"
+                ],
+                "file": "v1/https/repo.maven.apache.org/maven2/com/github/jnr/jnr-posix/3.0.27/jnr-posix-3.0.27.jar",
+                "sha256": "84dab031a38688cb2ec808a011ba0233cb0d1146d39020e1447992ad505f3d78",
+                "url": "https://repo.maven.apache.org/maven2/com/github/jnr/jnr-posix/3.0.27/jnr-posix-3.0.27.jar"
+            },
+            {
+                "coord": "com.github.jnr:jnr-x86asm:1.0.2",
+                "dependencies": [],
+                "file": "v1/https/repo.maven.apache.org/maven2/com/github/jnr/jnr-x86asm/1.0.2/jnr-x86asm-1.0.2.jar",
+                "sha256": "39f3675b910e6e9b93825f8284bec9f4ad3044cd20a6f7c8ff9e2f8695ebf21e",
+                "url": "https://repo.maven.apache.org/maven2/com/github/jnr/jnr-x86asm/1.0.2/jnr-x86asm-1.0.2.jar"
+            },
+            {
+                "coord": "com.google.guava:guava:19.0",
+                "dependencies": [],
+                "file": "v1/https/repo.maven.apache.org/maven2/com/google/guava/guava/19.0/guava-19.0.jar",
+                "sha256": "58d4cc2e05ebb012bbac568b032f75623be1cb6fb096f3c60c72a86f7f057de4",
+                "url": "https://repo.maven.apache.org/maven2/com/google/guava/guava/19.0/guava-19.0.jar"
+            },
+            {
+                "coord": "io.dropwizard.metrics:metrics-core:3.2.2",
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.25"
+                ],
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/metrics/metrics-core/3.2.2/metrics-core-3.2.2.jar",
+                "sha256": "5c6f685e41664d10c70c65837cba9e58d39ff3896811e3b5707a934b11c85ad0",
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/metrics/metrics-core/3.2.2/metrics-core-3.2.2.jar"
+            },
+            {
+                "coord": "io.netty:netty-buffer:4.0.47.Final",
+                "dependencies": [
+                    "io.netty:netty-common:4.0.47.Final"
+                ],
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-buffer/4.0.47.Final/netty-buffer-4.0.47.Final.jar",
+                "sha256": "ee1f7cca344a96db52eaacb3309da7c5934937797695e54b99c0bebbefb2360f",
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-buffer/4.0.47.Final/netty-buffer-4.0.47.Final.jar"
+            },
+            {
+                "coord": "io.netty:netty-codec:4.0.47.Final",
+                "dependencies": [
+                    "io.netty:netty-common:4.0.47.Final",
+                    "io.netty:netty-buffer:4.0.47.Final",
+                    "io.netty:netty-transport:4.0.47.Final"
+                ],
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-codec/4.0.47.Final/netty-codec-4.0.47.Final.jar",
+                "sha256": "0cae806f00463a712307f3e4d02748239f5a07b5e88f4ddcab50c013083fb976",
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-codec/4.0.47.Final/netty-codec-4.0.47.Final.jar"
+            },
+            {
+                "coord": "io.netty:netty-common:4.0.47.Final",
+                "dependencies": [],
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-common/4.0.47.Final/netty-common-4.0.47.Final.jar",
+                "sha256": "4cda0cb1308bed6316ccfa95495cf538443ec98187e79101d09364c98482d427",
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-common/4.0.47.Final/netty-common-4.0.47.Final.jar"
+            },
+            {
+                "coord": "io.netty:netty-handler:4.0.47.Final",
+                "dependencies": [
+                    "io.netty:netty-common:4.0.47.Final",
+                    "io.netty:netty-codec:4.0.47.Final",
+                    "io.netty:netty-buffer:4.0.47.Final",
+                    "io.netty:netty-transport:4.0.47.Final"
+                ],
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-handler/4.0.47.Final/netty-handler-4.0.47.Final.jar",
+                "sha256": "e7da2a6666bd30a8d4ebe36fa7ae7bd37d7db37f5098c2558ff6771b2ba2c830",
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-handler/4.0.47.Final/netty-handler-4.0.47.Final.jar"
+            },
+            {
+                "coord": "io.netty:netty-transport:4.0.47.Final",
+                "dependencies": [
+                    "io.netty:netty-common:4.0.47.Final",
+                    "io.netty:netty-buffer:4.0.47.Final"
+                ],
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-transport/4.0.47.Final/netty-transport-4.0.47.Final.jar",
+                "sha256": "dda8b6abeff3410a6d18d6688f1881740691e69be5275d7e33d1a798802d70ed",
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-transport/4.0.47.Final/netty-transport-4.0.47.Final.jar"
+            },
+            {
+                "coord": "org.ow2.asm:asm-analysis:5.0.3",
+                "dependencies": [
+                    "org.ow2.asm:asm:5.0.3",
+                    "org.ow2.asm:asm-tree:5.0.3"
+                ],
+                "file": "v1/https/repo.maven.apache.org/maven2/org/ow2/asm/asm-analysis/5.0.3/asm-analysis-5.0.3.jar",
+                "sha256": "e8fa2a63462c96557dcd36c25525e1264b77366ff851cf0b94eb7592b290849d",
+                "url": "https://repo.maven.apache.org/maven2/org/ow2/asm/asm-analysis/5.0.3/asm-analysis-5.0.3.jar"
+            },
+            {
+                "coord": "org.ow2.asm:asm-commons:5.0.3",
+                "dependencies": [
+                    "org.ow2.asm:asm:5.0.3",
+                    "org.ow2.asm:asm-tree:5.0.3"
+                ],
+                "file": "v1/https/repo.maven.apache.org/maven2/org/ow2/asm/asm-commons/5.0.3/asm-commons-5.0.3.jar",
+                "sha256": "18c1e092230233c9d29e46f21943d769bdb48130cc279e4b0e663f423948c2da",
+                "url": "https://repo.maven.apache.org/maven2/org/ow2/asm/asm-commons/5.0.3/asm-commons-5.0.3.jar"
+            },
+            {
+                "coord": "org.ow2.asm:asm-tree:5.0.3",
+                "dependencies": [
+                    "org.ow2.asm:asm:5.0.3"
+                ],
+                "file": "v1/https/repo.maven.apache.org/maven2/org/ow2/asm/asm-tree/5.0.3/asm-tree-5.0.3.jar",
+                "sha256": "347a7a9400f9964e87c91d3980e48eebdc8d024bc3b36f7f22189c662853a51c",
+                "url": "https://repo.maven.apache.org/maven2/org/ow2/asm/asm-tree/5.0.3/asm-tree-5.0.3.jar"
+            },
+            {
+                "coord": "org.ow2.asm:asm-util:5.0.3",
+                "dependencies": [
+                    "org.ow2.asm:asm:5.0.3",
+                    "org.ow2.asm:asm-tree:5.0.3"
+                ],
+                "file": "v1/https/repo.maven.apache.org/maven2/org/ow2/asm/asm-util/5.0.3/asm-util-5.0.3.jar",
+                "sha256": "2768edbfa2681b5077f08151de586a6d66b916703cda3ab297e58b41ae8f2362",
+                "url": "https://repo.maven.apache.org/maven2/org/ow2/asm/asm-util/5.0.3/asm-util-5.0.3.jar"
+            },
+            {
+                "coord": "org.ow2.asm:asm:5.0.3",
+                "dependencies": [],
+                "file": "v1/https/repo.maven.apache.org/maven2/org/ow2/asm/asm/5.0.3/asm-5.0.3.jar",
+                "sha256": "71c4f78e437b8fdcd9cc0dfd2abea8c089eb677005a6a5cff320206cc52b46cc",
+                "url": "https://repo.maven.apache.org/maven2/org/ow2/asm/asm/5.0.3/asm-5.0.3.jar"
+            },
+            {
+                "coord": "org.slf4j:slf4j-api:1.7.25",
+                "dependencies": [],
+                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar",
+                "sha256": "18c4a0095d5c1da6b817592e767bb23d29dd2f560ad74df75ff3961dbde25b79",
+                "url": "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar"
+            }
+        ],
+        "version": "0.1.0"
+    }
+}
