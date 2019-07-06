@@ -79,3 +79,16 @@ func (f *randomSplitHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	h.ServeHTTP(w, r)
 }
+
+// EvenSplitHandler splits traffic randomly between the handlers
+func EvenSplitHandler(handlers ...http.Handler) http.Handler {
+	size := len(handlers)
+	if size == 0 {
+		panic("no handlers were passed in")
+	}
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		idx := rand.Intn(size)
+		handlers[idx].ServeHTTP(w, r)
+	})
+
+}

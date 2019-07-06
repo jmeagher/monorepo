@@ -147,9 +147,7 @@ func TestContextCancellation(t *testing.T) {
 	wait := make(chan struct{})
 	handler := NewStructuredLogger(logger, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		waiting.Done()
-		t.Log("Handler starting wait")
 		<-wait
-		t.Log("Handler wait is done")
 	}))
 	handler.Level = logs.ErrorLevel // So logs are output by default
 
@@ -168,7 +166,6 @@ func TestContextCancellation(t *testing.T) {
 	waiting.Wait()
 	// Wait for context cancellation
 	<-ctx.Done()
-	t.Log("Test wait is over")
 	// Close to allow the internal handler to proceed
 	close(wait)
 	// Wait for the structured logger to actually log
