@@ -112,7 +112,7 @@ workflows:
       # - build-bazel-019
       # - build-bazel-022
       # - build-bazel-023
-      - build-bazel-024
+      # - build-bazel-024
       - build-bazel-025
       - build-bazel-026
-      - build-bazel-027
+      # - build-bazel-027
