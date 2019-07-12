@@ -64,7 +64,7 @@ func (f *openTracingHandler) ServeHTTP(writer http.ResponseWriter, req *http.Req
 	var serverSpan opentracing.Span
 
 	if wireContext != nil {
-		serverSpan = opentracing.StartSpan(
+		serverSpan = f.tracer.StartSpan(
 			f.spanName,
 			ext.RPCServerOption(wireContext))
 		defer serverSpan.Finish()

@@ -44,7 +44,7 @@ func main() {
 	debug := flag.Bool("debug", cfg.Debug, "If enabled extra debug request information will be printed")
 	flag.Parse()
 
-	var closer, e = jaeger.Init()
+	var tracer, closer, e = jaeger.Init()
 	if e != nil {
 		log.Fatal("Jaeger Init Fail: ", e)
 		return
@@ -53,14 +53,14 @@ func main() {
 
 	var handler http.Handler
 	if *successPct < 1.0 {
-		tmp := handlers.GlobalOpenTracingHandler("maybe-flake", httphelpers.RandomSplitHandler(
+		tmp := handlers.OpenTracingHandler(tracer, "maybe-flake", httphelpers.RandomSplitHandler(
 			float32(*successPct),
-			handlers.GlobalOpenTracingHandler("ok-handler", jsonResponder("flake-ok", 200, okDelay)),
-			handlers.GlobalOpenTracingHandler("flake-handler", jsonResponder("flake-bad", *errorCode, errDelay))))
+			handlers.OpenTracingHandler(tracer, "ok-handler", jsonResponder("flake-ok", 200, okDelay)),
+			handlers.OpenTracingHandler(tracer, "flake-handler", jsonResponder("flake-bad", *errorCode, errDelay))))
 		tmp.AddHandlerTag("static-tag", "just a test of flaky server")
 		handler = tmp
 	} else {
-		tmp := handlers.GlobalOpenTracingHandler("always-ok", jsonResponder("ok", 200, okDelay))
+		tmp := handlers.OpenTracingHandler(tracer, "always-ok", jsonResponder("ok", 200, okDelay))
 		tmp.AddHandlerTag("static-tag", "just a test always ok")
 		handler = tmp
 	}
