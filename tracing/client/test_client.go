@@ -62,7 +62,7 @@ func main() {
 }
 
 func runTest(url string, count int, minSr float64, maxSr float64, parallelism int) (string, bool) {
-	var closer, err = jaeger.Init()
+	var tracer, closer, err = jaeger.Init()
 	if err != nil {
 		log.Fatal("Jaeger Init Fail: ", err)
 	}
@@ -81,7 +81,7 @@ func runTest(url string, count int, minSr float64, maxSr float64, parallelism in
 	wg.Add(count)
 
 	for i := 0; i < parallelism; i++ {
-		go asyncTest(requests, url, results, &wg)
+		go asyncTest(tracer, requests, url, results, &wg)
 	}
 
 	done := make(chan struct{})
@@ -117,10 +117,10 @@ func runTest(url string, count int, minSr float64, maxSr float64, parallelism in
 	return fmt.Sprintf("Got a good success rate of %v\n", successRate), true
 }
 
-func asyncTest(runNum chan int, url string, result chan bool, wg *sync.WaitGroup) {
+func asyncTest(tracer opentracing.Tracer, runNum chan int, url string, result chan bool, wg *sync.WaitGroup) {
 
 	for i := range runNum {
-		var response, err = doTest(i, url)
+		var response, err = doTest(tracer, i, url)
 		var success = true
 		if err != nil {
 			log.Printf("Test error: %s", err.Error())
@@ -133,16 +133,16 @@ func asyncTest(runNum chan int, url string, result chan bool, wg *sync.WaitGroup
 	}
 }
 
-func doTest(testRun int, url string) (*http.Response, error) {
-	sp := opentracing.StartSpan("test_request")
+func doTest(tracer opentracing.Tracer, testRun int, url string) (*http.Response, error) {
+	sp := tracer.StartSpan("test_request")
 	defer sp.Finish()
 	ext.SamplingPriority.Set(sp, 1)
 	sp.SetTag("request_num", testRun)
 	ctx := opentracing.ContextWithSpan(context.Background(), sp)
-	return doRequest(ctx, url)
+	return doRequest(ctx, url, tracer)
 }
 
-func doRequest(context context.Context, url string) (*http.Response, error) {
+func doRequest(context context.Context, url string, tracer opentracing.Tracer) (*http.Response, error) {
 	span := opentracing.SpanFromContext(context)
 
 	httpClient := &http.Client{}
@@ -150,14 +150,14 @@ func doRequest(context context.Context, url string) (*http.Response, error) {
 
 	httpReq.Header.Set("x-my-client-name", os.Getenv("JAEGER_SERVICE_NAME"))
 
-	sp := opentracing.StartSpan(
+	sp := tracer.StartSpan(
 		"client_call",
 		opentracing.ChildOf(span.Context()))
 	defer sp.Finish()
 
 	// Transmit the span's TraceContext as HTTP headers on our
 	// outbound request.
-	opentracing.GlobalTracer().Inject(
+	tracer.Inject(
 		sp.Context(),
 		opentracing.HTTPHeaders,
 		opentracing.HTTPHeadersCarrier(httpReq.Header))
