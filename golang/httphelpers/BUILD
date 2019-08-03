@@ -8,6 +8,7 @@ filegroup(
 go_library(
     name = "go_default_library",
     srcs = [
+        "allow_methods.go",
         "cached_bodies.go",
         "common_handlers.go",
         "logger.go",
@@ -23,6 +24,7 @@ go_test(
     name = "go_default_test",
     size = "small",
     srcs = [
+        "allow_methods_test.go",
         "cached_bodies_test.go",
         "common_handlers_test.go",
         "logger_test.go",
