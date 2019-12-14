@@ -2,11 +2,11 @@ workspace(name = "jmeagher_monorepo")
 
 # Settings to check and update regularly
 rules_to_load = [
-    ("scala", "8092d5f6165a8d9c4797d5f089c1ba4eee3326b1", "bazelbuild", "io_bazel_rules_%s"),
-    ("jvm_external", "0a67f52558976208ea85d49ea36cfd708dad30da", "bazelbuild", "rules_%s"),
-    ("docker", "f962c24d59127ff3446756c06ff63af68c22645a", "bazelbuild", "io_bazel_rules_%s"),
-    ("go", "6fc21c78143ff1d4ea98100e8fd7a928d45abd00", "bazelbuild", "io_bazel_rules_%s"),
-    ("python", "88532b624f74ab17138fb638d3c62750b5af5f9a", "bazelbuild", "io_bazel_rules_%s"),
+    ("scala", "886bc9cf6d299545510b39b4872bbb5dc7526cb3", "bazelbuild", "io_bazel_rules_%s"),
+    ("jvm_external", "754b16440d50db635ae084ec1e8052bb83878532", "bazelbuild", "rules_%s"),
+    ("docker", "b2bf38db3856a0e4165dfee4229c25426994ea20", "bazelbuild", "io_bazel_rules_%s"),
+    ("go", "ce6cc4bb00afd965e86beee8efb734a8f6621b54", "bazelbuild", "io_bazel_rules_%s"),
+    ("python", "38f86fb55b698c51e8510c807489c9f4e047480e", "bazelbuild", "io_bazel_rules_%s"),
     # ("rust", "4a9d0e0b6c66f1e98d15cbd3cccc8100a0454fc9", "bazelbuild", "io_bazel_rules_%s"),
 ]
 
@@ -81,17 +81,24 @@ gazelle_dependencies()
 
 # Setup docker support
 load(
-    "@io_bazel_rules_docker//container:container.bzl",
-    "container_pull",
+    "@io_bazel_rules_docker//repositories:repositories.bzl",
     container_repositories = "repositories",
 )
-
 container_repositories()
 
 # Docker testing images
 load(
     "@io_bazel_rules_docker//python:image.bzl",
     _py_image_repos = "repositories",
+)
+
+load("@io_bazel_rules_docker//repositories:deps.bzl", container_deps = "deps")
+
+container_deps()
+
+load(
+    "@io_bazel_rules_docker//container:container.bzl",
+    "container_pull",
 )
 
 _py_image_repos()
