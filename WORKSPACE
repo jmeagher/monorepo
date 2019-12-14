@@ -59,10 +59,13 @@ pinned_maven_install()
 # Go support
 http_archive(
     name = "bazel_gazelle",
-    urls = ["https://github.com/bazelbuild/bazel-gazelle/archive/ddff739eca1ac0d5cc3530fc6af2ccfe19becc78.zip"],
-    type = "zip",
-    strip_prefix = "bazel-gazelle-ddff739eca1ac0d5cc3530fc6af2ccfe19becc78",
+    urls = [
+        "https://storage.googleapis.com/bazel-mirror/github.com/bazelbuild/bazel-gazelle/releases/download/v0.19.1/bazel-gazelle-v0.19.1.tar.gz",
+        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.19.1/bazel-gazelle-v0.19.1.tar.gz",
+    ],
+    sha256 = "86c6d481b3f7aedc1d60c1c211c6f76da282ae197c3b3160f54bd3a8f847896f",
 )
+
 
 load(
     "@io_bazel_rules_go//go:deps.bzl",
