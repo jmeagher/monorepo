@@ -59,7 +59,7 @@ commands:
 jobs:
   build-template: &build-template
     docker:
-      - image: circleci/openjdk:8
+      - image: circleci/python:3.6
     working_directory: ~/app/
     environment:
       BAZEL_VER: "override_this"
