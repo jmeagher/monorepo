@@ -121,11 +121,11 @@ load(
 _go_image_repos()
 
 # Expanded python support for pip import capability
-load("@io_bazel_rules_python//python:pip.bzl", "pip_repositories", "pip_import")
+load("@io_bazel_rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
 
 pip_repositories()
 
-pip_import(
+pip3_import(
     name = "my_python_deps",
     requirements = "//3rdparty:requirements.txt",
 )

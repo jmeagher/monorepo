@@ -1,4 +1,4 @@
 from jpm import jpmlib
 
-print jpmlib.getIt()
+print(jpmlib.getIt())
 

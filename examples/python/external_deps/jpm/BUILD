@@ -7,7 +7,10 @@ py_library(
         "__init__.py",
     ],
     deps = [
+        requirement("numpy"),
         requirement("pandas"),
+        requirement("pytz"),
+        requirement("python-dateutil"),
         requirement("six"),
     ],
     imports = [".."],
