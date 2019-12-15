@@ -103,6 +103,6 @@ workflows:
       # Commented out means the version probably won't work
       # - build-bazel-027
       - build-bazel-1-0
-      - build-bazel-1-1
-      - build-bazel-1-2
+      # - build-bazel-1-1
+      # - build-bazel-1-2
       
