@@ -1,27 +1,29 @@
 # Mostly copied from https://github.com/bazelbuild/rules_scala/blob/master/.travis.yml
 
-# trusty beta image has jdk8, gcc4.8.4
-dist: trusty
+dist: xenial
 sudo: required
-language: java
+language: sh
 
-services:
-  - docker
+addons:
+  apt:
+    packages:
+    - libxml2-utils
 
-os:
-  - linux
- #  - osx
+cache:
+    directories:
+     - .bazel_cache
+     - ~/.bazel_binaries
+
+_linux: &linux
+  os: linux
 
 env:
   # Bazel version to use for testing
   # Commented out means the version probably won't work
-  # - V=0.19.2
-  # - V=0.22.0
-  # - V=0.23.2
-  # - V=0.24.1
-  - V=0.25.3
-  - V=0.26.1
   # - V=0.27.1
+  - V=1.0.1
+  - V=1.1.0
+  - V=1.2.1
 
 before_install:
   - |
@@ -29,8 +31,6 @@ before_install:
       OS=darwin
     else
       sysctl kernel.unprivileged_userns_clone=1
-      sudo apt-get update -q
-      sudo apt-get install libxml2-utils -y
       OS=linux
     fi
     if [[ $V =~ .*rc[0-9]+.* ]]; then

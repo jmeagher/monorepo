@@ -1,5 +1,7 @@
-numpy==1.14.0
-scipy==1.0.0
+numpy==1.16.5
+scipy==1.2.2
 pandas==0.22.0
-matplotlib==2.1.1
-six==1.11.0
+matplotlib==3.0.3
+six==1.13.0
+pytz==2019.3
+python-dateutil==2.8.1

@@ -1,4 +1,3 @@
 from jpm import numerics
 
-print numerics.compute_something()
-
+print(numerics.compute_something())

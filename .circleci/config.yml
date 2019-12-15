@@ -18,6 +18,7 @@ commands:
           command: |
             sudo apt-get update -q
             sudo apt-get install libxml2-utils python-dev -y # Install some basics needed for python
+            sudo apt-get install openjdk-11-jdk-headless
             cat .bazelrc.travis >> .bazelrc
 
   bazel-build:
@@ -59,13 +60,13 @@ commands:
 jobs:
   build-template: &build-template
     docker:
-      - image: circleci/openjdk:8
+      - image: circleci/python:3.6
     working_directory: ~/app/
     environment:
       BAZEL_VER: "override_this"
     steps:
       - setup_remote_docker:
-          docker_layer_caching: true
+          docker_layer_caching: false
       - checkout
       - pre-run-setup
       - install-bazel
@@ -75,44 +76,33 @@ jobs:
       - save-caches
       # - e2e-test - Leave this out for now until docker issues can be resolved
 
-  build-bazel-019:
-    <<: *build-template
-    environment:
-      BAZEL_VER: "0.19.2"
-  build-bazel-022:
-    <<: *build-template
-    environment:
-      BAZEL_VER: "0.22.0"
-  build-bazel-023:
-    <<: *build-template
-    environment:
-      BAZEL_VER: "0.23.2"
-  build-bazel-024:
-    <<: *build-template
-    environment:
-      BAZEL_VER: "0.24.1"
-  build-bazel-025:
-    <<: *build-template
-    environment:
-      BAZEL_VER: "0.25.3"
-  build-bazel-026:
-    <<: *build-template
-    environment:
-      BAZEL_VER: "0.26.1"
   build-bazel-027:
     <<: *build-template
     environment:
       BAZEL_VER: "0.27.1"
 
+  build-bazel-1-0:
+    <<: *build-template
+    environment:
+      BAZEL_VER: "1.0.1"
+
+  build-bazel-1-1:
+    <<: *build-template
+    environment:
+      BAZEL_VER: "1.1.0"
+
+  build-bazel-1-2:
+    <<: *build-template
+    environment:
+      BAZEL_VER: "1.2.1"
+
 workflows:
   version: 2
   default_workflow:
     jobs:
-      # Commented out means the version does not work
-      # - build-bazel-019
-      # - build-bazel-022
-      # - build-bazel-023
-      # - build-bazel-024
-      - build-bazel-025
-      - build-bazel-026
+      # Commented out means the version probably won't work
       # - build-bazel-027
+      - build-bazel-1-0
+      # - build-bazel-1-1
+      # - build-bazel-1-2
+      
