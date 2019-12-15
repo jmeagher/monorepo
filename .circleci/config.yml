@@ -18,6 +18,7 @@ commands:
           command: |
             sudo apt-get update -q
             sudo apt-get install libxml2-utils python-dev -y # Install some basics needed for python
+            sudo apt-get install openjdk-11-jdk-headless
             cat .bazelrc.travis >> .bazelrc
 
   bazel-build:
