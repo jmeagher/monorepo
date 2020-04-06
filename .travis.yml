@@ -1,6 +1,6 @@
 # Mostly copied from https://github.com/bazelbuild/rules_scala/blob/master/.travis.yml
 
-dist: xenial
+dist: bionic
 sudo: required
 language: sh
 
