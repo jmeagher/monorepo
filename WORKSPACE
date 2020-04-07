@@ -2,23 +2,25 @@ workspace(name = "jmeagher_monorepo")
 
 # Settings to check and update regularly
 rules_to_load = [
-    ("scala", "886bc9cf6d299545510b39b4872bbb5dc7526cb3", "bazelbuild", "io_bazel_rules_%s"),
-    ("jvm_external", "754b16440d50db635ae084ec1e8052bb83878532", "bazelbuild", "rules_%s"),
-    ("docker", "b2bf38db3856a0e4165dfee4229c25426994ea20", "bazelbuild", "io_bazel_rules_%s"),
-    ("go", "ce6cc4bb00afd965e86beee8efb734a8f6621b54", "bazelbuild", "io_bazel_rules_%s"),
-    ("python", "38f86fb55b698c51e8510c807489c9f4e047480e", "bazelbuild", "io_bazel_rules_%s"),
+    ("scala", "886bc9cf6d299545510b39b4872bbb5dc7526cb3", "", "bazelbuild", "io_bazel_rules_%s"),
+    ("jvm_external", "bad9e2501279aea5268b1b8a5463ccc1be8ddf65", "", "bazelbuild", "rules_%s"),
+    ("docker", "62a1072965e98f74662a11ba89e11df77d7e4305", "4a2883552747c7b460c9a3bf3bbdddb3181ccfc01fcdc471842a00b3dbc82190", "bazelbuild", "io_bazel_rules_%s"),
+    ("go", "f78ceebea7f1b340c76f5ad2758117966cd9015b", "", "bazelbuild", "io_bazel_rules_%s"),
+    ("python", "748aa53d7701e71101dfd15d800e100f6ff8e5d1", "d3e40ca3b7e00b72d2b1585e0b3396bcce50f0fc692e2b7c91d8b0dc471e3eaf", "bazelbuild", "io_bazel_rules_%s"),
     # ("rust", "4a9d0e0b6c66f1e98d15cbd3cccc8100a0454fc9", "bazelbuild", "io_bazel_rules_%s"),
 ]
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-# Base part needed for at least rust
 http_archive(
     name = "bazel_skylib",
-    sha256 = "eb5c57e4c12e68c0c20bc774bfbc60a568e800d025557bc4ea022c6479acc867",
-    strip_prefix = "bazel-skylib-0.6.0",
-    url = "https://github.com/bazelbuild/bazel-skylib/archive/0.6.0.tar.gz",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.0.2/bazel-skylib-1.0.2.tar.gz",
+        "https://github.com/bazelbuild/bazel-skylib/releases/download/1.0.2/bazel-skylib-1.0.2.tar.gz",
+    ],
+    sha256 = "97e70364e9249702246c0e9444bccdc4b847bed1eb03c5a3ece4f83dfe6abc44",
 )
+load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+bazel_skylib_workspace()
 
 # Load all the base rules
 load("//tools/build_rules:rules_loader.bzl", "load_build_rules")
@@ -26,44 +28,19 @@ load("//tools/build_rules:rules_loader.bzl", "load_build_rules")
 load_build_rules(rules_to_load)
 
 # Scala setup
-load("@io_bazel_rules_scala//scala:scala.bzl", "scala_repositories")
-
-scala_repositories()
-
 load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_register_toolchains")
-
-register_toolchains("//tools/build_rules:strict_scala_toolchain")
-# load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_register_toolchains")
-# scala_register_toolchains()
-
-# Java version details
-scala_dep_ver = "2.11"
-akka_ver = "2.5.8"
-akka_http_ver = "10.0.11"
-# Setup importing maven based external dependencies
-# When modifying this pin specific versions with bazel run @unpinned_maven//:pin
-load("@rules_jvm_external//:defs.bzl", "maven_install")
-maven_install(
-    artifacts = [
-        "com.datastax.cassandra:cassandra-driver-core:3.4.0",
-    ], 
-        repositories = [
-            "https://repo.maven.apache.org/maven2/",
-    ],
-    maven_install_json = "//:maven_install.json"
-)
-load("@maven//:defs.bzl", "pinned_maven_install")
-pinned_maven_install()
-
+scala_register_toolchains()
+load("@io_bazel_rules_scala//scala:scala.bzl", "scala_repositories")
+scala_repositories()
 
 # Go support
 http_archive(
     name = "bazel_gazelle",
     urls = [
-        "https://storage.googleapis.com/bazel-mirror/github.com/bazelbuild/bazel-gazelle/releases/download/v0.19.1/bazel-gazelle-v0.19.1.tar.gz",
-        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.19.1/bazel-gazelle-v0.19.1.tar.gz",
+        "https://storage.googleapis.com/bazel-mirror/github.com/bazelbuild/bazel-gazelle/releases/download/v0.20.0/bazel-gazelle-v0.20.0.tar.gz",
+        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.20.0/bazel-gazelle-v0.20.0.tar.gz",
     ],
-    sha256 = "86c6d481b3f7aedc1d60c1c211c6f76da282ae197c3b3160f54bd3a8f847896f",
+    sha256 = "d8c45ee70ec39a57e7a05e5027c32b1576cc7f16d9dd37135b0eddde45cf1b10",
 )
 
 
@@ -150,7 +127,7 @@ container_pull(
     # 'tag' is also supported, but digest is encouraged for reproducibility.
     # note: couldn't get digest version to work
     tag = "3.11.1",
-    # digest = "sha256:cb506985b360983d774e6af46e9071c377af48b9d9be1a3ce7235c34d59a8c40",
+    digest = "sha256:18698b13866b5e805420718e22ad32e3b3227182d3143aaaa937c6154bb5d2bb",
 )
 
 container_pull(
@@ -159,6 +136,7 @@ container_pull(
     # Picked a recent build at random from https://hub.docker.com/r/envoyproxy/envoy-alpine/tags/
     repository = "envoyproxy/envoy-alpine",
     tag = "200b0e41641be46471c2ce3d230aae395fda7ded",
+    digest = "sha256:ae046d3c3b1ebcdbf02cd924edfb2fe5e328ab462c3e44961cb4aac9be208491",
 )
 
 # Load external golang repos
