@@ -2,10 +2,10 @@ workspace(name = "jmeagher_monorepo")
 
 # Settings to check and update regularly
 rules_to_load = [
-    ("scala", "886bc9cf6d299545510b39b4872bbb5dc7526cb3", "", "bazelbuild", "io_bazel_rules_%s"),
+    ("scala", "fadf4ce919a4deac1927c316bfb201c7d21128c1", "49475dcbf81463da644917de24f7e28b029b54a62076b5bd3ac1278d4f5e4543", "bazelbuild", "io_bazel_rules_%s"),
     ("jvm_external", "bad9e2501279aea5268b1b8a5463ccc1be8ddf65", "", "bazelbuild", "rules_%s"),
     ("docker", "62a1072965e98f74662a11ba89e11df77d7e4305", "4a2883552747c7b460c9a3bf3bbdddb3181ccfc01fcdc471842a00b3dbc82190", "bazelbuild", "io_bazel_rules_%s"),
-    ("go", "f78ceebea7f1b340c76f5ad2758117966cd9015b", "", "bazelbuild", "io_bazel_rules_%s"),
+    ("go", "f78ceebea7f1b340c76f5ad2758117966cd9015b", "04f71a220fa4ad87a7e8f7a08b63cda6bd7466342e86d780e9ae169d8b951081", "bazelbuild", "io_bazel_rules_%s"),
     ("python", "748aa53d7701e71101dfd15d800e100f6ff8e5d1", "d3e40ca3b7e00b72d2b1585e0b3396bcce50f0fc692e2b7c91d8b0dc471e3eaf", "bazelbuild", "io_bazel_rules_%s"),
     # ("rust", "4a9d0e0b6c66f1e98d15cbd3cccc8100a0454fc9", "bazelbuild", "io_bazel_rules_%s"),
 ]
