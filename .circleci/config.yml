@@ -95,6 +95,6 @@ workflows:
   version: 2
   default_workflow:
     jobs:
-      - build-bazel-1-2
+      # - build-bazel-1-2
       - build-bazel-2-2
       # - build-bazel-3-0
