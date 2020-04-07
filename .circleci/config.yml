@@ -76,6 +76,11 @@ jobs:
       - save-caches
       # - e2e-test - Leave this out for now until docker issues can be resolved
 
+  build-bazel-1-2:
+    <<: *build-template
+    environment:
+      BAZEL_VER: "1.2.1"
+
   build-bazel-2-2:
     <<: *build-template
     environment:
@@ -90,5 +95,6 @@ workflows:
   version: 2
   default_workflow:
     jobs:
+      - build-bazel-1-2
       - build-bazel-2-2
-      - build-bazel-3-0
+      # - build-bazel-3-0
