@@ -1,6 +1,6 @@
 # Mostly copied from https://github.com/bazelbuild/rules_scala/blob/master/.travis.yml
 
-dist: xenial
+dist: bionic
 sudo: required
 language: sh
 
@@ -19,11 +19,9 @@ _linux: &linux
 
 env:
   # Bazel version to use for testing
-  # Commented out means the version probably won't work
-  # - V=0.27.1
-  - V=1.0.1
-  - V=1.1.0
-  - V=1.2.1
+  # - V=1.2.1
+  - V=2.2.0
+  # - V=3.0.0
 
 before_install:
   - |
