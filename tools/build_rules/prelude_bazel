@@ -11,7 +11,7 @@ load("@io_bazel_rules_docker//scala:image.bzl", "scala_image")
 # External python requirements
 load("@my_python_deps//:requirements.bzl", "requirement")
 load(
-  "@io_bazel_rules_python//python:python.bzl",
+  "@rules_python//python:python.bzl",
   "py_binary", "py_library", "py_test",
 )
 

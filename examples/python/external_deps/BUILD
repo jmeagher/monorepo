@@ -7,8 +7,8 @@ py_binary(
 py_image(
     name = "main_docker",
     srcs = ["main.py"],
-    deps = [":main"],
     main = "main.py",
+    deps = [":main"],
 )
 
 filegroup(

@@ -6,13 +6,13 @@ filegroup(
 )
 
 go_library(
-    name = "go_default_library",
+    name = "handlers",
     srcs = ["tracing_handlers.go"],
     importpath = "github.com/jmeagher/monorepo/tracing/handlers",
     visibility = ["//visibility:public"],
     deps = [
-        "//golang/httphelpers:go_default_library",
-        "@com_github_opentracing_opentracing_go//:go_default_library",
-        "@com_github_opentracing_opentracing_go//ext:go_default_library",
+        "//golang/httphelpers",
+        "@com_github_opentracing_opentracing_go//:opentracing-go",
+        "@com_github_opentracing_opentracing_go//ext",
     ],
 )

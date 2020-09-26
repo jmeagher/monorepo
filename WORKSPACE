@@ -6,7 +6,7 @@ rules_to_load = [
     ("jvm_external", "54582a756201751b88d5d5f4a630985063b2f325", "", "bazelbuild", "rules_%s"),
     ("docker", "708e6c7c2d611c546b62fb21fbd2945fd8dc1cdb", "1f4dbc9ebb31284f6e4450b08a2c600a1c6837e5961205fa8d7c47bcd1f20de6", "bazelbuild", "io_bazel_rules_%s"),
     ("go", "64bfa14993c7841aaefbbe1f1aecaad72f302974", "84eba14421a7feca3a43fbd8f44b0fb9efa9364f2cd8e037721f88934467dead", "bazelbuild", "io_bazel_rules_%s"),
-    ("python", "29f96bd504f88fe0a148a726b877b6b3f8c7ab9f", "d063e115181a82d6ad1e66cfdd42668d283359cb1066768157774ff1ad9af12b", "bazelbuild", "io_bazel_rules_%s"),
+    ("python", "3baa2660569a76898d0f520c73b299ea39b6374d", "7122bef3e3ac44d5dd697a1411e2861dd7437000bc435d4be35e42589ebb9f9f", "bazelbuild", "rules_%s"),
     # ("rust", "4a9d0e0b6c66f1e98d15cbd3cccc8100a0454fc9", "bazelbuild", "io_bazel_rules_%s"),
 ]
 
@@ -27,10 +27,22 @@ load("//tools/build_rules:rules_loader.bzl", "load_build_rules")
 
 load_build_rules(rules_to_load)
 
-load("@io_bazel_rules_scala//:version.bzl", "bazel_version")
-bazel_version(name = "bazel_version")
+# Expanded python support for pip import capability
+load("@rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
+pip_repositories()
+
+pip3_import(
+    name = "my_python_deps",
+    requirements = "//3rdparty:requirements.txt",
+)
+
+load("@my_python_deps//:requirements.bzl", _python_3rd_party = "pip_install")
+_python_3rd_party()
+# pip_install()
 
 # Scala setup
+load("@io_bazel_rules_scala//:version.bzl", "bazel_version")
+bazel_version(name = "bazel_version")
 load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_register_toolchains")
 scala_register_toolchains()
 load("@io_bazel_rules_scala//scala:scala.bzl", "scala_repositories")
@@ -99,20 +111,6 @@ load(
 
 _go_image_repos()
 
-# Expanded python support for pip import capability
-load("@io_bazel_rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
-
-pip_repositories()
-
-pip3_import(
-    name = "my_python_deps",
-    requirements = "//3rdparty:requirements.txt",
-)
-
-load("@my_python_deps//:requirements.bzl", "pip_install")
-
-pip_install()
-
 # Rust support
 # Removed for now since it's been delicate to maintain and I'm not working with it now
 # load("@io_bazel_rules_rust//rust:repositories.bzl", "rust_repositories")
@@ -122,29 +120,29 @@ pip_install()
 
 # Load external docker containers
 
-# container_pull(
-#     name = "cassandra3",
-#     registry = "index.docker.io",
-#     repository = "library/cassandra",
-#     # 'tag' is also supported, but digest is encouraged for reproducibility.
-#     # note: couldn't get digest version to work
-#     tag = "3.11.1",
-#     digest = "sha256:18698b13866b5e805420718e22ad32e3b3227182d3143aaaa937c6154bb5d2bb",
-# )
+container_pull(
+    name = "cassandra3",
+    registry = "index.docker.io",
+    repository = "library/cassandra",
+    # 'tag' is also supported, but digest is encouraged for reproducibility.
+    # note: couldn't get digest version to work
+    tag = "3.11.1",
+    digest = "sha256:18698b13866b5e805420718e22ad32e3b3227182d3143aaaa937c6154bb5d2bb",
+)
 
-# container_pull(
-#     name = "envoyproxy",
-#     registry = "index.docker.io",
-#     # Picked a recent build at random from https://hub.docker.com/r/envoyproxy/envoy-alpine/tags/
-#     repository = "envoyproxy/envoy-alpine",
-#     tag = "200b0e41641be46471c2ce3d230aae395fda7ded",
-#     digest = "sha256:ae046d3c3b1ebcdbf02cd924edfb2fe5e328ab462c3e44961cb4aac9be208491",
-# )
+container_pull(
+    name = "envoyproxy",
+    registry = "index.docker.io",
+    # Picked a recent build at random from https://hub.docker.com/r/envoyproxy/envoy-alpine/tags/
+    repository = "envoyproxy/envoy-alpine",
+    tag = "200b0e41641be46471c2ce3d230aae395fda7ded",
+    digest = "sha256:ae046d3c3b1ebcdbf02cd924edfb2fe5e328ab462c3e44961cb4aac9be208491",
+)
 
 # Load external golang repos
 # To add or update new external go dependencies edit go.mod and run ...
 # bazel run //:gazelle -- update-repos -to_macro my-go-repositories.bzl%my_go_repositories -from_file go.mod
-#
+
 # To update build files for any external uses
 # Update build files with bazel run //:gazelle
 load("//:my-go-repositories.bzl", "my_go_repositories")
