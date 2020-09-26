@@ -16,7 +16,7 @@ if [ ! -e dotfiles ] ; then
   mv ~/.zshrc ~/.zshrc.orig
   mv ~/.bashrc ~/.bashrc.orig
   mv ~/.gitconfig ~/.gitconfig_local
-  ./setup.sh
+  (cd dotfiles && ./setup.sh)
 fi
 
 # Install and setup ibazel
