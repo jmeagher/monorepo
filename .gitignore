@@ -9,3 +9,5 @@
 
 # Bazel handles version details
 /go.sum
+
+/.codespaces-tmp

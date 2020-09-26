@@ -19,9 +19,7 @@ _linux: &linux
 
 env:
   # Bazel version to use for testing
-  # - V=1.2.1
-  - V=2.2.0
-  # - V=3.0.0
+  - V=3.4.1
 
 before_install:
   - |
