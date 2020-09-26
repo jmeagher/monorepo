@@ -8,7 +8,7 @@ go_binary(
 
 go_image(
     name = "flaky_image",
-    embed = [":go_default_library"],
+    embed = [":server_lib"],
     goarch = "amd64",
     goos = "linux",
     pure = "on",

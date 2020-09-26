@@ -15,7 +15,7 @@ def jaeger_go_deps():
         name = "com_github_codahale_hdrhistogram",
         importpath = "github.com/codahale/hdrhistogram",
         urls = ["https://github.com/codahale/hdrhistogram/archive/3a0bb77429bd3a61596f5e8a3172445844342120.tar.gz"],
-        strip_prefix = "hdrhistogram-3a0bb77429bd3a61596f5e8a3172445844342120/",
+        strip_prefix = "hdrhistogram-go-3a0bb77429bd3a61596f5e8a3172445844342120/",
         build_file_proto_mode = "default",
     )
 

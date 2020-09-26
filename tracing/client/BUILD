@@ -8,7 +8,7 @@ go_binary(
 
 go_image(
     name = "test_client_image",
-    embed = [":go_default_library"],
+    embed = [":client_lib"],
     goarch = "amd64",
     goos = "linux",
     pure = "on",
