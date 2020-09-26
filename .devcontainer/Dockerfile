@@ -24,5 +24,7 @@ RUN curl -fSsL -o /tmp/bazel-installer.sh https://github.com/bazelbuild/bazel/re
     && rm /tmp/bazel-installer.sh
 
 # [Optional] Uncomment this section to install additional OS packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends \
+         python3-distutils python3-dev python3-pip openjdk-11-jdk-headless \
+         jq entr tmux vim

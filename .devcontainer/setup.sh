@@ -7,8 +7,8 @@ mkdir -p $CODESPACES_TMP
 cd $CODESPACES_TMP
 
 # Extra base packages
-apt install -y python3-distutils python3-dev python3-pip \
-  jq entr tmux vim
+apt install -y python3-distutils python3-dev python3-pip openjdk-11-jdk-headless \
+  jq entr tmux vim silversearcher-ag
 
 # My dotfiles setup
 if [ ! -e dotfiles ] ; then
