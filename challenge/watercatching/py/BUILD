@@ -7,7 +7,7 @@ py_library(
 
 py_test(
     name = "watercatchingtest",
+    size = "small",
     srcs = ["watercatchingtest.py"],
     deps = [":py"],
-    size = "small",
 )

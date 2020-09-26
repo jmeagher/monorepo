@@ -5,3 +5,8 @@ go_test(
     size = "small",
     srcs = ["handler_test.go"],
 )
+
+go_test(
+    name = "handlers_test",
+    srcs = ["handler_test.go"],
+)

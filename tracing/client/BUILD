@@ -2,13 +2,13 @@ load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 
 go_binary(
     name = "test_client",
-    embed = [":go_default_library"],
+    embed = [":client_lib"],
     visibility = ["//visibility:public"],
 )
 
 go_image(
     name = "test_client_image",
-    embed = [":go_default_library"],
+    embed = [":client_lib"],
     goarch = "amd64",
     goos = "linux",
     pure = "on",
@@ -20,14 +20,14 @@ filegroup(
 )
 
 go_library(
-    name = "go_default_library",
+    name = "client_lib",
     srcs = ["test_client.go"],
     importpath = "github.com/jmeagher/monorepo/tracing/client",
     visibility = ["//visibility:private"],
     deps = [
-        "//tracing/jaeger:go_default_library",
-        "@com_github_kelseyhightower_envconfig//:go_default_library",
-        "@com_github_opentracing_opentracing_go//:go_default_library",
-        "@com_github_opentracing_opentracing_go//ext:go_default_library",
+        "//tracing/jaeger",
+        "@com_github_kelseyhightower_envconfig//:envconfig",
+        "@com_github_opentracing_opentracing_go//:opentracing-go",
+        "@com_github_opentracing_opentracing_go//ext",
     ],
 )

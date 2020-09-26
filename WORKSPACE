@@ -2,11 +2,11 @@ workspace(name = "jmeagher_monorepo")
 
 # Settings to check and update regularly
 rules_to_load = [
-    ("scala", "fadf4ce919a4deac1927c316bfb201c7d21128c1", "49475dcbf81463da644917de24f7e28b029b54a62076b5bd3ac1278d4f5e4543", "bazelbuild", "io_bazel_rules_%s"),
-    ("jvm_external", "bad9e2501279aea5268b1b8a5463ccc1be8ddf65", "", "bazelbuild", "rules_%s"),
-    ("docker", "62a1072965e98f74662a11ba89e11df77d7e4305", "4a2883552747c7b460c9a3bf3bbdddb3181ccfc01fcdc471842a00b3dbc82190", "bazelbuild", "io_bazel_rules_%s"),
-    ("go", "f78ceebea7f1b340c76f5ad2758117966cd9015b", "04f71a220fa4ad87a7e8f7a08b63cda6bd7466342e86d780e9ae169d8b951081", "bazelbuild", "io_bazel_rules_%s"),
-    ("python", "748aa53d7701e71101dfd15d800e100f6ff8e5d1", "d3e40ca3b7e00b72d2b1585e0b3396bcce50f0fc692e2b7c91d8b0dc471e3eaf", "bazelbuild", "io_bazel_rules_%s"),
+    ("scala", "f0c8d0759c3eeec7e7e94cd61e507b9b771b7641", "b0d698b6cc57b4474b412f056be66cbcc2a099295d6af7b0be5e83df0fc8911e", "bazelbuild", "io_bazel_rules_%s"),
+    ("jvm_external", "54582a756201751b88d5d5f4a630985063b2f325", "", "bazelbuild", "rules_%s"),
+    ("docker", "708e6c7c2d611c546b62fb21fbd2945fd8dc1cdb", "1f4dbc9ebb31284f6e4450b08a2c600a1c6837e5961205fa8d7c47bcd1f20de6", "bazelbuild", "io_bazel_rules_%s"),
+    ("go", "64bfa14993c7841aaefbbe1f1aecaad72f302974", "84eba14421a7feca3a43fbd8f44b0fb9efa9364f2cd8e037721f88934467dead", "bazelbuild", "io_bazel_rules_%s"),
+    ("python", "3baa2660569a76898d0f520c73b299ea39b6374d", "7122bef3e3ac44d5dd697a1411e2861dd7437000bc435d4be35e42589ebb9f9f", "bazelbuild", "rules_%s"),
     # ("rust", "4a9d0e0b6c66f1e98d15cbd3cccc8100a0454fc9", "bazelbuild", "io_bazel_rules_%s"),
 ]
 
@@ -14,10 +14,10 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 http_archive(
     name = "bazel_skylib",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.0.2/bazel-skylib-1.0.2.tar.gz",
-        "https://github.com/bazelbuild/bazel-skylib/releases/download/1.0.2/bazel-skylib-1.0.2.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.0.3/bazel-skylib-1.0.3.tar.gz",
+        "https://github.com/bazelbuild/bazel-skylib/releases/download/1.0.3/bazel-skylib-1.0.3.tar.gz",
     ],
-    sha256 = "97e70364e9249702246c0e9444bccdc4b847bed1eb03c5a3ece4f83dfe6abc44",
+    sha256 = "1c531376ac7e5a180e0237938a2536de0c54d93f5c278634818e0efc952dd56c",
 )
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 bazel_skylib_workspace()
@@ -27,7 +27,22 @@ load("//tools/build_rules:rules_loader.bzl", "load_build_rules")
 
 load_build_rules(rules_to_load)
 
+# Expanded python support for pip import capability
+load("@rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
+pip_repositories()
+
+pip3_import(
+    name = "my_python_deps",
+    requirements = "//3rdparty:requirements.txt",
+)
+
+load("@my_python_deps//:requirements.bzl", _python_3rd_party = "pip_install")
+_python_3rd_party()
+# pip_install()
+
 # Scala setup
+load("@io_bazel_rules_scala//:version.bzl", "bazel_version")
+bazel_version(name = "bazel_version")
 load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_register_toolchains")
 scala_register_toolchains()
 load("@io_bazel_rules_scala//scala:scala.bzl", "scala_repositories")
@@ -36,13 +51,12 @@ scala_repositories()
 # Go support
 http_archive(
     name = "bazel_gazelle",
+    sha256 = "72d339ff874a382f819aaea80669be049069f502d6c726a07759fdca99653c48",
     urls = [
-        "https://storage.googleapis.com/bazel-mirror/github.com/bazelbuild/bazel-gazelle/releases/download/v0.20.0/bazel-gazelle-v0.20.0.tar.gz",
-        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.20.0/bazel-gazelle-v0.20.0.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/v0.22.1/bazel-gazelle-v0.22.1.tar.gz",
+        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.22.1/bazel-gazelle-v0.22.1.tar.gz",
     ],
-    sha256 = "d8c45ee70ec39a57e7a05e5027c32b1576cc7f16d9dd37135b0eddde45cf1b10",
 )
-
 
 load(
     "@io_bazel_rules_go//go:deps.bzl",
@@ -97,20 +111,6 @@ load(
 
 _go_image_repos()
 
-# Expanded python support for pip import capability
-load("@io_bazel_rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
-
-pip_repositories()
-
-pip3_import(
-    name = "my_python_deps",
-    requirements = "//3rdparty:requirements.txt",
-)
-
-load("@my_python_deps//:requirements.bzl", "pip_install")
-
-pip_install()
-
 # Rust support
 # Removed for now since it's been delicate to maintain and I'm not working with it now
 # load("@io_bazel_rules_rust//rust:repositories.bzl", "rust_repositories")
@@ -142,7 +142,7 @@ container_pull(
 # Load external golang repos
 # To add or update new external go dependencies edit go.mod and run ...
 # bazel run //:gazelle -- update-repos -to_macro my-go-repositories.bzl%my_go_repositories -from_file go.mod
-#
+
 # To update build files for any external uses
 # Update build files with bazel run //:gazelle
 load("//:my-go-repositories.bzl", "my_go_repositories")

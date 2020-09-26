@@ -6,7 +6,7 @@ filegroup(
 )
 
 go_library(
-    name = "go_default_library",
+    name = "httphelpers",
     srcs = [
         "allow_methods.go",
         "cached_bodies.go",
@@ -17,11 +17,11 @@ go_library(
     ],
     importpath = "github.com/jmeagher/monorepo/golang/httphelpers",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_sirupsen_logrus//:go_default_library"],
+    deps = ["@com_github_sirupsen_logrus//:logrus"],
 )
 
 go_test(
-    name = "go_default_test",
+    name = "httphelpers_test",
     size = "small",
     srcs = [
         "allow_methods_test.go",
@@ -32,10 +32,10 @@ go_test(
         "structured_log_test.go",
     ],
     args = ["-test.v"],
-    embed = [":go_default_library"],
+    embed = [":httphelpers"],
     deps = [
-        "@com_github_sirupsen_logrus//:go_default_library",
-        "@com_github_sirupsen_logrus//hooks/test:go_default_library",
-        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_sirupsen_logrus//:logrus",
+        "@com_github_sirupsen_logrus//hooks/test",
+        "@com_github_stretchr_testify//assert",
     ],
 )
