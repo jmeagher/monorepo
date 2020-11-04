@@ -4,8 +4,8 @@
 	"build": {
 		"dockerfile": "Dockerfile",
 		"args": {
-			"BAZEL_VERSION": "3.4.1",
-			"BAZEL_DOWNLOAD_SHA": "9808adad931ac652e8ff5022a74507c532250c2091d21d6aebc7064573669cc5"
+			"BAZEL_VERSION": "3.7.0",
+			"BAZEL_DOWNLOAD_SHA": "621089dc4d396612603a55f18f55acded29d9b21534ebaa99406a0b4b05029fb"
 		}
 	},
 

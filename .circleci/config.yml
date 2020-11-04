@@ -80,9 +80,14 @@ jobs:
     <<: *build-template
     environment:
       BAZEL_VER: "3.4.1"
+  build-bazel-3-7:
+    <<: *build-template
+    environment:
+      BAZEL_VER: "3.7.0"
 
 workflows:
   version: 2
   default_workflow:
     jobs:
       - build-bazel-3-4
+      - build-bazel-3-7
