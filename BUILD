@@ -7,7 +7,6 @@ filegroup(
             ".*",  # mainly .git* files
         ],
     ) + [
-        ".travis.yml",
     ],
     visibility = ["//src/test/shell/bazel:__pkg__"],
 )
