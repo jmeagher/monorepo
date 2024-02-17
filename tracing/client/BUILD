@@ -6,13 +6,13 @@ go_binary(
     visibility = ["//visibility:public"],
 )
 
-go_image(
-    name = "test_client_image",
-    embed = [":client_lib"],
-    goarch = "amd64",
-    goos = "linux",
-    pure = "on",
-)
+# go_image(
+#     name = "test_client_image",
+#     embed = [":client_lib"],
+#     goarch = "amd64",
+#     goos = "linux",
+#     pure = "on",
+# )
 
 filegroup(
     name = "srcs",
