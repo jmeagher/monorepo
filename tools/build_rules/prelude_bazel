@@ -1,15 +1,15 @@
 
 load("@io_bazel_rules_scala//scala:scala.bzl", "scala_binary", "scala_library", "scala_test", "scala_repl")
 
-load("@io_bazel_rules_docker//container:container.bzl",
-     "container_image",
-     )
+# load("@io_bazel_rules_docker//container:container.bzl",
+#      "container_image",
+#      )
 
 load("@io_bazel_rules_docker//python:image.bzl", "py_image")
 load("@io_bazel_rules_docker//scala:image.bzl", "scala_image")
 
 # External python requirements
-load("@my_python_deps//:requirements.bzl", "requirement")
+# load("@my_python_deps//:requirements.bzl", "requirement")
 load(
   "@rules_python//python:python.bzl",
   "py_binary", "py_library", "py_test",
@@ -21,4 +21,4 @@ load(
 
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_test", "go_source", "go_library")
 
-load("@io_bazel_rules_docker//go:image.bzl", "go_image")
+# load("@io_bazel_rules_docker//go:image.bzl", "go_image")

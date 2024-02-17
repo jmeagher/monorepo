@@ -31,13 +31,13 @@ load_build_rules(rules_to_load)
 load("@rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
 pip_repositories()
 
-pip3_import(
-    name = "my_python_deps",
-    requirements = "//3rdparty:requirements.txt",
-)
+# pip3_import(
+#     name = "my_python_deps",
+#     requirements = "//3rdparty:requirements.txt",
+# )
 
-load("@my_python_deps//:requirements.bzl", _python_3rd_party = "pip_install")
-_python_3rd_party()
+# load("@my_python_deps//:requirements.bzl", _python_3rd_party = "pip_install")
+# # _python_3rd_party()
 # pip_install()
 
 # Scala setup
@@ -73,43 +73,43 @@ load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
 # gazelle:repository_macro my-go-repositories.bzl%my_go_repositories
 gazelle_dependencies()
 
-# Setup docker support
-load(
-    "@io_bazel_rules_docker//repositories:repositories.bzl",
-    container_repositories = "repositories",
-)
-container_repositories()
+# # Setup docker support
+# load(
+#     "@io_bazel_rules_docker//repositories:repositories.bzl",
+#     container_repositories = "repositories",
+# )
+# container_repositories()
 
-# Docker testing images
-load(
-    "@io_bazel_rules_docker//python:image.bzl",
-    _py_image_repos = "repositories",
-)
+# # Docker testing images
+# load(
+#     "@io_bazel_rules_docker//python:image.bzl",
+#     _py_image_repos = "repositories",
+# )
 
-load("@io_bazel_rules_docker//repositories:deps.bzl", container_deps = "deps")
+# load("@io_bazel_rules_docker//repositories:deps.bzl", container_deps = "deps")
 
-container_deps()
+# container_deps()
 
-load(
-    "@io_bazel_rules_docker//container:container.bzl",
-    "container_pull",
-)
+# load(
+#     "@io_bazel_rules_docker//container:container.bzl",
+#     "container_pull",
+# )
 
-_py_image_repos()
+# _py_image_repos()
 
-load(
-    "@io_bazel_rules_docker//scala:image.bzl",
-    _scala_image_repos = "repositories",
-)
+# load(
+#     "@io_bazel_rules_docker//scala:image.bzl",
+#     _scala_image_repos = "repositories",
+# )
 
-_scala_image_repos()
+# _scala_image_repos()
 
-load(
-    "@io_bazel_rules_docker//go:image.bzl",
-    _go_image_repos = "repositories",
-)
+# load(
+#     "@io_bazel_rules_docker//go:image.bzl",
+#     _go_image_repos = "repositories",
+# )
 
-_go_image_repos()
+# _go_image_repos()
 
 # Rust support
 # Removed for now since it's been delicate to maintain and I'm not working with it now
@@ -120,24 +120,24 @@ _go_image_repos()
 
 # Load external docker containers
 
-container_pull(
-    name = "cassandra3",
-    registry = "index.docker.io",
-    repository = "library/cassandra",
-    # 'tag' is also supported, but digest is encouraged for reproducibility.
-    # note: couldn't get digest version to work
-    tag = "3.11.1",
-    digest = "sha256:18698b13866b5e805420718e22ad32e3b3227182d3143aaaa937c6154bb5d2bb",
-)
+# container_pull(
+#     name = "cassandra3",
+#     registry = "index.docker.io",
+#     repository = "library/cassandra",
+#     # 'tag' is also supported, but digest is encouraged for reproducibility.
+#     # note: couldn't get digest version to work
+#     tag = "3.11.1",
+#     digest = "sha256:18698b13866b5e805420718e22ad32e3b3227182d3143aaaa937c6154bb5d2bb",
+# )
 
-container_pull(
-    name = "envoyproxy",
-    registry = "index.docker.io",
-    # Picked a recent build at random from https://hub.docker.com/r/envoyproxy/envoy-alpine/tags/
-    repository = "envoyproxy/envoy-alpine",
-    tag = "200b0e41641be46471c2ce3d230aae395fda7ded",
-    digest = "sha256:ae046d3c3b1ebcdbf02cd924edfb2fe5e328ab462c3e44961cb4aac9be208491",
-)
+# container_pull(
+#     name = "envoyproxy",
+#     registry = "index.docker.io",
+#     # Picked a recent build at random from https://hub.docker.com/r/envoyproxy/envoy-alpine/tags/
+#     repository = "envoyproxy/envoy-alpine",
+#     tag = "200b0e41641be46471c2ce3d230aae395fda7ded",
+#     digest = "sha256:ae046d3c3b1ebcdbf02cd924edfb2fe5e328ab462c3e44961cb4aac9be208491",
+# )
 
 # Load external golang repos
 # To add or update new external go dependencies edit go.mod and run ...
